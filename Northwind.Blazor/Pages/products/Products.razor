@@ -1,0 +1,34 @@
+﻿@using Northwind.Blazor.Models
+@using Northwind.Core.Dtos
+@using Northwind.Core.Interfaces.Services
+@inject IProductsService _productsSvc
+@page "/products"
+<h3>Products</h3>
+
+<table class="table table-bordered table-striped table-sm">
+    <thead>
+        <tr>
+            <th>Name</th><th>Code</th><th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in _products)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Code</td>
+                <td>@product.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private ICollection<ProductDto> _products;
+
+    protected override void OnInitialized()
+    {
+        _products = _productsSvc.GetAll();
+        base.OnInitialized();
+    }
+}
