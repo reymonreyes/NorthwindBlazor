@@ -5,6 +5,8 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.Blazor", "Northwind.Blazor\Northwind.Blazor.csproj", "{57247CD0-FD9A-4B97-9905-51F63409F6E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.Core", "Northwind.Core\Northwind.Core.csproj", "{3202E7CE-F213-42FB-867C-A56E33005605}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{57247CD0-FD9A-4B97-9905-51F63409F6E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57247CD0-FD9A-4B97-9905-51F63409F6E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57247CD0-FD9A-4B97-9905-51F63409F6E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3202E7CE-F213-42FB-867C-A56E33005605}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3202E7CE-F213-42FB-867C-A56E33005605}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3202E7CE-F213-42FB-867C-A56E33005605}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3202E7CE-F213-42FB-867C-A56E33005605}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
