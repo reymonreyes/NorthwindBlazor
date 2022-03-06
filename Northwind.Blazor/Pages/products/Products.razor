@@ -27,7 +27,7 @@
     private ICollection<ProductDto> _products;
 
     protected override void OnInitialized()
-    {
+    {        
         _products = _productsSvc.GetAll();
         base.OnInitialized();
     }

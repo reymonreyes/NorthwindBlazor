@@ -1,4 +1,5 @@
 ﻿using Northwind.Core.Dtos;
+using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using System;
 using System.Collections.Generic;
@@ -11,16 +12,11 @@ namespace Northwind.Core.Services
 {
     public class ProductsService : IProductsService
     {
-        private ICollection<ProductDto> _products = new List<ProductDto>
+        private readonly IProductsRepository _productsRepository;
+        public ProductsService(IProductsRepository productsRepository)
         {
-            new ProductDto{ Id = 1, Name = "Red T-Shirt", Code = "RTS", Description = "Red colored t-shirt."},
-            new ProductDto{ Id = 2, Name = "Orange T-Shirt", Code = "OTS"},
-            new ProductDto { Id = 1, Name = "Yellow T-Shirt", Code = "YTS" },
-            new ProductDto { Id = 1, Name = "Green T-Shirt", Code = "GTS" },
-            new ProductDto { Id = 1, Name = "Blue T-Shirt", Code = "BTS" },
-            new ProductDto { Id = 1, Name = "Indigo T-Shirt", Code = "ITS" },
-            new ProductDto { Id = 1, Name = "Violet T-Shirt", Code = "VTS" },
-        };
+            _productsRepository = productsRepository;
+        }
 
         public ProductDto Get()
         {
@@ -29,7 +25,14 @@ namespace Northwind.Core.Services
 
         public ICollection<ProductDto> GetAll()
         {            
-            return _products;
+            var products = _productsRepository.GetAll();
+            return products.Select(x => new ProductDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Code = x.Code,
+                Description = x.Description
+            }).ToList();
         }
     }
 }
