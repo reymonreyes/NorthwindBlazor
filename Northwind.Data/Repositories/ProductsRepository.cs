@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Northwind.Common.Helpers;
 using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
@@ -16,28 +17,23 @@ namespace Northwind.Data.Repositories
         public ProductsRepository(EfDbContext dbContext)
         {
             _dbContext = dbContext;
+            
         }
-
-        private ICollection<Product> _products = new List<Product>
-        {
-            new Product { Id = 1, Name = "Red T-Shirt", Code = "RTS", Description = "Red colored t-shirt."},
-            new Product { Id = 2, Name = "Orange T-Shirt", Code = "OTS"},
-            new Product { Id = 1, Name = "Yellow T-Shirt", Code = "YTS" },
-            new Product { Id = 1, Name = "Green T-Shirt", Code = "GTS" },
-            new Product { Id = 1, Name = "Blue T-Shirt", Code = "BTS" },
-            new Product { Id = 1, Name = "Indigo T-Shirt", Code = "ITS" },
-            new Product { Id = 1, Name = "Violet T-Shirt", Code = "VTS" },
-        };
 
         public void Create(Product product)
         {
             throw new NotImplementedException();
         }
 
+        public async Task<ProductDto?> Get(int productId)
+        {
+            Product? product = await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == productId);
+            return ObjectMapperHelper.ToProductDto(product);
+        }
+
         public ICollection<Product> GetAll()
         {
-            return _dbContext.Products.Select(x => new Product { Id = x.Id, Name = x.Name, UnitPrice = x.UnitPrice }).OrderBy(x => x.Name).ToList();
-            //return _products;
+            return _dbContext.Products.ToList();
         }
     }
 }

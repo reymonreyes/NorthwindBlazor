@@ -1,13 +1,34 @@
 ﻿@page "/products/{id:int}"
-<h3>Details</h3>
+@using Northwind.Core.Dtos
+@using Northwind.Core.Interfaces.Services
+@inject IProductsService ProductsService
+<div><NavLink href="products"><span class="oi oi-chevron-left"></span></NavLink> Product Details</div>
+
+@if(_product is null)
+{
+    <div>Loading...</div>
+}
+else
+{
+    <div class="row">
+        <div class="col-2"><label>Name</label></div>
+        <div class="col-10">@_product.Name</div>
+    </div>
+    <div class="row">
+        <div class="col-2"><label>Unit Price</label></div>
+        <div class="col-10">@_product.UnitPrice.ToString("C")</div>
+    </div>
+}
 
 @code {
+    private ProductDto? _product = null;
+    int? test;
     [Parameter]
     public int Id { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-
+        _product = await ProductsService.Get(Id);
         base.OnInitialized();
     }
 }

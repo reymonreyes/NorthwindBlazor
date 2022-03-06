@@ -18,9 +18,9 @@ namespace Northwind.Core.Services
             _unitOfWork = unitOfWork;
         }
 
-        public ProductDto Get()
+        public async Task<ProductDto?> Get(int productId)
         {
-            throw new NotImplementedException();
+            return await _unitOfWork.ProductsRepository.Get(productId);
         }
 
         public ICollection<ProductDto> GetAll()

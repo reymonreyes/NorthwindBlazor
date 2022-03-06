@@ -1,4 +1,5 @@
-﻿using Northwind.Core.Entities;
+﻿using Northwind.Core.Dtos;
+using Northwind.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace Northwind.Core.Interfaces.Repositories
     {
         ICollection<Product> GetAll();
         void Create(Product productDto);
+        Task<ProductDto?> Get(int productId);
     }
 }

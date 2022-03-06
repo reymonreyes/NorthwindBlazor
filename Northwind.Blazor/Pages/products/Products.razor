@@ -15,7 +15,7 @@
         @foreach (var product in _products)
         {
             <tr>
-                <td>@product.Name</td>
+                <td><NavLink href="@string.Format("products/{0}", product.Id)">@product.Name</NavLink></td>
                 <td class="text-end">@product.UnitPrice.ToString("C")</td>
                 <td>@product.Description</td>
             </tr>
