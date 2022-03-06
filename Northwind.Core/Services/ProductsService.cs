@@ -12,10 +12,10 @@ namespace Northwind.Core.Services
 {
     public class ProductsService : IProductsService
     {
-        private readonly IProductsRepository _productsRepository;
-        public ProductsService(IProductsRepository productsRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public ProductsService(IUnitOfWork unitOfWork)
         {
-            _productsRepository = productsRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public ProductDto Get()
@@ -24,12 +24,13 @@ namespace Northwind.Core.Services
         }
 
         public ICollection<ProductDto> GetAll()
-        {            
-            var products = _productsRepository.GetAll();
+        {
+            var products = _unitOfWork.ProductsRepository.GetAll();
             return products.Select(x => new ProductDto
             {
                 Id = x.Id,
                 Name = x.Name,
+                UnitPrice = x.UnitPrice,
                 Code = x.Code,
                 Description = x.Description
             }).ToList();

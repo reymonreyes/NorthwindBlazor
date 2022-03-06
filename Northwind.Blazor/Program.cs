@@ -4,6 +4,7 @@ using Northwind.Blazor.Data;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Services;
+using Northwind.Data;
 using Northwind.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,8 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddSingleton<EfDbContext>();
 builder.Services.AddSingleton<IProductsService, ProductsService>();
-builder.Services.AddSingleton<IProductsRepository, ProductsRepository>();
+//builder.Services.AddSingleton<IProductsRepository, ProductsRepository>();
+builder.Services.AddSingleton<IUnitOfWork, EfUnitOfWork>();
 
 var app = builder.Build();
 

@@ -7,8 +7,8 @@
 
 <table class="table table-bordered table-striped table-sm">
     <thead>
-        <tr>
-            <th>Name</th><th>Code</th><th>Description</th>
+        <tr class="text-center">
+            <th>Name</th><th>Unit Price</th><th>Description</th>
         </tr>
     </thead>
     <tbody>
@@ -16,7 +16,7 @@
         {
             <tr>
                 <td>@product.Name</td>
-                <td>@product.Code</td>
+                <td class="text-end">@product.UnitPrice.ToString("C")</td>
                 <td>@product.Description</td>
             </tr>
         }

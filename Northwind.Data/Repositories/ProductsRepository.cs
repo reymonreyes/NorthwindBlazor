@@ -1,4 +1,5 @@
-﻿using Northwind.Core.Dtos;
+﻿using Microsoft.EntityFrameworkCore;
+using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
 using System;
@@ -11,6 +12,12 @@ namespace Northwind.Data.Repositories
 {
     public class ProductsRepository : IProductsRepository
     {
+        private readonly EfDbContext _dbContext;
+        public ProductsRepository(EfDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         private ICollection<Product> _products = new List<Product>
         {
             new Product { Id = 1, Name = "Red T-Shirt", Code = "RTS", Description = "Red colored t-shirt."},
@@ -29,7 +36,8 @@ namespace Northwind.Data.Repositories
 
         public ICollection<Product> GetAll()
         {
-            return _products;
+            return _dbContext.Products.Select(x => new Product { Id = x.Id, Name = x.Name, UnitPrice = x.UnitPrice }).OrderBy(x => x.Name).ToList();
+            //return _products;
         }
     }
 }
