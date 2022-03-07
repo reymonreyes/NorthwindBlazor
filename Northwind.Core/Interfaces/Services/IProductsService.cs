@@ -9,7 +9,7 @@ namespace Northwind.Core.Interfaces.Services
 {
     public interface IProductsService
     {
-        ICollection<ProductDto> GetAll();
+        Task<ICollection<ProductDto>> GetAll();
         Task<ProductDto?> Get(int productId);
     }
 }

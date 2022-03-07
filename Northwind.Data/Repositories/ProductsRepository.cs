@@ -31,9 +31,9 @@ namespace Northwind.Data.Repositories
             return ObjectMapperHelper.ToProductDto(product);
         }
 
-        public ICollection<Product> GetAll()
+        public async Task<ICollection<Product>> GetAll()
         {
-            return _dbContext.Products.ToList();
+            return await _dbContext.Products.ToListAsync();
         }
     }
 }

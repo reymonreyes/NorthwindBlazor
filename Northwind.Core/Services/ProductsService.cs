@@ -23,9 +23,9 @@ namespace Northwind.Core.Services
             return await _unitOfWork.ProductsRepository.Get(productId);
         }
 
-        public ICollection<ProductDto> GetAll()
+        public async Task<ICollection<ProductDto>> GetAll()
         {
-            var products = _unitOfWork.ProductsRepository.GetAll();
+            var products = await _unitOfWork.ProductsRepository.GetAll();
             return products.Select(x => new ProductDto
             {
                 Id = x.Id,

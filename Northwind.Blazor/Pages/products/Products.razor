@@ -5,6 +5,12 @@
 @page "/products"
 <h3>Products</h3>
 
+@if(_products is null)
+{
+    <div>Loading...</div>   
+}
+else
+{   
 <table class="table table-bordered table-striped table-sm">
     <thead>
         <tr class="text-center">
@@ -22,13 +28,13 @@
         }
     </tbody>
 </table>
-
+}
 @code {
-    private ICollection<ProductDto> _products;
+    private ICollection<ProductDto>? _products;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {        
-        _products = _productsSvc.GetAll();
+        _products = await _productsSvc.GetAll();
         base.OnInitialized();
     }
 }

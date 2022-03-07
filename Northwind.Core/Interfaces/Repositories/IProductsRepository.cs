@@ -10,7 +10,7 @@ namespace Northwind.Core.Interfaces.Repositories
 {
     public interface IProductsRepository
     {
-        ICollection<Product> GetAll();
+        Task<ICollection<Product>> GetAll();
         void Create(Product productDto);
         Task<ProductDto?> Get(int productId);
     }
