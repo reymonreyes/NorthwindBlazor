@@ -15,8 +15,16 @@ else
         <div class="col-10">@_product.Name</div>
     </div>
     <div class="row">
+        <div class="col-2"><label>Code</label></div>
+        <div class="col-10">@_product.Code</div>
+    </div>
+    <div class="row">
         <div class="col-2"><label>Unit Price</label></div>
         <div class="col-10">@_product.UnitPrice.ToString("C")</div>
+    </div>
+    <div class="row">
+        <div class="col-2"><label>Description</label></div>
+        <div class="col-10">@_product.Description</div>
     </div>
 }
 

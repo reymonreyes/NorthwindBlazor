@@ -14,7 +14,7 @@ else
 <table class="table table-bordered table-striped table-sm">
     <thead>
         <tr class="text-center">
-            <th>Name</th><th>Unit Price</th><th>Description</th>
+            <th>Name</th><th>Code</th><th>Unit Price</th><th>Description</th>
         </tr>
     </thead>
     <tbody>
@@ -22,6 +22,7 @@ else
         {
             <tr>
                 <td><NavLink href="@string.Format("products/{0}", product.Id)">@product.Name</NavLink></td>
+                <td>@product.Code</td>
                 <td class="text-end">@product.UnitPrice.ToString("C")</td>
                 <td>@product.Description</td>
             </tr>
