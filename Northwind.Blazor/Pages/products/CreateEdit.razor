@@ -1,0 +1,114 @@
+﻿@page "/products/create"
+@page "/products/edit/{id:int}"
+@using Northwind.Blazor.Models
+@using Northwind.Common.Enums
+@inject NavigationManager NavigationManager
+<h4>
+    @if(_mode == EntryMode.Create){
+        <span>Create Product</span>
+    }
+    else{
+        <span>Edit Product</span>
+    }
+</h4>
+@if(_product is null)
+{
+<div>Unable to load product.</div>
+}
+else{
+<EditForm Model="@_product" OnValidSubmit="Save">
+    <DataAnnotationsValidator/>
+    <div class="row mb-3">
+        <label class="col-2" for="name">Name</label>
+        <div class="col-10">
+            <InputText @bind-Value="_product.Name" class="form-control" id="name"/>
+            <ValidationMessage For="@(() => _product.Name)"/>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-2" for="code">Code</label>
+        <div class="col-10">
+            <InputText @bind-Value="_product.Code" class="form-control" />
+            <ValidationMessage For="@(() => _product.Code)"/>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-2" for="code">Quantity Per Unit</label>
+        <div class="col-10">
+            <InputText @bind-Value="_product.QuantityPerUnit" class="form-control" />
+            <ValidationMessage For="@(() => _product.QuantityPerUnit)"/>
+        </div>
+    </div>
+        <div class="row mb-3">
+        <label class="col-2" for="code">Unit Price</label>
+        <div class="col-10">            
+            <InputNumber @bind-Value="_product.UnitPrice" class="form-control" />
+            <ValidationMessage For="@(() => _product.UnitPrice)"/>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-2" for="code">Units In Stock</label>
+        <div class="col-10">
+            <InputNumber @bind-Value="_product.UnitsInStock" class="form-control" />
+            <ValidationMessage For="@(() => _product.UnitsInStock)"/>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-2" for="code">Units On Order</label>
+        <div class="col-10">
+            <InputNumber @bind-Value="_product.UnitsOnOrder" class="form-control" />
+            <ValidationMessage For="@(() => _product.UnitsOnOrder)"/>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-2" for="code">Reorder Level</label>
+        <div class="col-10">
+            <InputNumber @bind-Value="_product.ReorderLevel" class="form-control" />
+            <ValidationMessage For="@(() => _product.ReorderLevel)"/>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-2" for="discontinued">Discontinued</label>
+        <div class="col-10">
+            <InputCheckbox @bind-Value="_product.Discontinued" class="form-check-input" id="discontinued"/>
+            <ValidationMessage For="@(() => _product.Discontinued)"/>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-2">Description</label>
+        <div class="col-10">
+            <InputTextArea @bind-Value="_product.Description" class="form-control" />
+            <ValidationMessage For="@(() => _product.Description)"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-end">
+            <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+    </div>
+</EditForm>
+}
+@code {
+    private EntryMode _mode = EntryMode.Create;
+    private Product? _product;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _mode = NavigationManager.Uri.Contains("create") ? EntryMode.Create : EntryMode.Edit;
+
+        if(_mode == EntryMode.Create)
+        {
+            _product = new Product();
+        }
+
+        base.OnInitialized();
+    }
+
+    private void Save()
+    {
+        
+    }
+}

@@ -3,8 +3,16 @@
 @using Northwind.Core.Interfaces.Services
 @inject IProductsService _productsSvc
 @page "/products"
-<h3>Products</h3>
-
+<div class="row mb-1">
+    <div class="col-6">
+        <h4>Products</h4>
+    </div>
+    <div class="col-6 text-end">
+        <NavLink href="products/create" class="btn btn-primary btn-sm">Create Product</NavLink>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
 @if(_products is null)
 {
     <div>Loading...</div>   
@@ -30,6 +38,8 @@ else
     </tbody>
 </table>
 }
+    </div>
+</div>
 @code {
     private ICollection<ProductDto>? _products;
 
