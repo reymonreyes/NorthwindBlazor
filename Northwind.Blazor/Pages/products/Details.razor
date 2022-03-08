@@ -1,42 +1,77 @@
 ﻿@page "/products/{id:int}"
+@using Northwind.Blazor.Helpers
+@using Northwind.Blazor.Models
 @using Northwind.Core.Dtos
 @using Northwind.Core.Interfaces.Services
 @inject IProductsService ProductsService
-<div><NavLink href="products"><span class="oi oi-chevron-left"></span></NavLink> Product Details</div>
 
-@if(_product is null)
-{
-    <div>Loading...</div>
-}
-else
-{
-    <div class="row">
-        <div class="col-2"><label>Name</label></div>
-        <div class="col-10">@_product.Name</div>
+<div class="row mb-1">
+    <div class="col-6">
+        <span class="h5"><NavLink href="products"><span class="oi oi-chevron-left"></span></NavLink> Product Details</span>
     </div>
-    <div class="row">
-        <div class="col-2"><label>Code</label></div>
-        <div class="col-10">@_product.Code</div>
-    </div>
-    <div class="row">
-        <div class="col-2"><label>Unit Price</label></div>
-        <div class="col-10">@_product.UnitPrice.ToString("C")</div>
-    </div>
-    <div class="row">
-        <div class="col-2"><label>Description</label></div>
-        <div class="col-10">@_product.Description</div>
-    </div>
-}
+</div>
 
+<div class="row">
+    <div class="col-lg-6">
+        @if (_product is null)
+        {
+            <div>Loading...</div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-2"><label>Name</label></div>
+                <div class="col-10">@_product.Name</div>
+            </div>
+            <div class="row">
+                <div class="col-2"><label>Code</label></div>
+                <div class="col-10">@_product.Code</div>
+            </div>
+            <div class="row">
+                <div class="col-2"><label>Unit Price</label></div>
+                <div class="col-10">@_product.UnitPrice.ToString("C")</div>
+            </div>
+            <div class="row mb-2">
+                <label class="col-2" for="code">Quantity per Unit</label>
+                <div class="col-10">@_product.UnitsInStock</div>
+            </div>
+            <div class="row mb-2">
+                <label class="col-2" for="code">Units In Stock</label>
+                <div class="col-10">@_product.UnitsInStock</div>
+            </div>
+            <div class="row mb-2">
+                <label class="col-2" for="code">Units On Order</label>
+                <div class="col-10">@_product.UnitsOnOrder</div>
+            </div>
+            <div class="row mb-2">
+                <label class="col-2" for="code">Reorder Level</label>
+                <div class="col-10">@_product.ReorderLevel</div>
+            </div>
+            <div class="row mb-2">
+                <label class="col-2" for="discontinued">Discontinued</label>
+                <div class="col-10"><DisplayBoolean Value="_product.Discontinued"/></div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-2"><label>Description</label></div>
+                <div class="col-10">@_product.Description</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-2">
+                    <NavLink href="@(String.Format("products/edit/{0}", _product.Id))" class="btn btn-primary btn-sm">Edit Product</NavLink>
+                </div>
+            </div>
+        }
+    </div>
+</div>
 @code {
-    private ProductDto? _product = null;
-    int? test;
+    private Product? _product = null;
+
     [Parameter]
     public int Id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        _product = await ProductsService.Get(Id);
-        base.OnInitialized();
+        var productDto = await ProductsService.Get(Id);
+        _product = MapperHelper.ToProduct(productDto);
     }
 }
