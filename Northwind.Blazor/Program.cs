@@ -15,7 +15,6 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<EfDbContext>();
 builder.Services.AddSingleton<IProductsService, ProductsService>();
-//builder.Services.AddSingleton<IProductsRepository, ProductsRepository>();
 builder.Services.AddSingleton<IUnitOfWork, EfUnitOfWork>();
 
 var app = builder.Build();

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.Blazor", "Northwind.Blazor\Northwind.Blazor.csproj", "{57247CD0-FD9A-4B97-9905-51F63409F6E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Blazor", "Northwind.Blazor\Northwind.Blazor.csproj", "{57247CD0-FD9A-4B97-9905-51F63409F6E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.Core", "Northwind.Core\Northwind.Core.csproj", "{3202E7CE-F213-42FB-867C-A56E33005605}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Core", "Northwind.Core\Northwind.Core.csproj", "{3202E7CE-F213-42FB-867C-A56E33005605}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.Data", "Northwind.Data\Northwind.Data.csproj", "{42C1FC42-A996-4D9B-AB50-9E6332B3434A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Data", "Northwind.Data\Northwind.Data.csproj", "{42C1FC42-A996-4D9B-AB50-9E6332B3434A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.Common", "Northwind.Common\Northwind.Common.csproj", "{C566DFE4-C977-4EAE-9BCA-DF62C7566B50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Common", "Northwind.Common\Northwind.Common.csproj", "{C566DFE4-C977-4EAE-9BCA-DF62C7566B50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

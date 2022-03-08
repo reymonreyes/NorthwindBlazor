@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="TinyMapper" Version="3.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Northwind.Core\Northwind.Core.csproj" />
     <ProjectReference Include="..\Northwind.Data\Northwind.Data.csproj" />
   </ItemGroup>

@@ -1,16 +1,24 @@
 ﻿@page "/products/create"
 @page "/products/edit/{id:int}"
+@using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
+@using Northwind.Core.Interfaces.Services
 @inject NavigationManager NavigationManager
-<h4>
-    @if(_mode == EntryMode.Create){
-        <span>Create Product</span>
+@inject IProductsService ProductsService
+
+<div class="row mb-1">
+    <div class="col-lg-6">
+    @if (_mode == EntryMode.Create)
+    {
+        <span class="h5">Create Product</span>
     }
-    else{
-        <span>Edit Product</span>
+    else
+    {
+        <span class="h5">Edit Product</span>
     }
-</h4>
+    </div>
+</div>
 @if(_product is null)
 {
 <div>Unable to load product.</div>
@@ -83,6 +91,7 @@ else{
     </div>
     <div class="row">
         <div class="col-12 text-end">
+            <NavLink href="products" class="btn btn-secondary">Cancel</NavLink>
             <button class="btn btn-primary" type="submit">Save</button>
         </div>
     </div>
@@ -95,16 +104,19 @@ else{
     [Parameter]
     public int Id { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         _mode = NavigationManager.Uri.Contains("create") ? EntryMode.Create : EntryMode.Edit;
 
-        if(_mode == EntryMode.Create)
-        {
-            _product = new Product();
+        switch(_mode){
+            case EntryMode.Create:
+                _product = new Product();
+                break;
+            case EntryMode.Edit:
+                var productDto = await ProductsService.Get(Id);
+                _product = MapperHelper.ToProduct(productDto);
+                break;
         }
-
-        base.OnInitialized();
     }
 
     private void Save()
