@@ -22,7 +22,7 @@ namespace Northwind.Data.Repositories
 
         public void Create(Product product)
         {
-            throw new NotImplementedException();
+            _dbContext.Products.Add(product);
         }
 
         public async Task<ProductDto?> Get(int productId)

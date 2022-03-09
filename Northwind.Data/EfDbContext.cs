@@ -18,7 +18,7 @@ namespace Northwind.Data
         {
             modelBuilder.Entity<Product>().ToTable("products");
             modelBuilder.Entity<Product>().HasKey(x => x.Id).HasName("pk_products");
-            modelBuilder.Entity<Product>().Property(x => x.Id).HasColumnName("product_id").HasColumnType("smallint");
+            modelBuilder.Entity<Product>().Property(x => x.Id).HasColumnName("product_id").HasColumnType("smallint").UseHiLo();
             modelBuilder.Entity<Product>().Property(x => x.Name).HasColumnName("product_name").HasColumnType("character varying");
             modelBuilder.Entity<Product>().Property(x => x.Code).HasColumnName("code").HasColumnType("character varying");
             modelBuilder.Entity<Product>().Property(x => x.Description).HasColumnName("description").HasColumnType("text");

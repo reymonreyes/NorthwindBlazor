@@ -1,4 +1,5 @@
 ﻿using Northwind.Core.Dtos;
+using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using System;
@@ -16,6 +17,30 @@ namespace Northwind.Core.Services
         public ProductsService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+
+        public int Create(ProductDto? productDto)
+        {
+            if (productDto == null)
+                return 0;
+
+            var product = new Product
+            {
+                Name = productDto.Name,
+                Code = productDto.Code,
+                UnitPrice = productDto.UnitPrice,
+                QuantityPerUnit = productDto.QuantityPerUnit,
+                UnitsInStock = productDto.UnitsInStock,
+                UnitsInOrder = productDto.UnitsInOrder,
+                ReorderLevel = productDto.ReorderLevel,
+                Discontinued = productDto.Discontinued
+            };
+
+            _unitOfWork.ProductsRepository.Create(product);
+            _unitOfWork.Commit();
+
+            return product.Id;
+
         }
 
         public async Task<ProductDto?> Get(int productId)

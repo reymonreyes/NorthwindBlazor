@@ -121,6 +121,10 @@ else{
 
     private void Save()
     {
-        
+        var productDto = MapperHelper.ToProductDto(_product);
+        if (productDto != null)
+        {
+            var result = ProductsService.Create(productDto);
+        }
     }
 }
