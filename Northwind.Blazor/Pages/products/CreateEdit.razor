@@ -124,7 +124,15 @@ else{
         var productDto = MapperHelper.ToProductDto(_product);
         if (productDto != null)
         {
-            var result = ProductsService.Create(productDto);
+            switch (_mode)
+            {
+                case EntryMode.Create:
+                    var result = ProductsService.Create(productDto);
+                    break;
+                case EntryMode.Edit:
+                    //ProductsService.Edit(Id, productDto);
+                    break;
+            }
         }
     }
 }

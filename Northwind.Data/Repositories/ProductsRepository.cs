@@ -20,9 +20,9 @@ namespace Northwind.Data.Repositories
             
         }
 
-        public void Create(Product product)
+        public async Task Create(Product product)
         {
-            _dbContext.Products.Add(product);
+            await _dbContext.Products.AddAsync(product);
         }
 
         public async Task<ProductDto?> Get(int productId)
