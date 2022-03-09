@@ -33,7 +33,7 @@ namespace Northwind.Data.Repositories
 
         public async Task<ICollection<Product>> GetAll()
         {
-            return await _dbContext.Products.ToListAsync();
+            return await _dbContext.Products.OrderBy(x => x.Name).ToListAsync();
         }
     }
 }

@@ -33,7 +33,8 @@ namespace Northwind.Core.Services
                 UnitsInStock = productDto.UnitsInStock,
                 UnitsInOrder = productDto.UnitsInOrder,
                 ReorderLevel = productDto.ReorderLevel,
-                Discontinued = productDto.Discontinued
+                Discontinued = productDto.Discontinued,
+                Description = productDto.Description
             };
 
             _unitOfWork.ProductsRepository.Create(product);
