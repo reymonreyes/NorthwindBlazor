@@ -10,7 +10,7 @@ namespace Northwind.Data.Migrations
         {
             migrationBuilder.CreateSequence(
                 name: "EntityFrameworkHiLoSequence",
-                incrementBy: 10,
+                incrementBy: 100,
                 startValue: 78);
         }
 
