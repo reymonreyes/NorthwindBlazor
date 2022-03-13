@@ -13,7 +13,7 @@ namespace Northwind.Core.Entities
         public string? Code { get; set; }
         public string? Description { get; set; }
         public decimal UnitPrice { get; set; }
-        public string QuantityPerUnit { get; set; } = string.Empty;
+        public string? QuantityPerUnit { get; set; }
         public int UnitsInStock { get; set; }
         public int UnitsInOrder { get; set; }
         public int ReorderLevel { get; set; }

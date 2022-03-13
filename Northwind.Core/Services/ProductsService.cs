@@ -19,14 +19,14 @@ namespace Northwind.Core.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task Create(ProductDto? productDto)
+        public async Task Create(ProductDto productDto)
         {
             if (productDto == null)
                 return;
 
             var product = new Product
             {
-                Name = productDto.Name,
+                Name = null,//productDto.Name,
                 Code = productDto.Code,
                 UnitPrice = productDto.UnitPrice,
                 QuantityPerUnit = productDto.QuantityPerUnit,
@@ -38,6 +38,15 @@ namespace Northwind.Core.Services
             };
 
             await _unitOfWork.ProductsRepository.Create(product);
+            await _unitOfWork.Commit();
+        }
+
+        public async Task Edit(int id, ProductDto productDto)
+        {
+            if (productDto == null)
+                return;
+
+            await _unitOfWork.ProductsRepository.Create(new Product { Id = id });
             await _unitOfWork.Commit();
         }
 
