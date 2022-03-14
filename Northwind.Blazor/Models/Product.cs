@@ -7,7 +7,7 @@ namespace Northwind.Blazor.Models
         public int Id { get; set; }
         [Required, MaxLength(40)]
         public string Name { get; set; } = string.Empty;
-        [MaxLength(16)]
+        [Required, MaxLength(16)]
         public string? Code { get; set; }
         public string? Description { get; set; }
         public string? QuantityPerUnit { get; set; }

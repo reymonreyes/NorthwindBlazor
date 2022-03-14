@@ -92,7 +92,9 @@ else{
     <div class="row">
         <div class="col-12 text-end">
             <NavLink href="products" class="btn btn-secondary">Cancel</NavLink>
-            <button class="btn btn-primary" type="submit">Save</button>
+            <button class="btn btn-primary" type="submit">
+                @_saveButtonText
+            </button>
         </div>
     </div>
 </EditForm>
@@ -100,6 +102,7 @@ else{
 @code {
     private EntryMode _mode = EntryMode.Create;
     private Product? _product;
+    private string _saveButtonText = "Save";
 
     [Parameter]
     public int Id { get; set; }
@@ -119,20 +122,24 @@ else{
         }
     }
 
-    private void Save()
+    private async Task Save()
     {
         var productDto = MapperHelper.ToProductDto(_product);
         if (productDto != null)
         {
+            _saveButtonText = "Saving...";
+
             switch (_mode)
             {
                 case EntryMode.Create:
-                    var result = ProductsService.Create(productDto);
+                    await ProductsService.Create(productDto);
+                    _saveButtonText = "Save";
                     break;
                 case EntryMode.Edit:
-                    //ProductsService.Edit(Id, productDto);
+                    ProductsService.Edit(Id, productDto);
                     break;
             }
+            NavigationManager.NavigateTo("products");
         }
     }
 }
