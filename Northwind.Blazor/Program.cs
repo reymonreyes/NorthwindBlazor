@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Northwind.Blazor.Data;
+using Northwind.Common.Validators;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
+using Northwind.Core.Interfaces.Validators;
 using Northwind.Core.Services;
 using Northwind.Data;
 using Northwind.Data.Repositories;
@@ -16,6 +18,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<EfDbContext>();
 builder.Services.AddSingleton<IProductsService, ProductsService>();
 builder.Services.AddSingleton<IUnitOfWork, EfUnitOfWork>();
+builder.Services.AddSingleton<IProductValidator, ProductValidator>();
 
 var app = builder.Build();
 
