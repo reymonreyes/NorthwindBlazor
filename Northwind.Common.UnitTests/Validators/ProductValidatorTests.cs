@@ -1,4 +1,5 @@
 ﻿using Northwind.Common.Validators;
+using Northwind.Core.Enums;
 using Northwind.Core.Interfaces.Validators;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,8 @@ namespace Northwind.Common.UnitTests.Validators
             IProductValidator validator = new ProductValidator();
             var result = validator.Validate(new Core.Dtos.ProductDto());
 
-            Assert.True(result.Count > 0);
+            Assert.Contains(result, x => x.MessageType == ServiceMessageType.Error && x.Message.Value.Contains("Name"));
+            Assert.Contains(result, x => x.MessageType == ServiceMessageType.Error && x.Message.Value.Contains("Code"));
         }
     }
 }

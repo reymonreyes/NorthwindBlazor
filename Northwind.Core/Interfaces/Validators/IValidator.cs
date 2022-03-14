@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Northwind.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace Northwind.Core.Interfaces.Validators
 {
     public interface IValidator<T> where T : class
     {
-        List<KeyValuePair<string, string>> Validate(T entity);
+        List<ServiceMessageResult> Validate(T value);
+        //List<KeyValuePair<string, string>> Validate(T entity);
     }
 }

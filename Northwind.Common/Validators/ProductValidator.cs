@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Northwind.Core.Dtos;
+using Northwind.Core.Enums;
 using Northwind.Core.Interfaces.Validators;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,12 @@ namespace Northwind.Common.Validators
         public ProductValidator()
         {
             RuleFor(x => x.Name).NotEmpty();
+            RuleFor(x => x.Code).NotEmpty();
         }
-        List<KeyValuePair<string, string>> Core.Interfaces.Validators.IValidator<ProductDto>.Validate(ProductDto instance)
+        List<ServiceMessageResult> Core.Interfaces.Validators.IValidator<ProductDto>.Validate(ProductDto instance)
         {
-            var validationResult = Validate(instance);            
-            return validationResult.Errors.Select(x => new KeyValuePair<string, string>(x.PropertyName, x.ErrorMessage)).ToList();
+            var validationResult = Validate(instance);
+            return validationResult.Errors.Select(x => new ServiceMessageResult { MessageType = ServiceMessageType.Error, Message = new KeyValuePair<string, string>(x.PropertyName, x.ErrorMessage) }).ToList();
         }
     }
 }
