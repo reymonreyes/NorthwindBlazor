@@ -2,6 +2,7 @@
 using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
+using Northwind.Core.Interfaces.Validators;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,19 +15,34 @@ namespace Northwind.Core.Services
     public class ProductsService : IProductsService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ProductsService(IUnitOfWork unitOfWork)
+        private readonly IProductValidator _productValidator;
+        public ProductsService(IUnitOfWork unitOfWork, IProductValidator productValidator)
         {
             _unitOfWork = unitOfWork;
+            _productValidator = productValidator;
+
         }
 
-        public async Task Create(ProductDto productDto)
+        public async Task<ServiceResult> Create(ProductDto? productDto)
         {
             if (productDto == null)
-                return;
+                throw new ArgumentNullException("product");
+
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
+
+            var validationResult = _productValidator.Validate(productDto);
+            if(validationResult?.Count > 0)
+            {
+                result.IsSuccessful = false;
+                result.Messages.AddRange(validationResult);
+            }
+
+            if (!result.IsSuccessful)
+                return result;
 
             var product = new Product
             {
-                Name = null,//productDto.Name,
+                Name = productDto.Name,
                 Code = productDto.Code,
                 UnitPrice = productDto.UnitPrice,
                 QuantityPerUnit = productDto.QuantityPerUnit,
@@ -39,6 +55,8 @@ namespace Northwind.Core.Services
 
             await _unitOfWork.ProductsRepository.Create(product);
             await _unitOfWork.Commit();
+
+            return result;
         }
 
         public async Task Edit(int id, ProductDto productDto)
