@@ -1,17 +1,51 @@
 ﻿@page "/categories/create"
 @page "/categories/edit/{id:int}"
+@using Northwind.Blazor.Models
 @using Northwind.Common.Enums
 @inject NavigationManager NavigationManager
 
 <EntryModePageHeader Mode="_mode" DisplayName="Category"/>
+<EditForm Model="@_category" OnValidSubmit="Save">
+    <DataAnnotationsValidator/>
+    <div class="row mb-3">
+        <label class="col-2" for="name">Name</label>
+        <div class="col-10">
+            <InputText @bind-Value="_category.Name" class="form-control" id="name"/>
+            <ValidationMessage For="@(() => _category.Name)"/>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-2">Description</label>
+        <div class="col-10">
+            <InputTextArea @bind-Value="_category.Description" class="form-control" />
+            <ValidationMessage For="@(() => _category.Description)"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-end">
+            <NavLink href="products" class="btn btn-secondary">Cancel</NavLink>
+            <button class="btn btn-primary" type="submit">
+                @_saveButtonText
+            </button>
+        </div>
+    </div>
+</EditForm>
 
 @code {
     private EntryMode _mode = EntryMode.Create;
+    private Category? _category;
+    private string _saveButtonText = "Save";
     [Parameter]
     public int Id { get; set; }
 
     protected override void OnInitialized()
     {
         _mode = NavigationManager.Uri.Contains("create") ? EntryMode.Create : EntryMode.Edit;
+        _category = _mode == EntryMode.Create ? new Category() : null;
+    }
+
+    private void Save()
+    {
+        
     }
 }
