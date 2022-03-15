@@ -1,0 +1,17 @@
+﻿@page "/categories/create"
+@page "/categories/edit/{id:int}"
+@using Northwind.Common.Enums
+@inject NavigationManager NavigationManager
+
+<EntryModePageHeader Mode="_mode" DisplayName="Category"/>
+
+@code {
+    private EntryMode _mode = EntryMode.Create;
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _mode = NavigationManager.Uri.Contains("create") ? EntryMode.Create : EntryMode.Edit;
+    }
+}
