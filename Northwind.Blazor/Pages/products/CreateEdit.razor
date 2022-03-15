@@ -136,7 +136,7 @@ else{
                     _saveButtonText = "Save";
                     break;
                 case EntryMode.Edit:
-                    ProductsService.Edit(Id, productDto);
+                    await ProductsService.Edit(Id, productDto);
                     break;
             }
             NavigationManager.NavigateTo("products");
