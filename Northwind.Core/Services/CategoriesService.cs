@@ -23,12 +23,11 @@ namespace Northwind.Core
             {
                 result.IsSuccessful = false;
                 validationResult.AddRange(validationResult);
-            }
 
-            if (!result.IsSuccessful)
                 return result;
-
-
+            }
+            
+            
 
             return result;
         }
