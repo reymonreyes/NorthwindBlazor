@@ -8,32 +8,34 @@
 @inject ICategoriesService CategoriesService
 
 <EntryModePageHeader Mode="_mode" DisplayName="Category"/>
-<EditForm Model="@_category" OnValidSubmit="Save">
-    <DataAnnotationsValidator/>
-    <div class="row mb-3">
-        <label class="col-2" for="name">Name</label>
-        <div class="col-10">
-            <InputText @bind-Value="_category.Name" class="form-control" id="name"/>
-            <ValidationMessage For="@(() => _category.Name)"/>
+@if (_category != null)
+{
+    <EditForm Model="@_category" OnValidSubmit="Save">
+        <DataAnnotationsValidator/>
+        <div class="row mb-3">
+            <label class="col-2" for="name">Name</label>
+            <div class="col-10">
+                <InputText @bind-Value="_category.Name" class="form-control" id="name"/>
+                <ValidationMessage For="@(() => _category.Name)"/>
+            </div>
         </div>
-    </div>
-    <div class="row mb-3">
-        <label class="col-2">Description</label>
-        <div class="col-10">
-            <InputTextArea @bind-Value="_category.Description" class="form-control" />
-            <ValidationMessage For="@(() => _category.Description)"/>
+        <div class="row mb-3">
+            <label class="col-2">Description</label>
+            <div class="col-10">
+                <InputTextArea @bind-Value="_category.Description" class="form-control" />
+                <ValidationMessage For="@(() => _category.Description)"/>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12 text-end">
-            <NavLink href="products" class="btn btn-secondary">Cancel</NavLink>
-            <button class="btn btn-primary" type="submit">
-                @_saveButtonText
-            </button>
+        <div class="row">
+            <div class="col-12 text-end">
+                <NavLink href="products" class="btn btn-secondary">Cancel</NavLink>
+                <button class="btn btn-primary" type="submit">
+                    @_saveButtonText
+                </button>
+            </div>
         </div>
-    </div>
-</EditForm>
-
+    </EditForm>
+}
 @code {
     private EntryMode _mode = EntryMode.Create;
     private Category? _category;
