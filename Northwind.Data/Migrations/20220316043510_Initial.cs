@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -9,15 +11,14 @@ namespace Northwind.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateSequence(
-                name: "EntityFrameworkHiLoSequence",
+                name: "EFProductIdHiLoSequence",
                 incrementBy: 100,
-                startValue: 78);
+                startValue: 1);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropSequence(
-                name: "EntityFrameworkHiLoSequence");
+            migrationBuilder.DropSequence(name: "EFProductIdHiLoSequence");
         }
     }
 }

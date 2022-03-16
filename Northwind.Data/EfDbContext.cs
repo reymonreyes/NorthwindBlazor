@@ -20,8 +20,8 @@ namespace Northwind.Data
         {
             modelBuilder.Entity<Product>().ToTable("products");
             modelBuilder.Entity<Product>().HasKey(x => x.Id).HasName("pk_products");
-            modelBuilder.Entity<Product>().Property(x => x.Id).HasColumnName("product_id").HasColumnType("smallint").IsRequired(true).UseHiLo("EntityFrameworkHiLoSequence");
-            modelBuilder.Entity<Product>().Property(x => x.Name).HasColumnName("product_name").HasColumnType("character varying").IsRequired(true);
+            modelBuilder.Entity<Product>().Property(x => x.Id).HasColumnName("product_id").HasColumnType("smallint").IsRequired(true).UseHiLo("EFProductIdHiLoSequence");
+            modelBuilder.Entity<Product>().Property(x => x.Name).HasColumnName("product_name").HasColumnType("character varying").IsRequired(true);            
             modelBuilder.Entity<Product>().Property(x => x.Code).HasColumnName("code").HasColumnType("character varying").IsRequired(true);
             modelBuilder.Entity<Product>().Property(x => x.Description).HasColumnName("description").HasColumnType("text");
             modelBuilder.Entity<Product>().Property(x => x.UnitPrice).HasColumnName("unit_price").HasColumnType("real");
@@ -30,7 +30,7 @@ namespace Northwind.Data
             modelBuilder.Entity<Product>().Property(x => x.UnitsInOrder).HasColumnName("units_on_order").HasColumnType("smallint");
             modelBuilder.Entity<Product>().Property(x => x.ReorderLevel).HasColumnName("reorder_level").HasColumnType("smallint");
             modelBuilder.Entity<Product>().Property(x => x.Discontinued).HasColumnName("discontinued").HasColumnType("integer");
-
+            
             modelBuilder.Entity<Category>().ToTable("categories");
             modelBuilder.Entity<Category>().HasKey(x => x.Id).HasName("pk_categories");
             modelBuilder.Entity<Category>().Property(x => x.Id).HasColumnName("category_id").HasColumnType("smallint").UseHiLo("EFCategoryIdHiLoSequence");

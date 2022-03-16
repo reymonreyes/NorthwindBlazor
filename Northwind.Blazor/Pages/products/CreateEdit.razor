@@ -4,22 +4,16 @@
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
 @using Northwind.Core.Interfaces.Services
+@using System.Diagnostics
 @inject NavigationManager NavigationManager
 @inject IProductsService ProductsService
 
+<ErrorBoundary>
+    <ErrorContent>
+        An error occured while processing the request.
+    </ErrorContent>
+    <ChildContent>
 <EntryModePageHeader Mode="_mode" DisplayName="Product"/>
-<div class="row mb-1">
-    <div class="col-lg-6">
-    @if (_mode == EntryMode.Create)
-    {
-        <span class="h5">Create Product</span>
-    }
-    else
-    {
-        <span class="h5">Edit Product</span>
-    }
-    </div>
-</div>
 @if(_product is null)
 {
 <div>Unable to load product.</div>
@@ -100,6 +94,9 @@ else{
     </div>
 </EditForm>
 }
+    </ChildContent>
+</ErrorBoundary>
+
 @code {
     private EntryMode _mode = EntryMode.Create;
     private Product? _product;
@@ -130,18 +127,36 @@ else{
         {
             _saveButtonText = "Saving...";
 
-            switch (_mode)
+            try
             {
-                case EntryMode.Create:
-                    await ProductsService.Create(productDto);                   
-                    break;
-                case EntryMode.Edit:
-                    await ProductsService.Edit(Id, productDto);
-                    break;
+                switch (_mode)
+                {
+                    case EntryMode.Create:
+                        await ProductsService.Create(productDto);
+                        break;
+                    case EntryMode.Edit:
+                        await ProductsService.Edit(Id, productDto);
+                        break;
+                }
+                Back();
             }
-
-            _saveButtonText = "Save";
-            NavigationManager.NavigateTo("products");
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.Message);
+                Debug.WriteLine(exc.Message);
+                //add persistent logging in future
+            }
+            finally { Reset(); }
         }
+    }
+
+    private void Back()
+    {
+        NavigationManager.NavigateTo("products");
+    }
+
+    private void Reset()
+    {
+        _saveButtonText = "Save";        
     }
 }

@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Northwind.Data.Migrations
 {
     [DbContext(typeof(EfDbContext))]
-    [Migration("20220309040050_Initial")]
-    partial class Initial
+    [Migration("20220316044806_UseHiloForCategoryIdKey")]
+    partial class UseHiloForCategoryIdKey
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,8 +23,36 @@ namespace Northwind.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.HasSequence("EntityFrameworkHiLoSequence")
+            modelBuilder.HasSequence("EFCategoryIdHiLoSequence")
                 .IncrementsBy(10);
+
+            modelBuilder.HasSequence("EFProductIdHiLoSequence")
+                .IncrementsBy(10);
+
+            modelBuilder.Entity("Northwind.Core.Category", b =>
+                {
+                    b.Property<short>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasColumnName("category_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseHiLo(b.Property<short>("Id"), "EFCategoryIdHiLoSequence");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("character varying")
+                        .HasColumnName("category_name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_categories");
+
+                    b.ToTable("categories", (string)null);
+                });
 
             modelBuilder.Entity("Northwind.Core.Entities.Product", b =>
                 {
@@ -33,9 +61,10 @@ namespace Northwind.Data.Migrations
                         .HasColumnType("smallint")
                         .HasColumnName("product_id");
 
-                    NpgsqlPropertyBuilderExtensions.UseHiLo(b.Property<short>("Id"), "EntityFrameworkHiLoSequence");
+                    NpgsqlPropertyBuilderExtensions.UseHiLo(b.Property<short>("Id"), "EFProductIdHiLoSequence");
 
                     b.Property<string>("Code")
+                        .IsRequired()
                         .HasColumnType("character varying")
                         .HasColumnName("code");
 
@@ -48,11 +77,11 @@ namespace Northwind.Data.Migrations
                         .HasColumnName("discontinued");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("character varying")
                         .HasColumnName("product_name");
 
                     b.Property<string>("QuantityPerUnit")
-                        .IsRequired()
                         .HasColumnType("character varying")
                         .HasColumnName("quantity_per_unit");
 
