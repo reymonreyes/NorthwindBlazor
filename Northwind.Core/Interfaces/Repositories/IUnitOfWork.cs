@@ -9,6 +9,7 @@ namespace Northwind.Core.Interfaces.Repositories
     public interface IUnitOfWork
     {
         IProductsRepository ProductsRepository { get; }
+        ICategoriesRepository CategoriesRepository { get; }
         Task Commit();
     }
 }

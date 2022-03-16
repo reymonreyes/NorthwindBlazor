@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Northwind.Core;
 using Northwind.Core.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace Northwind.Data
     public class EfDbContext : DbContext
     {
         public DbSet<Product> Products => Set<Product>();
+        public DbSet<Category> Categories => Set<Category>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder.UseNpgsql(@"Host=localhost:5432;Username=postgres;Password=admin;Database=northwind");
 
@@ -28,6 +30,12 @@ namespace Northwind.Data
             modelBuilder.Entity<Product>().Property(x => x.UnitsInOrder).HasColumnName("units_on_order").HasColumnType("smallint");
             modelBuilder.Entity<Product>().Property(x => x.ReorderLevel).HasColumnName("reorder_level").HasColumnType("smallint");
             modelBuilder.Entity<Product>().Property(x => x.Discontinued).HasColumnName("discontinued").HasColumnType("integer");
+
+            modelBuilder.Entity<Category>().ToTable("categories");
+            modelBuilder.Entity<Category>().HasKey(x => x.Id).HasName("pk_categories");
+            modelBuilder.Entity<Category>().Property(x => x.Id).HasColumnName("category_id").HasColumnType("smallint").IsRequired(true).UseHiLo();
+            modelBuilder.Entity<Category>().Property(x => x.Name).HasColumnName("category_name").HasColumnType("character varying").IsRequired(true)
+                .HasMaxLength(15);
         }
     }
 }

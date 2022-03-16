@@ -56,6 +56,7 @@ namespace Northwind.Core.Services
             await _unitOfWork.ProductsRepository.Create(product);
             await _unitOfWork.Commit();
 
+            result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", product.Id.ToString()) });
             return result;
         }
 
