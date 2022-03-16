@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using MudBlazor.Services;
 using Northwind.Blazor.Data;
 using Northwind.Common.Validators;
 using Northwind.Core.Interfaces.Repositories;
@@ -14,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddMudServices();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<EfDbContext>();
 builder.Services.AddSingleton<IProductsService, ProductsService>();

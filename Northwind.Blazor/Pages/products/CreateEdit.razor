@@ -7,6 +7,7 @@
 @using System.Diagnostics
 @inject NavigationManager NavigationManager
 @inject IProductsService ProductsService
+@inject ISnackbar Snackbar
 
 <ErrorBoundary>
     <ErrorContent>
@@ -145,6 +146,8 @@ else{
                 Console.WriteLine(exc.Message);
                 Debug.WriteLine(exc.Message);
                 //add persistent logging in future
+                Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopEnd;
+                Snackbar.Add("Something went wrong. Please try again.", Severity.Error);
             }
             finally { Reset(); }
         }
