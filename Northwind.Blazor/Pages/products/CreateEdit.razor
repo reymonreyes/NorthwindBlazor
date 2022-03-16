@@ -133,13 +133,14 @@ else{
             switch (_mode)
             {
                 case EntryMode.Create:
-                    await ProductsService.Create(productDto);
-                    _saveButtonText = "Save";
+                    await ProductsService.Create(productDto);                   
                     break;
                 case EntryMode.Edit:
                     await ProductsService.Edit(Id, productDto);
                     break;
             }
+
+            _saveButtonText = "Save";
             NavigationManager.NavigateTo("products");
         }
     }

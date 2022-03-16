@@ -3,7 +3,7 @@ using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
 
-namespace Northwind.Core
+namespace Northwind.Core.Services
 {
     public class CategoriesService : ICategoriesService
     {

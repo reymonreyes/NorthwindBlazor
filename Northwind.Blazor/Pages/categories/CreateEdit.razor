@@ -1,8 +1,11 @@
 ﻿@page "/categories/create"
 @page "/categories/edit/{id:int}"
+@using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
+@using Northwind.Core.Interfaces.Services
 @inject NavigationManager NavigationManager
+@inject ICategoriesService CategoriesService
 
 <EntryModePageHeader Mode="_mode" DisplayName="Category"/>
 <EditForm Model="@_category" OnValidSubmit="Save">
@@ -44,8 +47,22 @@
         _category = _mode == EntryMode.Create ? new Category() : null;
     }
 
-    private void Save()
+    private async Task Save()
     {
-        
+        var categoryDto = MapperHelper.ToCategoryDto(_category);
+        if(categoryDto is not null)
+        {
+            _saveButtonText = "Saving...";
+
+            switch (_mode)
+            {
+                case EntryMode.Create:
+                    await CategoriesService.Create(categoryDto);
+                    break;
+            }
+
+            _saveButtonText = "Save";
+            NavigationManager.NavigateTo("categories");
+        }
     }
 }
