@@ -143,11 +143,10 @@ else{
             }
             catch (Exception exc)
             {
+                //add persistent logging in future
                 Console.WriteLine(exc.Message);
                 Debug.WriteLine(exc.Message);
-                //add persistent logging in future
-                Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopEnd;
-                Snackbar.Add("Something went wrong. Please try again.", Severity.Error);
+                Notify();
             }
             finally { Reset(); }
         }
@@ -161,5 +160,11 @@ else{
     private void Reset()
     {
         _saveButtonText = "Save";        
+    }
+
+    private void Notify()
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopEnd;
+        Snackbar.Add("Something went wrong. Please try again.", Severity.Error);
     }
 }
