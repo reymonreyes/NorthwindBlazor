@@ -3,23 +3,21 @@
 @using Northwind.Core.Interfaces.Services
 @inject IProductsService _productsSvc
 @page "/products"
-<div class="row mb-1">
-    <div class="col-6">
-        <span class="h5">Products</span>
-    </div>
-    <div class="col-6 text-end">
-        <NavLink href="products/create" class="btn btn-primary btn-sm">Create Product</NavLink>
-    </div>
-</div>
-<div class="row">
-    <div class="col-12">
+
+<MudPaper Elevation="5" Class="my-1">
+    <MudToolBar>
+        <MudText>Products</MudText>
+        <MudSpacer/>
+        <MudButton Link="products/create" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Create Product</MudButton>
+    </MudToolBar>
+</MudPaper>
 @if(_products is null)
 {
     <div>Loading...</div>   
 }
 else
 {   
-<table class="table table-bordered table-striped table-sm">
+<MudSimpleTable Style="overflow-x: auto;" Dense="true" Hover="true" Bordered="true">
     <thead>
         <tr class="text-center">
             <th>Name</th><th>Code</th><th>Unit Price</th><th>Description</th>
@@ -36,10 +34,8 @@ else
             </tr>
         }
     </tbody>
-</table>
+</MudSimpleTable>
 }
-    </div>
-</div>
 @code {
     private ICollection<ProductDto>? _products;
 
