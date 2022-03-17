@@ -9,94 +9,36 @@
 @inject IProductsService ProductsService
 @inject ISnackbar Snackbar
 
-<ErrorBoundary>
-    <ErrorContent>
-        An error occured while processing the request.
-    </ErrorContent>
-    <ChildContent>
-<EntryModePageHeader Mode="_mode" DisplayName="Product"/>
+<MudPaper Elevation="2" Class="my-1">
+    <MudToolBar>
+        <MudText><EntryModePageHeader Mode="_mode" DisplayName="Product"/></MudText>        
+    </MudToolBar>
+</MudPaper>
+
 @if(_product is null)
 {
 <div>Unable to load product.</div>
 }
 else{
 <EditForm Model="@_product" OnValidSubmit="Save">
-    <DataAnnotationsValidator/>
-    <div class="row mb-3">
-        <label class="col-2" for="name">Name</label>
-        <div class="col-10">
-            <InputText @bind-Value="_product.Name" class="form-control" id="name"/>
-            <ValidationMessage For="@(() => _product.Name)"/>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label class="col-2" for="code">Code</label>
-        <div class="col-10">
-            <InputText @bind-Value="_product.Code" class="form-control" />
-            <ValidationMessage For="@(() => _product.Code)"/>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label class="col-2" for="code">Quantity Per Unit</label>
-        <div class="col-10">
-            <InputText @bind-Value="_product.QuantityPerUnit" class="form-control" />
-            <ValidationMessage For="@(() => _product.QuantityPerUnit)"/>
-        </div>
-    </div>
-        <div class="row mb-3">
-        <label class="col-2" for="code">Unit Price</label>
-        <div class="col-10">            
-            <InputNumber @bind-Value="_product.UnitPrice" class="form-control" />
-            <ValidationMessage For="@(() => _product.UnitPrice)"/>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label class="col-2" for="code">Units In Stock</label>
-        <div class="col-10">
-            <InputNumber @bind-Value="_product.UnitsInStock" class="form-control" />
-            <ValidationMessage For="@(() => _product.UnitsInStock)"/>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label class="col-2" for="code">Units On Order</label>
-        <div class="col-10">
-            <InputNumber @bind-Value="_product.UnitsOnOrder" class="form-control" />
-            <ValidationMessage For="@(() => _product.UnitsOnOrder)"/>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label class="col-2" for="code">Reorder Level</label>
-        <div class="col-10">
-            <InputNumber @bind-Value="_product.ReorderLevel" class="form-control" />
-            <ValidationMessage For="@(() => _product.ReorderLevel)"/>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label class="col-2" for="discontinued">Discontinued</label>
-        <div class="col-10">
-            <InputCheckbox @bind-Value="_product.Discontinued" class="form-check-input" id="discontinued"/>
-            <ValidationMessage For="@(() => _product.Discontinued)"/>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label class="col-2">Description</label>
-        <div class="col-10">
-            <InputTextArea @bind-Value="_product.Description" class="form-control" />
-            <ValidationMessage For="@(() => _product.Description)"/>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12 text-end">
-            <NavLink href="products" class="btn btn-secondary">Cancel</NavLink>
-            <button class="btn btn-primary" type="submit">
-                @_saveButtonText
-            </button>
-        </div>
-    </div>
+    <MudGrid>
+        <MudItem lg="6" sm="12" xs="12">
+                <DataAnnotationsValidator/>
+                <MudTextField Label="Name" @bind-Value="_product.Name" For="@(() => _product.Name)"/>
+                <MudTextField Label="Code" @bind-Value="_product.Code" For="@(() => _product.Code)"/>
+                <MudTextField Label="Quantity Per Unit" @bind-Value="_product.QuantityPerUnit" For="@(() => _product.QuantityPerUnit)"/>
+                <MudNumericField Label="Unit Price" @bind-Value="_product.UnitPrice" For="@(() => _product.UnitPrice)" />
+                <MudNumericField Label="Units In Stock" @bind-Value="_product.UnitsInStock" For="@(() => _product.UnitsInStock)" />
+                <MudNumericField Label="Units On Order" @bind-Value="_product.UnitsOnOrder" For="@(() => _product.UnitsOnOrder)" />
+                <MudNumericField Label="Reorder Level" @bind-Value="_product.ReorderLevel" For="@(() => _product.ReorderLevel)" />
+                <MudTextField T="string" Label="Description"  Text="@_product.Description" Lines="3" Variant="Variant.Outlined"/>
+            <div class="d-flex justify-end mt-2">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">@_saveButtonText</MudButton>
+            </div>    
+        </MudItem>
+    </MudGrid>
 </EditForm>
 }
-    </ChildContent>
-</ErrorBoundary>
 
 @code {
     private EntryMode _mode = EntryMode.Create;
@@ -139,6 +81,7 @@ else{
                         await ProductsService.Edit(Id, productDto);
                         break;
                 }
+                Notify("Product created successfully.", true);
                 Back();
             }
             catch (Exception exc)
@@ -146,7 +89,7 @@ else{
                 //add persistent logging in future
                 Console.WriteLine(exc.Message);
                 Debug.WriteLine(exc.Message);
-                Notify();
+                Notify("Something went wrong. Please try again.", false);
             }
             finally { Reset(); }
         }
@@ -159,12 +102,12 @@ else{
 
     private void Reset()
     {
-        _saveButtonText = "Save";        
+        _saveButtonText = "Save";
     }
 
-    private void Notify()
+    private void Notify(string message, bool isSuccessful)
     {
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopEnd;
-        Snackbar.Add("Something went wrong. Please try again.", Severity.Error);
+        Snackbar.Add(message, isSuccessful ? Severity.Success : Severity.Error);
     }
 }

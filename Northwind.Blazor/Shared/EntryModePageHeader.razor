@@ -1,17 +1,7 @@
 ﻿@using Northwind.Common.Enums
-<div class="row mb-1">
-    <div class="col-lg-6">
-        <span class="h5">@string.Format("{0} {1}", GetModeName(Mode), DisplayName)</span>
-    @*@if (Mode == EntryMode.Create)
-    {
-        <span class="h5">@string.Format("{0} {1}", GetModeName(Mode), DisplayName)</span>
-    }
-    else
-    {
-        <span class="h5">Edit Product</span>
-    }*@
-    </div>
-</div>
+
+@string.Format("{0} {1}", GetModeName(Mode), DisplayName)
+
 @code {
     [Parameter]
     public EntryMode Mode { get; set; }
