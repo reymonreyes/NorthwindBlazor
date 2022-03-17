@@ -1,13 +1,16 @@
 ﻿@page "/categories"
-<div class="row mb-1">
-    <div class="col-6">
-        <span class="h5">Categories</span>
-    </div>
-    <div class="col-6 text-end">
-        <NavLink href="categories/create" class="btn btn-primary btn-sm">Create Category</NavLink>
-    </div>
-</div>
+@using Northwind.Core.Dtos
+@using Northwind.Core.Interfaces.Services
+@inject ICategoriesService CategoriesService
+
+<MudPaper Elevation="2" Class="my-1">
+    <MudToolBar>
+        <MudText>Categories</MudText>
+        <MudSpacer/>
+        <MudButton Link="categories/create" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Create Category</MudButton>
+    </MudToolBar>
+</MudPaper>
 
 @code {
-
+    
 }
