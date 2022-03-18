@@ -12,8 +12,8 @@ namespace Northwind.Data.Migrations
         {            
             migrationBuilder.CreateSequence(
                 name: "EFCategoryIdHiLoSequence",
-                incrementBy: 100,
-                startValue: 1);                       
+                incrementBy: 1,
+                startValue: 9);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
