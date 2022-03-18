@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Northwind.Core;
+using Northwind.Core.Dtos;
 using Northwind.Core.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,13 @@ namespace Northwind.Data.Repositories
         public async Task Create(Category category)
         {
             await _dbContext.Categories.AddAsync(category);            
+        }
+
+        public async Task<Category?> Get(int categoryId)
+        {
+            var result = await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == categoryId);
+            
+            return result;
         }
 
         public async Task<ICollection<Category>> GetAll()

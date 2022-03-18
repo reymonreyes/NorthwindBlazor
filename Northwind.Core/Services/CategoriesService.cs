@@ -43,15 +43,14 @@ namespace Northwind.Core.Services
             return result;
         }
 
-        public async Task<ICollection<CategoryDto>> GetAll()
+        public async Task<Category?> Get(int categoryId)
         {
-            var categories = await _unitOfWork.CategoriesRepository.GetAll();
-            return categories.Select(category => new CategoryDto
-            {
-                Id = category.Id,
-                Name = category.Name,
-                Description= category.Description
-            }).ToList();
+            return await _unitOfWork.CategoriesRepository.Get(categoryId);
+        }
+
+        public async Task<ICollection<Category>> GetAll()
+        {
+            return await _unitOfWork.CategoriesRepository.GetAll();
         }
     }
 }

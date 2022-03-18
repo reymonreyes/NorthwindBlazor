@@ -4,6 +4,7 @@
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
 @using Northwind.Core.Interfaces.Services
+@using System.Diagnostics
 @inject NavigationManager NavigationManager
 @inject ICategoriesService CategoriesService
 @inject ISnackbar Snackbar
@@ -50,16 +51,28 @@
         {
             _saveButtonText = "Saving...";
 
-            switch (_mode)
+            try
             {
-                case EntryMode.Create:
-                    await CategoriesService.Create(categoryDto);
-                    Notify("Category created successfully.", true);
-                    break;
-            }
+                switch (_mode)
+                {
+                    case EntryMode.Create:
+                        await CategoriesService.Create(categoryDto);
+                        Notify("Category created successfully.", true);
+                        break;
+                }
 
-            _saveButtonText = "Save";
-            NavigationManager.NavigateTo("categories");
+                NavigationManager.NavigateTo("categories");
+            }
+            catch(Exception exc)
+            {
+                Console.WriteLine(exc.Message);
+                Debug.WriteLine(exc.Message);
+                Notify("Something went wrong. Please try again.", false);
+            }
+            finally
+            {
+                _saveButtonText = "Save";                
+            }
         }
     }
 

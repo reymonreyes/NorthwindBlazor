@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Northwind.Core.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,6 @@ namespace Northwind.Core.Interfaces.Repositories
     {
         Task Create(Category category);
         Task<ICollection<Category>> GetAll();
+        Task<Category?> Get(int categoryId);
     }
 }
