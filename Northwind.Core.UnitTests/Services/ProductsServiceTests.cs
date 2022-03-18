@@ -1,6 +1,7 @@
 ﻿using Autofac.Extras.Moq;
 using Moq;
 using Northwind.Core.Dtos;
+using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
@@ -42,6 +43,17 @@ namespace Northwind.Core.UnitTests.Services
             var result = await productsService.Create(product);
 
             validatorMock.Verify(x => x.Validate(product), Times.Once);
+        }
+        
+        [Fact]
+        public async Task Create_ShouldReturnIdIfSuccessful()
+        {
+            var mock = AutoMock.GetLoose();
+            var productsRepo = mock.Mock<IProductsRepository>();
+            mock.Mock<IUnitOfWork>().Setup(x => x.ProductsRepository).Returns(productsRepo.Object);
+            var productsSvc = mock.Create<ProductsService>();
+            var result = await productsSvc.Create(new ProductDto { Name = "Aniseed", Code = "ANSD" });
+            Assert.True(result.IsSuccessful);
         }
 
         private IProductsService GetMock()

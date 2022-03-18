@@ -1,4 +1,4 @@
-﻿namespace Northwind.Core
+﻿namespace Northwind.Core.Entities
 {
     public class Category
     {

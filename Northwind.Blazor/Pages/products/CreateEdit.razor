@@ -17,7 +17,7 @@
 
 @if(_product is null)
 {
-<div>Unable to load product.</div>
+<MudAlert Severity="Severity.Error">Unable to load product.</MudAlert>
 }
 else{
 <EditForm Model="@_product" OnValidSubmit="Save">

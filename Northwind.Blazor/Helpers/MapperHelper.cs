@@ -32,5 +32,14 @@ namespace Northwind.Blazor.Helpers
             TinyMapper.Bind<Category, CategoryDto>();
             return TinyMapper.Map<CategoryDto>(category);
         }
+
+        public static Category? ToCategory(CategoryDto? categoryDto)
+        {
+            if (categoryDto is null)
+                return null;
+
+            TinyMapper.Bind<CategoryDto, Category>();
+            return TinyMapper.Map<Category>(categoryDto);
+        }
     }
 }

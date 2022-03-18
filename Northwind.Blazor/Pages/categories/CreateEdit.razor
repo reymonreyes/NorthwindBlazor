@@ -11,11 +11,15 @@
 
 <MudPaper Elevation="2" Class="my-1">
     <MudToolBar>
-        <MudText><EntryModePageHeader Mode="_mode" DisplayName="Product"/></MudText>        
+        <MudText><EntryModePageHeader Mode="_mode" DisplayName="Category"/></MudText>        
     </MudToolBar>
 </MudPaper>
 
-@if (_category != null)
+@if (_category is null)
+{
+    <MudAlert Severity="Severity.Error">Unable to load category.</MudAlert>
+}
+else
 {
 <EditForm Model="@_category" OnValidSubmit="Save">
     <DataAnnotationsValidator/>
@@ -38,10 +42,19 @@
     [Parameter]
     public int Id { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         _mode = NavigationManager.Uri.Contains("create") ? EntryMode.Create : EntryMode.Edit;
-        _category = _mode == EntryMode.Create ? new Category() : null;
+        switch (_mode)
+        {
+            case EntryMode.Create:
+                _category = new Category();
+                break;
+            case EntryMode.Edit:
+                var category = await CategoriesService.Get(Id);
+                _category = MapperHelper.ToCategory(category);
+                break;
+        }
     }
 
     private async Task Save()
@@ -58,6 +71,9 @@
                     case EntryMode.Create:
                         await CategoriesService.Create(categoryDto);
                         Notify("Category created successfully.", true);
+                        break;
+                    case EntryMode.Edit:
+                        //await CategoriesService
                         break;
                 }
 

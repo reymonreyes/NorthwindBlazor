@@ -1,4 +1,5 @@
 ﻿using Northwind.Core.Dtos;
+using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
@@ -43,14 +44,38 @@ namespace Northwind.Core.Services
             return result;
         }
 
-        public async Task<Category?> Get(int categoryId)
+        public Task Edit(int categoryId, CategoryDto? categoryDto)
         {
-            return await _unitOfWork.CategoriesRepository.Get(categoryId);
+            var x = 1;
+            return Task.CompletedTask;
         }
 
-        public async Task<ICollection<Category>> GetAll()
+        public async Task<CategoryDto?> Get(int categoryId)
         {
-            return await _unitOfWork.CategoriesRepository.GetAll();
+            var category = await _unitOfWork.CategoriesRepository.Get(categoryId);
+            if (category == null)
+                return null;
+
+            return new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description
+            };
         }
+
+        public async Task<ICollection<CategoryDto>> GetAll()
+        {
+            var categories = await _unitOfWork.CategoriesRepository.GetAll();
+
+            return categories.Select(x => new CategoryDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description
+            }).ToList();
+        }
+
+
     }
 }
