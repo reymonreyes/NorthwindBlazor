@@ -33,7 +33,7 @@ namespace Northwind.Data
             
             modelBuilder.Entity<Category>().ToTable("categories");
             modelBuilder.Entity<Category>().HasKey(x => x.Id).HasName("pk_categories");
-            modelBuilder.Entity<Category>().Property(x => x.Id).HasColumnName("category_id").HasColumnType("smallint").UseHiLo("EFCategoryIdHiLoSequence");
+            modelBuilder.Entity<Category>().Property(x => x.Id).HasColumnName("category_id").HasColumnType("smallint").IsRequired(true).UseHiLo("EFCategoryIdHiLoSequence");
             modelBuilder.Entity<Category>().Property(x => x.Name).HasColumnName("category_name").HasColumnType("character varying").IsRequired(true)
                 .HasMaxLength(15);
             modelBuilder.Entity<Category>().Property(x => x.Description).HasColumnName("description").HasColumnType("text");
