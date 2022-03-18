@@ -6,6 +6,7 @@
 @using Northwind.Core.Interfaces.Services
 @inject NavigationManager NavigationManager
 @inject ICategoriesService CategoriesService
+@inject ISnackbar Snackbar
 
 <MudPaper Elevation="2" Class="my-1">
     <MudToolBar>
@@ -53,11 +54,18 @@
             {
                 case EntryMode.Create:
                     await CategoriesService.Create(categoryDto);
+                    Notify("Category created successfully.", true);
                     break;
             }
 
             _saveButtonText = "Save";
             NavigationManager.NavigateTo("categories");
         }
+    }
+
+    private void Notify(string message, bool isSuccessful)
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopEnd;
+        Snackbar.Add(message, isSuccessful ? Severity.Success : Severity.Error);
     }
 }
