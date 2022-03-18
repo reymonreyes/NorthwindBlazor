@@ -42,5 +42,16 @@ namespace Northwind.Core.Services
             result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", category.Id.ToString()) });
             return result;
         }
+
+        public async Task<ICollection<CategoryDto>> GetAll()
+        {
+            var categories = await _unitOfWork.CategoriesRepository.GetAll();
+            return categories.Select(category => new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description= category.Description
+            }).ToList();
+        }
     }
 }

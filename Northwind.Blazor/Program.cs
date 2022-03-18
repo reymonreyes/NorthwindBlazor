@@ -17,10 +17,10 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
 builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddSingleton<EfDbContext>();
-builder.Services.AddSingleton<IProductsService, ProductsService>();
-builder.Services.AddSingleton<ICategoriesService, CategoriesService>();
-builder.Services.AddSingleton<IUnitOfWork, EfUnitOfWork>();
+builder.Services.AddTransient<EfDbContext>();
+builder.Services.AddTransient<IProductsService, ProductsService>();
+builder.Services.AddTransient<ICategoriesService, CategoriesService>();
+builder.Services.AddTransient<IUnitOfWork, EfUnitOfWork>();
 builder.Services.AddSingleton<IProductValidator, ProductValidator>();
 builder.Services.AddSingleton<ICategoryValidator, CategoryValidator>();
 

@@ -9,5 +9,6 @@ namespace Northwind.Core.Interfaces.Repositories
     public interface ICategoriesRepository
     {
         Task Create(Category category);
+        Task<ICollection<Category>> GetAll();
     }
 }

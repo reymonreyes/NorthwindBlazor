@@ -10,5 +10,6 @@ namespace Northwind.Core.Interfaces.Services
     public interface ICategoriesService
     {
         Task<ServiceResult> Create(CategoryDto? categoryDto);
+        Task<ICollection<CategoryDto>> GetAll();
     }
 }

@@ -11,6 +11,36 @@
     </MudToolBar>
 </MudPaper>
 
+@if(_categories is null)
+{
+    <div>Loading...</div>
+}
+else
+{
+<MudSimpleTable Style="overflow-x: auto;" Dense="true" Hover="true" Bordered="true">
+    <thead>
+        <tr class="text-center">
+            <th>Name</th><th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in _categories)
+        {
+            <tr>               
+                <td>@category.Name</td>
+                <td>@category.Description</td>
+            </tr>
+        }
+    </tbody>
+</MudSimpleTable>
+}
 @code {
-    
+    private ICollection<CategoryDto>? _categories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var getAllTask = CategoriesService.GetAll();
+        var categories = await getAllTask;
+        _categories = categories;
+    }
 }
