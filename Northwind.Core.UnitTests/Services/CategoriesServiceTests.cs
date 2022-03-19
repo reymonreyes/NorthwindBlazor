@@ -1,6 +1,8 @@
 ﻿using Autofac.Extras.Moq;
 using Moq;
 using Northwind.Core.Dtos;
+using Northwind.Core.Entities;
+using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
 using Northwind.Core.Services;
@@ -55,6 +57,42 @@ namespace Northwind.Core.UnitTests.Services
             ICategoriesService categoriesService = mock.Create<CategoriesService>();
             var result = await categoriesService.Create(new CategoryDto());
             Assert.False(result.IsSuccessful);
+        }
+
+        [Fact]
+        [Trait("CRUD", "Edit")]
+        public async Task Edit_ShouldThrowExceptionIfInputIsNull()
+        {           
+            ICategoriesService categoriesService = GetCategoriesServiceMock();
+            await Assert.ThrowsAsync<ArgumentNullException>(() => categoriesService.Edit(1, null));
+        }
+
+        [Fact]
+        [Trait("CRUD", "Edit")]
+        public async Task Edit_ShouldThrowExceptionIfInvalidId()
+        {
+            ICategoriesService categoriesService = GetCategoriesServiceMock();
+            var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => categoriesService.Edit(0, null));
+            Assert.True(exception.ParamName == "categoryId");
+        }
+
+        [Fact]
+        [Trait("CRUD", "Edit")]
+        public async Task Edit_ShouldThrowExceptionCategoryNotFound()
+        {
+            var mock = AutoMock.GetLoose();
+            var categoriesRepo = mock.Mock<ICategoriesRepository>();
+            categoriesRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Category?)null);
+            mock.Mock<IUnitOfWork>().Setup(x => x.CategoriesRepository).Returns(categoriesRepo.Object);
+            ICategoriesService categoriesService = mock.Create<CategoriesService>();
+            var exception = await Assert.ThrowsAsync<Exception>(() => categoriesService.Edit(1, new CategoryDto { Name = "Beverage", Description = "Test" }));
+            Assert.True(exception.Message == "not found");
+        }
+
+        private ICategoriesService GetCategoriesServiceMock()
+        {
+            var mock = AutoMock.GetLoose();
+            return mock.Create<CategoriesService>();
         }
     }
 }

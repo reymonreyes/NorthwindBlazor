@@ -44,10 +44,20 @@ namespace Northwind.Core.Services
             return result;
         }
 
-        public Task Edit(int categoryId, CategoryDto? categoryDto)
+        public async Task Edit(int categoryId, CategoryDto? categoryDto)
         {
-            var x = 1;
-            return Task.CompletedTask;
+            if(categoryId <= 0)
+                throw new ArgumentOutOfRangeException("categoryId");
+            if(categoryDto is null)
+                throw new ArgumentNullException("category");
+
+            var category = await _unitOfWork.CategoriesRepository.Get(categoryId);
+            if (category is null)
+                throw new Exception("not found");
+
+            category.Name = categoryDto.Name;
+            category.Description = categoryDto.Description;
+            await _unitOfWork.Commit();
         }
 
         public async Task<CategoryDto?> Get(int categoryId)
