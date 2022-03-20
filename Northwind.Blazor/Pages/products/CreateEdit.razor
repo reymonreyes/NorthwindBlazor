@@ -33,6 +33,7 @@ else{
                 <MudNumericField Label="Reorder Level" @bind-Value="_product.ReorderLevel" For="@(() => _product.ReorderLevel)" />
                 <MudTextField T="string" Label="Description"  Text="@_product.Description" Lines="3" Variant="Variant.Outlined"/>
             <div class="d-flex justify-end mt-2">
+                <MudButton Link="products" Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Small" Class="mr-1">Cancel</MudButton>
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">@_saveButtonText</MudButton>
             </div>    
         </MudItem>

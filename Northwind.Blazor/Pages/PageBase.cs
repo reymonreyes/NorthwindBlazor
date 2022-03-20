@@ -6,7 +6,7 @@ namespace Northwind.Blazor.Pages
     public class PageBase : ComponentBase
     {
         [Inject]
-        public ISnackbar Snackbar { get; set; }
+        public ISnackbar Snackbar { get; set; } = default!;
 
         public bool IsLoading { get; set; }
         public bool HasError { get; set; }

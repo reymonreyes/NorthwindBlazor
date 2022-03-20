@@ -25,10 +25,11 @@ namespace Northwind.Data.Repositories
             await _dbContext.Products.AddAsync(product);
         }
 
-        public async Task<ProductDto?> Get(int productId)
+        public async Task<Product?> Get(int productId)
         {
-            Product? product = await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == productId);
-            return ObjectMapperHelper.ToProductDto(product);
+            return await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == productId);
+            //Product? product = await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == productId);
+            //return ObjectMapperHelper.ToProductDto(product);
         }
 
         public async Task<ICollection<Product>> GetAll()

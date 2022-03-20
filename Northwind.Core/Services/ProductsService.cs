@@ -60,18 +60,57 @@ namespace Northwind.Core.Services
             return result;
         }
 
-        public async Task Edit(int id, ProductDto productDto)
+        public async Task<ServiceResult> Edit(int id, ProductDto productDto)
         {
             if (productDto == null)
-                return;
+                throw new ArgumentNullException("product");
+            if(id <= 0)
+                throw new ArgumentOutOfRangeException("id");
 
-            await _unitOfWork.ProductsRepository.Create(new Product { Id = id });
+            var product = await _unitOfWork.ProductsRepository.Get(id);
+            if (product is null)
+                throw new Exception("not found");
+
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
+
+            product.Name = productDto.Name;
+            product.Code = productDto.Code;
+            product.UnitPrice = productDto.UnitPrice;
+            product.QuantityPerUnit = productDto.QuantityPerUnit;
+            product.UnitsInStock = productDto.UnitsInStock;
+            product.UnitsInOrder = productDto.UnitsInOrder;
+            product.ReorderLevel = productDto.ReorderLevel;
+            product.Discontinued = productDto.Discontinued;
+            product.Description = productDto.Description;
+
             await _unitOfWork.Commit();
+            result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", product.Id.ToString()) });
+
+            return result;
         }
 
         public async Task<ProductDto?> Get(int productId)
         {
-            return await _unitOfWork.ProductsRepository.Get(productId);
+            ProductDto? result = null;
+            var product = await _unitOfWork.ProductsRepository.Get(productId);
+            if(product is not null)
+            {
+                result = new ProductDto
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Code = product.Code,
+                    UnitPrice = product.UnitPrice,
+                    QuantityPerUnit = product.QuantityPerUnit,
+                    UnitsInStock = product.UnitsInStock,
+                    UnitsInOrder = product.UnitsInOrder,
+                    ReorderLevel = product.ReorderLevel,
+                    Discontinued = product.Discontinued,
+                    Description = product.Description
+                };
+            }
+
+            return result;
         }
 
         public async Task<ICollection<ProductDto>> GetAll()

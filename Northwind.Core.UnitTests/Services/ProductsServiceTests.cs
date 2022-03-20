@@ -46,13 +46,68 @@ namespace Northwind.Core.UnitTests.Services
         }
         
         [Fact]
-        public async Task Create_ShouldReturnIdIfSuccessful()
+        public async Task Create_ShouldReturnIsSuccessfulIfSuccessful()
         {
             var mock = AutoMock.GetLoose();
             var productsRepo = mock.Mock<IProductsRepository>();
             mock.Mock<IUnitOfWork>().Setup(x => x.ProductsRepository).Returns(productsRepo.Object);
             var productsSvc = mock.Create<ProductsService>();
             var result = await productsSvc.Create(new ProductDto { Name = "Aniseed", Code = "ANSD" });
+            Assert.True(result.IsSuccessful);
+        }
+
+        [Fact]
+        public async Task Edit_ShouldThrowExceptionIfInputIsNull()
+        {
+            var mock = AutoMock.GetLoose();
+            var productsService = mock.Create<ProductsService>();
+            await Assert.ThrowsAsync<ArgumentNullException>(() => productsService.Edit(It.IsAny<int>(), It.IsAny<ProductDto>()));
+        }
+
+        [Fact]
+        public async Task Edit_ShouldThrowExceptionIfInvalidId()
+        {
+            var mock = AutoMock.GetLoose();
+            var productsService = mock.Create<ProductsService>();
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => productsService.Edit(0, new ProductDto()));
+        }
+
+        [Fact]
+        public async Task Edit_ShouldThrowExceptionIfProductDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var productsRepoMock = mock.Mock<IProductsRepository>();
+            productsRepoMock.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Product?)null);
+            var uowMock = mock.Mock<IUnitOfWork>();
+            uowMock.Setup(x => x.ProductsRepository).Returns(productsRepoMock.Object);
+            var productsService = mock.Create<ProductsService>();
+            var result = await Assert.ThrowsAsync<Exception>(() => productsService.Edit(1, new ProductDto()));
+            Assert.True(result.Message == "not found");
+        }
+
+        [Fact]
+        public async Task Edit_ShouldReturnIsSuccessfulIfUpdateWasSuccessful()
+        {
+            var productDto = new ProductDto
+            {
+                Id = 1,
+                Name = "Product 1",
+                Code = "PRD1"
+            };
+            var product = new Product
+            {
+                Id = 1,
+                Name = "Product 1",
+                Code = "PRD1"
+            };
+
+            var mock = AutoMock.GetLoose();
+            var productsRepoMock = mock.Mock<IProductsRepository>();
+            productsRepoMock.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync(product);
+            var uowMock = mock.Mock<IUnitOfWork>();
+            uowMock.Setup(x => x.ProductsRepository).Returns(productsRepoMock.Object);
+            var productsService = mock.Create<ProductsService>();
+            var result = await productsService.Edit(1, productDto);
             Assert.True(result.IsSuccessful);
         }
 
