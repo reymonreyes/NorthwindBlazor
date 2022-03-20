@@ -3,66 +3,71 @@
 @using Northwind.Blazor.Models
 @using Northwind.Core.Dtos
 @using Northwind.Core.Interfaces.Services
+@inherits PageBase
 @inject IProductsService ProductsService
 
-<div class="row mb-1">
-    <div class="col-6">
-        <span class="h5"><NavLink href="products"><span class="oi oi-chevron-left"></span></NavLink> Product Details</span>
-    </div>
-</div>
+<MudPaper Elevation="1" Class="my-1">
+    <MudToolBar>
+        <MudIconButton Icon="@Icons.Filled.ChevronLeft" Link="products"></MudIconButton>
+        <MudText>Product Details</MudText>
+    </MudToolBar>
+</MudPaper>
 
-<div class="row">
-    <div class="col-lg-6">
-        @if (_product is null)
-        {
-            <div>Loading...</div>
-        }
-        else
-        {
-            <div class="row">
-                <div class="col-2"><label>Name</label></div>
-                <div class="col-10">@_product.Name</div>
-            </div>
-            <div class="row">
-                <div class="col-2"><label>Code</label></div>
-                <div class="col-10">@_product.Code</div>
-            </div>
-            <div class="row">
-                <div class="col-2"><label>Unit Price</label></div>
-                <div class="col-10">@_product.UnitPrice.ToString("C")</div>
-            </div>
-            <div class="row mb-2">
-                <label class="col-2" for="code">Quantity per Unit</label>
-                <div class="col-10">@_product.UnitsInStock</div>
-            </div>
-            <div class="row mb-2">
-                <label class="col-2" for="code">Units In Stock</label>
-                <div class="col-10">@_product.UnitsInStock</div>
-            </div>
-            <div class="row mb-2">
-                <label class="col-2" for="code">Units On Order</label>
-                <div class="col-10">@_product.UnitsOnOrder</div>
-            </div>
-            <div class="row mb-2">
-                <label class="col-2" for="code">Reorder Level</label>
-                <div class="col-10">@_product.ReorderLevel</div>
-            </div>
-            <div class="row mb-2">
-                <label class="col-2" for="discontinued">Discontinued</label>
-                <div class="col-10"><DisplayBoolean Value="_product.Discontinued"/></div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-2"><label>Description</label></div>
-                <div class="col-10">@_product.Description</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-2">
-                    <NavLink href="@(String.Format("products/edit/{0}", _product.Id))" class="btn btn-primary btn-sm">Edit Product</NavLink>
-                </div>
-            </div>
-        }
-    </div>
-</div>
+@if (IsLoading)
+{
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+}
+@if(_product is not null)
+{
+    <MudGrid Class="mt-1">
+        <MudItem xs="12" md="12" lg="6" xl="6">
+            <MudPaper Class="px-2">
+                <MudGrid>
+                    <MudItem xs="3" md="3" lg="3"><MudText Style="font-weight: bold;">Name</MudText></MudItem>
+                    <MudItem xs="9" md="9" lg="9"><MudText>@_product.Name</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="3" lg="3"><MudText Style="font-weight: bold;">Code</MudText></MudItem>
+                    <MudItem xs="9" md="9" lg="9"><MudText>@_product.Code</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="3" lg="3"><MudText Style="font-weight: bold;">Quantity Per Unit</MudText></MudItem>
+                    <MudItem xs="9" md="9" lg="9"><MudText>@_product.QuantityPerUnit</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="3" lg="3"><MudText Style="font-weight: bold;">Unit Price</MudText></MudItem>
+                    <MudItem xs="9" md="9" lg="9"><MudText>@_product.UnitPrice.ToString("C")</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="3" lg="3"><MudText Style="font-weight: bold;">Units In Stock</MudText></MudItem>
+                    <MudItem xs="9" md="9" lg="9"><MudText>@_product.UnitsInStock</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="3" lg="3"><MudText Style="font-weight: bold;">Units On Order</MudText></MudItem>
+                    <MudItem xs="9" md="9" lg="9"><MudText>@_product.UnitsOnOrder</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="3" lg="3"><MudText Style="font-weight: bold;">Reorder Level</MudText></MudItem>
+                    <MudItem xs="9" md="9" lg="9"><MudText>@_product.ReorderLevel</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="3" lg="3"><MudText Style="font-weight: bold;">Discontinued</MudText></MudItem>
+                    <MudItem xs="9" md="9" lg="9"><MudText><DisplayBoolean Value="_product.Discontinued"></DisplayBoolean></MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="3" lg="3"><MudText Style="font-weight: bold;">Description</MudText></MudItem>
+                    <MudItem xs="9" md="9" lg="9"><MudText>@_product.Description</MudText></MudItem>
+                </MudGrid>
+                <MudDivider DividerType="DividerType.FullWidth" Class="my-1"/>
+                <MudGrid>
+                    <MudItem xs="12" md="12" lg="12" Class="d-flex justify-end">
+                        <MudButton Link="@String.Format("products/edit/{0}", _product.Id)" Variant="Variant.Filled" Color="Color.Primary">Edit</MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>                
+    </MudGrid>
+}
 @code {
     private Product? _product = null;
 
@@ -71,7 +76,15 @@
 
     protected override async Task OnInitializedAsync()
     {
+        IsLoading = true;
         var productDto = await ProductsService.Get(Id);
+        IsLoading = false;
+        if(productDto is null)
+        {
+            Notify("Product not found.", Severity.Error);
+            return;
+        }
+
         _product = MapperHelper.ToProduct(productDto);
     }
 }
