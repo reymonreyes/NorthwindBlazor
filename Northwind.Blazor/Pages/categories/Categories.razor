@@ -27,7 +27,7 @@ else
         @foreach (var category in _categories)
         {
             <tr>               
-                <td>@category.Name</td>
+                <td><NavLink href="@string.Format("categories/{0}", category.Id)">@category.Name</NavLink></td>
                 <td>@category.Description</td>
             </tr>
         }

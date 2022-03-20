@@ -1,0 +1,68 @@
+﻿@page "/categories/{id:int}"
+@using Northwind.Blazor.Helpers
+@using Northwind.Blazor.Models
+@using Northwind.Core.Dtos
+@using Northwind.Core.Interfaces.Services
+@using System.Diagnostics
+@inject ICategoriesService CategoriesService
+@inject ISnackbar Snackbar
+
+
+<MudPaper Elevation="1" Class="my-5">
+    <MudToolBar>
+        <MudIconButton Icon="@Icons.Filled.ChevronLeft" Link="categories"></MudIconButton>
+        <MudText>Category Details</MudText>
+    </MudToolBar>
+</MudPaper>
+
+@if (_isLoading)
+{
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+}
+
+@if (_category is null)
+{
+    <div>Category not found</div>
+}
+else
+{
+    
+    <MudGrid>
+        <MudItem xs="12" md="12" lg="6" xl="6">
+            <MudPaper Class="px-2">
+                <MudGrid>
+                    <MudItem xs="2" md="2" lg="2"><MudText Style="font-weight: bold;">Name</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_category.Name</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="2" md="2" lg="2"><MudText Style="font-weight: bold;">Description</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_category.Description</MudText></MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>                
+    </MudGrid>
+    
+}
+
+@code {
+    private Category? _category = null;
+    private bool _isLoading = true;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+
+        var categoryDto = await CategoriesService.Get(Id);
+        _isLoading = false;        
+
+        if (categoryDto is null){
+            Snackbar.Add("Category not found.", Severity.Error);
+            return;
+        }
+
+        _category = MapperHelper.ToCategory(categoryDto);
+    }    
+}
