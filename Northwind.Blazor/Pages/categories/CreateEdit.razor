@@ -73,10 +73,13 @@ else
                         Notify("Category created successfully.", true);
                         break;
                     case EntryMode.Edit:
-                        //await CategoriesService
+                        var category = MapperHelper.ToCategoryDto(_category);
+                        if (category is not null)
+                            await CategoriesService.Edit(category.Id, category);
+
                         break;
                 }
-
+                Notify("Category updated successfully.", true);
                 NavigationManager.NavigateTo("categories");
             }
             catch(Exception exc)
@@ -87,7 +90,7 @@ else
             }
             finally
             {
-                _saveButtonText = "Save";                
+                _saveButtonText = "Save";
             }
         }
     }
