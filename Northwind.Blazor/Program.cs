@@ -20,6 +20,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTransient<EfDbContext>();
 builder.Services.AddTransient<IProductsService, ProductsService>();
 builder.Services.AddTransient<ICategoriesService, CategoriesService>();
+builder.Services.AddTransient<ISuppliersService, SuppliersService>();
 builder.Services.AddTransient<IUnitOfWork, EfUnitOfWork>();
 builder.Services.AddSingleton<IProductValidator, ProductValidator>();
 builder.Services.AddSingleton<ICategoryValidator, CategoryValidator>();

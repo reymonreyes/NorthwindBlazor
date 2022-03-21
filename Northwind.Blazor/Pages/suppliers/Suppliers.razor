@@ -1,6 +1,9 @@
 ﻿@page "/suppliers"
+@using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
+@using Northwind.Core.Interfaces.Services
 @inherits PageBase
+@inject ISuppliersService SuppliersService
 <MudPaper Elevation="2" Class="my-1">
     <MudToolBar>
         <MudText>Suppliers</MudText>
@@ -29,35 +32,42 @@ else
         </tr>
     </thead>
     <tbody>
-        @foreach (var supplier in _suppliers)
+    @foreach (var supplier in _suppliers)
+    {
+        if (supplier is not null)
         {
-            <tr>               
-                <td class="d-flex">
-                    <MudLink Href="@string.Format("suppliers/{0}", supplier.Id)" Underline="Underline.None" Class="flex-grow-1">@supplier.Name</MudLink>
-                </td>
-                <td>@supplier.ContactName</td>
-                <td>@supplier.ContactTitle</td>
-                <td>@supplier.Phone</td>
-            </tr>
+        <tr>               
+            <td class="d-flex">
+                <MudLink Href="@string.Format("suppliers/{0}", supplier.Id)" Underline="Underline.None" Class="flex-grow-1">@supplier.Name</MudLink>
+            </td>
+            <td>@supplier.ContactName</td>
+            <td>@supplier.ContactTitle</td>
+            <td>@supplier.Phone</td>
+        </tr>
         }
+    }
     </tbody>
 </MudSimpleTable>
 }
 @code {
-    private List<Supplier>? _suppliers = null;
+    private ICollection<Supplier?>? _suppliers = null;
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
-        await Task.Delay(3000);
-        _suppliers = new List<Supplier>
+        var suppliers = await SuppliersService.GetAll();
+        if(suppliers is not null)
         {
-            new Supplier{ Id = 1, Name = "Alpha One"},
-            new Supplier{ Id = 2, Name = "Bravo Two" },
-            new Supplier{ Id = 3, Name = "Charlie Three" },
-            new Supplier{ Id = 4, Name = "Delta Four" },
-            new Supplier{ Id = 5, Name = "Eagle Five" }
-        };
+            _suppliers = suppliers.Select(x => MapperHelper.ToSupplier(x)).ToList();
+        }
+        //_suppliers = new List<Supplier>
+        //{
+        //    new Supplier{ Id = 1, Name = "Alpha One"},
+        //    new Supplier{ Id = 2, Name = "Bravo Two" },
+        //    new Supplier{ Id = 3, Name = "Charlie Three" },
+        //    new Supplier{ Id = 4, Name = "Delta Four" },
+        //    new Supplier{ Id = 5, Name = "Eagle Five" }
+        //};
 
         IsLoading = false;
     }
