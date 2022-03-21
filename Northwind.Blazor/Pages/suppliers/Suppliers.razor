@@ -1,0 +1,64 @@
+﻿@page "/suppliers"
+@using Northwind.Blazor.Models
+@inherits PageBase
+<MudPaper Elevation="2" Class="my-1">
+    <MudToolBar>
+        <MudText>Suppliers</MudText>
+        <MudSpacer />
+        <MudButton Link="suppliers/create" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Create Supplier</MudButton>
+    </MudToolBar>
+</MudPaper>
+
+@if(IsLoading)
+{
+    <MudProgressLinear Indeterminate="true"/>
+}
+@if(_suppliers is null)
+{
+    <MudAlert Severity="Severity.Info" Variant="Variant.Text">No suppliers found.</MudAlert>
+}
+else
+{   
+<MudSimpleTable Style="overflow-x: auto;" Dense="true" Hover="true" Bordered="true">
+    <thead>
+        <tr class="text-center">
+            <th>Name</th>
+            <th>Contact Name</th>
+            <th>Contact Title</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var supplier in _suppliers)
+        {
+            <tr>               
+                <td class="d-flex">
+                    <MudLink Href="@string.Format("suppliers/{0}", supplier.Id)" Underline="Underline.None" Class="flex-grow-1">@supplier.Name</MudLink>
+                </td>
+                <td>@supplier.ContactName</td>
+                <td>@supplier.ContactTitle</td>
+                <td>@supplier.Phone</td>
+            </tr>
+        }
+    </tbody>
+</MudSimpleTable>
+}
+@code {
+    private List<Supplier>? _suppliers = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        await Task.Delay(3000);
+        _suppliers = new List<Supplier>
+        {
+            new Supplier{ Id = 1, Name = "Alpha One"},
+            new Supplier{ Id = 2, Name = "Bravo Two" },
+            new Supplier{ Id = 3, Name = "Charlie Three" },
+            new Supplier{ Id = 4, Name = "Delta Four" },
+            new Supplier{ Id = 5, Name = "Eagle Five" }
+        };
+
+        IsLoading = false;
+    }
+}
