@@ -27,9 +27,7 @@ namespace Northwind.Data.Repositories
 
         public async Task<Product?> Get(int productId)
         {
-            return await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == productId);
-            //Product? product = await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == productId);
-            //return ObjectMapperHelper.ToProductDto(product);
+            return await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == productId);            
         }
 
         public async Task<ICollection<Product>> GetAll()
