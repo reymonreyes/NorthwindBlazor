@@ -55,19 +55,21 @@ else
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
-        var suppliers = await SuppliersService.GetAll();
-        if(suppliers is not null)
+
+        try
         {
-            _suppliers = suppliers.Select(x => MapperHelper.ToSupplier(x)).ToList();
+            var suppliers = await SuppliersService.GetAll();
+
+            if(suppliers is not null)
+            {
+                _suppliers = suppliers.Select(x => MapperHelper.ToSupplier(x)).ToList();
+            }
         }
-        //_suppliers = new List<Supplier>
-        //{
-        //    new Supplier{ Id = 1, Name = "Alpha One"},
-        //    new Supplier{ Id = 2, Name = "Bravo Two" },
-        //    new Supplier{ Id = 3, Name = "Charlie Three" },
-        //    new Supplier{ Id = 4, Name = "Delta Four" },
-        //    new Supplier{ Id = 5, Name = "Eagle Five" }
-        //};
+        catch(Exception exc)
+        {
+            //add some error logging
+            throw exc;    
+        }
 
         IsLoading = false;
     }
