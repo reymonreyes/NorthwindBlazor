@@ -11,20 +11,25 @@ namespace Northwind.Data.Repositories
 {
     public class SuppliersRepository : ISuppliersRepository
     {
-        private readonly EfDbContext _efDbContext;
+        private readonly EfDbContext _dbContext;
         public SuppliersRepository(EfDbContext efDbContext)
         {
-            _efDbContext = efDbContext;
+            _dbContext = efDbContext;
+        }
+
+        public async Task Create(Supplier supplier)
+        {
+            await _dbContext.Suppliers.AddAsync(supplier);
         }
 
         public async Task<Supplier?> Get(int supplierId)
         {
-            return await _efDbContext.Suppliers.FirstOrDefaultAsync(x => x.Id == supplierId);   
+            return await _dbContext.Suppliers.FirstOrDefaultAsync(x => x.Id == supplierId);   
         }
 
         public async Task<ICollection<Supplier>> GetAll()
         {
-            return await _efDbContext.Suppliers.OrderBy(x => x.Name).ToListAsync();
+            return await _dbContext.Suppliers.OrderBy(x => x.Name).ToListAsync();
         }
     }
 }

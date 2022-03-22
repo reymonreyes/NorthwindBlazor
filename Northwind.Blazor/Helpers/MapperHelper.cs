@@ -50,5 +50,14 @@ namespace Northwind.Blazor.Helpers
             TinyMapper.Bind<SupplierDto, Supplier>();
             return TinyMapper.Map<Supplier>(supplierDto);
         }
+
+        public static SupplierDto? ToSupplierDto(Supplier? supplier)
+        {
+            if (supplier is null)
+                return null;
+
+            TinyMapper.Bind<Supplier, SupplierDto>();
+            return TinyMapper.Map<SupplierDto>(supplier);
+        }
     }
 }

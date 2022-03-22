@@ -11,5 +11,6 @@ namespace Northwind.Core.Interfaces.Services
     {
         Task<ICollection<SupplierDto>> GetAll();
         Task<SupplierDto?> Get(int id);
+        Task<ServiceResult> Create(SupplierDto? supplierDto);
     }
 }

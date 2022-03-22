@@ -1,4 +1,5 @@
 ﻿@page "/suppliers/create"
+@using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
 @inject NavigationManager NavigationManager
@@ -61,6 +62,12 @@
 
     private void Save()
     {
-        
+        var supplierDto = MapperHelper.ToSupplierDto(_supplier);
+
+        switch(_mode){
+            case EntryMode.Create:
+                
+                break;
+        }   
     }
 }
