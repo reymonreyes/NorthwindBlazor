@@ -1,0 +1,107 @@
+﻿@page "/suppliers/{id:int}"
+@using Northwind.Blazor.Helpers
+@using Northwind.Blazor.Models
+@using Northwind.Core.Interfaces.Services
+@inherits PageBase
+@inject ISuppliersService SuppliersService
+<MudPaper Elevation="1" Class="my-1">
+    <MudToolBar>
+        <MudIconButton Icon="@Icons.Filled.ChevronLeft" Link="suppliers"></MudIconButton>
+        <MudText>Supplier Details</MudText>
+    </MudToolBar>
+</MudPaper>
+
+@if (IsLoading)
+{
+    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+}
+@if(_supplier is not null)
+{
+    <MudGrid Class="mt-1">
+        <MudItem xs="12" md="12" lg="6" xl="6">
+            <MudPaper Class="px-2">
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Name</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_supplier.Name</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Contact Name</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_supplier.ContactName</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Contact Title</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_supplier.ContactTitle</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Address</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_supplier.Address</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">City</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_supplier.City</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Region</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_supplier.Region</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Country</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_supplier.Country</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Postal Code</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_supplier.PostalCode</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Phone</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_supplier.Phone</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Fax</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_supplier.Fax</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Email</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_supplier.Email</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Homepage</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_supplier.Homepage</MudText></MudItem>
+                </MudGrid>
+                <MudDivider DividerType="DividerType.FullWidth" Class="my-1"/>
+                <MudGrid>
+                    <MudItem xs="12" md="12" lg="12" Class="d-flex justify-end">
+                        <MudButton Link="@String.Format("suppliers/edit/{0}", _supplier.Id)" Variant="Variant.Filled" Color="Color.Primary">Edit</MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    private Supplier? _supplier;
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            IsLoading = true;
+            var supplierData = await SuppliersService.Get(Id);
+            if (supplierData is not null)
+            {
+                _supplier = MapperHelper.ToSupplier(supplierData);
+            }
+            else
+                Notify("Supplier not found", Severity.Error);
+        }
+        catch(Exception exc)
+        {
+            //add some error logging
+            throw exc;
+        }
+        IsLoading = false;
+    }
+}
