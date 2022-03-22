@@ -34,16 +34,25 @@ namespace Northwind.Core.Services
             }
 
             return result;
-            //var data = new List<SupplierDto>
-            //        {
-            //            new SupplierDto{ Id = 1, Name = "Alpha One"},
-            //            new SupplierDto{ Id = 2, Name = "Bravo Two" },
-            //            new SupplierDto{ Id = 3, Name = "Charlie Three" },
-            //            new SupplierDto{ Id = 4, Name = "Delta Four" },
-            //            new SupplierDto{ Id = 5, Name = "Eagle Five" }
-            //        };
+        }
 
-            //return Task.FromResult<ICollection<SupplierDto>>(data);
+        public async Task<SupplierDto?> Get(int supplierId)
+        {
+            SupplierDto? result = null;
+            var supplier = await _unitOfWork.SuppliersRepository.Get(supplierId);
+            if(supplier is not null)
+            {
+                result = new SupplierDto
+                {
+                    Id = supplier.Id,
+                    Name = supplier.Name,
+                    ContactName = supplier.ContactName,
+                    ContactTitle = supplier.ContactTitle,
+                    Phone = supplier.Phone
+                };
+            }
+
+            return result;
         }
     }
 }

@@ -10,5 +10,6 @@ namespace Northwind.Core.Interfaces.Repositories
     public interface ISuppliersRepository
     {
         Task<ICollection<Supplier>> GetAll();
+        Task<Supplier?> Get(int id);
     }
 }

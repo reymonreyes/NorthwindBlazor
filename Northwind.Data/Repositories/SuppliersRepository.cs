@@ -16,6 +16,12 @@ namespace Northwind.Data.Repositories
         {
             _efDbContext = efDbContext;
         }
+
+        public async Task<Supplier?> Get(int supplierId)
+        {
+            return await _efDbContext.Suppliers.FirstOrDefaultAsync(x => x.Id == supplierId);   
+        }
+
         public async Task<ICollection<Supplier>> GetAll()
         {
             return await _efDbContext.Suppliers.OrderBy(x => x.Name).ToListAsync();

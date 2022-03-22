@@ -10,5 +10,6 @@ namespace Northwind.Core.Interfaces.Services
     public interface ISuppliersService
     {
         Task<ICollection<SupplierDto>> GetAll();
+        Task<SupplierDto?> Get(int id);
     }
 }
