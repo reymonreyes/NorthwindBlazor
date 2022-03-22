@@ -24,6 +24,7 @@ builder.Services.AddTransient<ISuppliersService, SuppliersService>();
 builder.Services.AddTransient<IUnitOfWork, EfUnitOfWork>();
 builder.Services.AddSingleton<IProductValidator, ProductValidator>();
 builder.Services.AddSingleton<ICategoryValidator, CategoryValidator>();
+builder.Services.AddSingleton<ISupplierValidator, SupplierValidator>();
 
 var app = builder.Build();
 

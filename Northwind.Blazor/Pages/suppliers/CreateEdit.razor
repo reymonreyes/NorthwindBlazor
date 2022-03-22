@@ -2,7 +2,9 @@
 @using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
+@using Northwind.Core.Interfaces.Services
 @inject NavigationManager NavigationManager
+@inject ISuppliersService SuppliersService
 @inherits PageBase
 
 <MudPaper Elevation="1" Class="my-1">
@@ -60,14 +62,18 @@
         }
     }
 
-    private void Save()
+    private async Task Save()
     {
         var supplierDto = MapperHelper.ToSupplierDto(_supplier);
-
+        IsLoading = true;
         switch(_mode){
             case EntryMode.Create:
-                
+                await SuppliersService.Create(supplierDto);
                 break;
-        }   
+        }
+
+        IsLoading = false;
+        Notify("Supplier created successfully.", Severity.Success);
+        NavigationManager.NavigateTo("suppliers");
     }
 }
