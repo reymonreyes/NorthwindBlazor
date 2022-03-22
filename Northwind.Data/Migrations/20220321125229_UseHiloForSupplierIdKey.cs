@@ -10,7 +10,8 @@ namespace Northwind.Data.Migrations
         {
             migrationBuilder.CreateSequence(
                 name: "EFSupplierIdHiloSequence",
-                incrementBy: 10);            
+                incrementBy: 1,
+                startValue: 30);            
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
