@@ -1,0 +1,66 @@
+﻿@page "/suppliers/create"
+@using Northwind.Blazor.Models
+@using Northwind.Common.Enums
+@inject NavigationManager NavigationManager
+@inherits PageBase
+
+<MudPaper Elevation="1" Class="my-1">
+    <MudToolBar>
+        <MudIconButton Icon="@Icons.Filled.ChevronLeft" Link="suppliers"></MudIconButton>
+        <MudText>Supplier Details</MudText>
+    </MudToolBar>
+</MudPaper>
+
+@if(IsLoading)
+{
+    <MudProgressLinear Indeterminate="true"/>
+}
+@if(_supplier is not null)
+{
+    <EditForm Model="@_supplier" OnValidSubmit="Save">
+        <MudGrid>
+            <MudItem lg="6" sm="12" xs="12">
+                <DataAnnotationsValidator/>
+                <MudTextField Label="Name" @bind-Value="_supplier.Name" For="@(() => _supplier.Name)"/>
+                <MudTextField Label="Contact Name" @bind-Value="_supplier.ContactName" For="@(() => _supplier.ContactName)"/>
+                <MudTextField Label="Contact Title" @bind-Value="_supplier.ContactTitle" For="@(() => _supplier.ContactTitle)"/>
+                <MudTextField Label="Address" @bind-Value="_supplier.Address" For="@(() => _supplier.Address)"/>
+                <MudTextField Label="City" @bind-Value="_supplier.City" For="@(() => _supplier.City)"/>
+                <MudTextField Label="Region" @bind-Value="_supplier.Region" For="@(() => _supplier.Region)"/>
+                <MudTextField Label="Countr" @bind-Value="_supplier.Country" For="@(() => _supplier.Country)"/>
+                <MudTextField Label="Postal Code" @bind-Value="_supplier.PostalCode" For="@(() => _supplier.PostalCode)"/>
+                <MudTextField Label="Phone" @bind-Value="_supplier.Phone" For="@(() => _supplier.Phone)"/>
+                <MudTextField Label="Fax" @bind-Value="_supplier.Fax" For="@(() => _supplier.Fax)"/>
+                <MudTextField Label="Email Address" @bind-Value="_supplier.Email" For="@(() => _supplier.Email)"/>
+                <div class="d-flex justify-end mt-2">
+                    <MudButton Link="suppliers" Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Small" Class="mr-1">Cancel</MudButton>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">@_saveButtonText</MudButton>
+                </div>    
+            </MudItem>
+        </MudGrid>
+    </EditForm>
+}
+
+@code {
+    private Supplier? _supplier;
+    private EntryMode _mode = EntryMode.Create;
+    private string _saveButtonText = "Save";
+
+    public int Id { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _mode = NavigationManager.Uri.Contains("create") ? EntryMode.Create : EntryMode.Edit;
+        switch (_mode)
+        {
+            case EntryMode.Create:
+                _supplier = new Supplier();
+                break;
+        }
+    }
+
+    private void Save()
+    {
+        
+    }
+}
