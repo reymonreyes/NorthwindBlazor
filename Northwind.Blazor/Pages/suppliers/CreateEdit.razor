@@ -3,6 +3,7 @@
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
 @using Northwind.Core.Interfaces.Services
+@using System.Diagnostics
 @inject NavigationManager NavigationManager
 @inject ISuppliersService SuppliersService
 @inherits PageBase
@@ -66,14 +67,22 @@
     {
         var supplierDto = MapperHelper.ToSupplierDto(_supplier);
         IsLoading = true;
-        switch(_mode){
-            case EntryMode.Create:
-                await SuppliersService.Create(supplierDto);
-                break;
+        try
+        {
+            switch (_mode)
+            {
+                case EntryMode.Create:
+                    await SuppliersService.Create(supplierDto);
+                    break;
+            }
+            Notify($"Supplier {(_mode == EntryMode.Create ? "created" : "updated")} successfully.", Severity.Success);
+            NavigationManager.NavigateTo("suppliers");
         }
-
-        IsLoading = false;
-        Notify("Supplier created successfully.", Severity.Success);
-        NavigationManager.NavigateTo("suppliers");
+        catch(Exception exc)
+        {
+            Debug.WriteLine(exc.Message);
+            Notify("Something went wrong. Please try again.", Severity.Error);
+        }
+        IsLoading = false;        
     }
 }
