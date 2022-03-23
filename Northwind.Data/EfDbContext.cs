@@ -15,10 +15,14 @@ namespace Northwind.Data
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Supplier> Suppliers => Set<Supplier>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
-            optionsBuilder.UseNpgsql(@"Host=localhost:5432;Username=postgres;Password=admin;Database=northwind");
+            optionsBuilder.UseNpgsql(@"Host=localhost:5432;Username=postgres;Password=admin;Database=northwind").EnableDetailedErrors(true);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasSequence<int>("EFProductIdHiLoSequence").IncrementsBy(1);
+            modelBuilder.HasSequence<int>("EFCategoryIdHiLoSequence").IncrementsBy(1);
+            modelBuilder.HasSequence<int>("EFSupplierIdHiloSequence").IncrementsBy(1);
+
             modelBuilder.Entity<Product>().ToTable("products");
             modelBuilder.Entity<Product>().HasKey(x => x.Id).HasName("pk_products");
             modelBuilder.Entity<Product>().Property(x => x.Id).HasColumnName("product_id").HasColumnType("smallint").IsRequired(true).UseHiLo("EFProductIdHiLoSequence");
