@@ -1,8 +1,9 @@
-﻿@using Northwind.Blazor.Models
+﻿@page "/products"
+@using Northwind.Blazor.Models
 @using Northwind.Core.Dtos
 @using Northwind.Core.Interfaces.Services
 @inject IProductsService _productsSvc
-@page "/products"
+@inherits PageBase
 
 <MudPaper Elevation="2" Class="my-1">
     <MudToolBar>
@@ -11,9 +12,14 @@
         <MudButton Link="products/create" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Create Product</MudButton>
     </MudToolBar>
 </MudPaper>
-@if(_products is null)
+@if (IsLoading)
 {
-    <div>Loading...</div>   
+    <MudProgressLinear Indeterminate="true"/>
+}
+
+@if(!_products.Any())
+{
+    <MudAlert Severity="Severity.Info" Variant="Variant.Text">No products found.</MudAlert>
 }
 else
 {   
@@ -37,7 +43,7 @@ else
 </MudSimpleTable>
 }
 @code {
-    private ICollection<ProductDto>? _products;
+    private ICollection<ProductDto> _products = new List<ProductDto>();
 
     protected override async Task OnInitializedAsync()
     {        

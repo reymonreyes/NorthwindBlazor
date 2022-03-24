@@ -16,7 +16,7 @@
 {
     <MudProgressLinear Indeterminate="true"/>
 }
-@if(_suppliers is null)
+@if(!_suppliers.Any())
 {
     <MudAlert Severity="Severity.Info" Variant="Variant.Text">No suppliers found.</MudAlert>
 }
@@ -50,7 +50,7 @@ else
 </MudSimpleTable>
 }
 @code {
-    private ICollection<Supplier?>? _suppliers = null;
+    private ICollection<Supplier?> _suppliers = new List<Supplier?>();
 
     protected override async Task OnInitializedAsync()
     {
