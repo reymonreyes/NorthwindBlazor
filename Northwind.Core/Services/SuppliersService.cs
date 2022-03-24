@@ -52,7 +52,15 @@ namespace Northwind.Core.Services
                     Name = supplier.Name,
                     ContactName = supplier.ContactName,
                     ContactTitle = supplier.ContactTitle,
-                    Phone = supplier.Phone
+                    Address = supplier.Address,
+                    City = supplier.City,
+                    Region = supplier.Region,
+                    Country = supplier.Country,
+                    PostalCode = supplier.PostalCode,
+                    Phone = supplier.Phone,
+                    Fax = supplier.Fax,
+                    Email = supplier.Email,
+                    Homepage = supplier.Homepage
                 };
             }
 
