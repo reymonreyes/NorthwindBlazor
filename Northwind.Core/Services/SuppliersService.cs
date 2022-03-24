@@ -98,5 +98,46 @@ namespace Northwind.Core.Services
 
             return result;
         }
+
+        public async Task<ServiceResult> Edit(int supplierId, SupplierDto supplierDto)
+        {
+            if (supplierId <= 0 || supplierId == int.MinValue)
+                throw new ArgumentOutOfRangeException("supplierId");
+            if (supplierDto == null)
+                throw new ArgumentNullException("supplier");
+            
+            var supplierEntity = await _unitOfWork.SuppliersRepository.Get(supplierId);
+            if (supplierEntity == null)
+                throw new Exception("supplier not found");
+            
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
+            var validationResult = _supplierValidator.Validate(supplierDto);
+            if (validationResult?.Count > 0)
+            {
+                result.IsSuccessful = false;
+                result.Messages.AddRange(validationResult);
+            }
+
+            if (!result.IsSuccessful)
+                return result;
+
+            supplierEntity.Name = supplierDto.Name;
+            supplierEntity.ContactName = supplierDto.ContactName;
+            supplierEntity.ContactTitle = supplierDto.ContactTitle;
+            supplierEntity.Address = supplierDto.Address;
+            supplierEntity.City = supplierDto.City;
+            supplierEntity.Region = supplierDto.Region;
+            supplierEntity.Country = supplierDto.Country;
+            supplierEntity.PostalCode = supplierDto.PostalCode;
+            supplierEntity.Phone = supplierDto.Phone;
+            supplierEntity.Fax = supplierDto.Fax;
+            supplierEntity.Email = supplierDto.Email;
+            supplierEntity.Homepage = supplierDto.Homepage;
+
+            await _unitOfWork.Commit();
+            result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", supplierEntity.Id.ToString()) });
+
+            return result;
+        }
     }
 }

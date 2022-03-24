@@ -73,6 +73,17 @@ namespace Northwind.Core.Services
 
             var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
 
+            var validationResult = _productValidator.Validate(productDto);
+            if (validationResult?.Count > 0)
+            {
+                result.IsSuccessful = false;
+                result.Messages.AddRange(validationResult);
+            }
+
+            if (!result.IsSuccessful)
+                return result;
+
+
             product.Name = productDto.Name;
             product.Code = productDto.Code;
             product.UnitPrice = productDto.UnitPrice;

@@ -1,4 +1,5 @@
 ﻿@page "/suppliers/create"
+@page "/suppliers/edit/{id:int}"
 @using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
@@ -50,17 +51,36 @@
     private EntryMode _mode = EntryMode.Create;
     private string _saveButtonText = "Save";
 
+    [Parameter]
     public int Id { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         _mode = NavigationManager.Uri.Contains("create") ? EntryMode.Create : EntryMode.Edit;
+
         switch (_mode)
         {
             case EntryMode.Create:
                 _supplier = new Supplier();
                 break;
+            case EntryMode.Edit:
+                await LoadSupplier();
+                break;
         }
+
+    }
+
+    private async Task LoadSupplier()
+    {
+        IsLoading = true;
+
+        var supplier = await SuppliersService.Get(Id);
+        if (supplier is not null)
+            _supplier = MapperHelper.ToSupplier(supplier);
+        else
+            Notify("Supplier not found.", Severity.Error);
+
+        IsLoading = false;
     }
 
     private async Task Save()
@@ -69,14 +89,20 @@
         IsLoading = true;
         try
         {
-            switch (_mode)
+            if (supplierDto is not null)
             {
-                case EntryMode.Create:
-                    await SuppliersService.Create(supplierDto);
-                    break;
+                switch (_mode)
+                {
+                    case EntryMode.Create:
+                        await SuppliersService.Create(supplierDto);
+                        break;
+                    case EntryMode.Edit:
+                        await SuppliersService.Edit(Id, supplierDto);
+                        break;
+                }
+                Notify($"Supplier {(_mode == EntryMode.Create ? "created" : "updated")} successfully.", Severity.Success);
+                NavigationManager.NavigateTo("suppliers");
             }
-            Notify($"Supplier {(_mode == EntryMode.Create ? "created" : "updated")} successfully.", Severity.Success);
-            NavigationManager.NavigateTo("suppliers");
         }
         catch(Exception exc)
         {
