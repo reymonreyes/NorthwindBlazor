@@ -1,6 +1,8 @@
 ﻿using Northwind.Core.Dtos;
+using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
+using Northwind.Core.Interfaces.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +14,44 @@ namespace Northwind.Core.Services
     public class ShippersService : IShippersService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ShippersService(IUnitOfWork unitOfWork)
+        private readonly IShipperValidator _shipperValidator;
+        public ShippersService(IUnitOfWork unitOfWork, IShipperValidator shipperValidator)
         {
             _unitOfWork = unitOfWork;
+            _shipperValidator = shipperValidator;
         }
+
+        public async Task<ServiceResult> Create(ShipperDto? shipperDto)
+        {
+            if(shipperDto is null)
+                throw new ArgumentNullException("shipper");
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
+
+            var validationResult = _shipperValidator.Validate(shipperDto);
+            if(validationResult?.Count > 0)
+            {
+                result.IsSuccessful = false;
+                result.Messages.AddRange(validationResult);
+            }
+
+            if (!result.IsSuccessful)
+                return result;
+
+            var shipper = new Shipper
+            {
+                Name = shipperDto.Name,
+                Phone = shipperDto.Phone,
+            };
+
+            await _unitOfWork.ShippersRepository.Create(shipper);
+            await _unitOfWork.Commit();
+
+            result.Messages.Clear();
+            result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", shipper.Id.ToString()) });
+
+            return result;
+        }
+
         public async Task<ICollection<ShipperDto>> GetAll()
         {
             ICollection<ShipperDto> result = new List<ShipperDto>();
@@ -26,14 +62,6 @@ namespace Northwind.Core.Services
                 Name = x.Name,
                 Phone = x.Phone
             }).ToList();
-            //return new List<ShipperDto>
-            //{
-            //    new ShipperDto{ Id = 1, Name = "Shipper One", Phone = "1234" },
-            //    new ShipperDto{ Id = 2, Name = "Shipper Two", Phone = "2234" },
-            //    new ShipperDto{ Id = 3, Name = "Shipper Three", Phone = "3234" },
-            //    new ShipperDto{ Id = 4, Name = "Shipper Four", Phone = "4234" },
-            //    new ShipperDto{ Id = 5, Name = "Shipper Five", Phone = "5234" }
-            //};
         }
     }
 }

@@ -16,6 +16,12 @@ namespace Northwind.Data.Repositories
         {
             _efDbContext = efDbContext;
         }
+
+        public async Task Create(Shipper shipper)
+        {
+            await _efDbContext.Shippers.AddAsync(shipper);
+        }
+
         public async Task<ICollection<Shipper>> GetAll()
         {
             return await _efDbContext.Shippers.ToListAsync();

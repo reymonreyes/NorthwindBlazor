@@ -82,7 +82,7 @@ namespace Northwind.Data
             modelBuilder.Entity<Shipper>().HasKey(x => x.Id).HasName("pk_shippers");
             modelBuilder.Entity<Shipper>().Property(x => x.Id).HasColumnName("shipper_id").HasColumnType("smallint").IsRequired(true).UseHiLo("EFShipperIdHiloSequence");
             modelBuilder.Entity<Shipper>().Property(x => x.Name).HasColumnName("company_name").HasColumnType("character varying").IsRequired(true).HasMaxLength(40);
-            modelBuilder.Entity<Shipper>().Property(x => x.Phone).HasColumnName("phone").HasColumnType("character varying").IsRequired(true).HasMaxLength(24);
+            modelBuilder.Entity<Shipper>().Property(x => x.Phone).HasColumnName("phone").HasColumnType("character varying").HasMaxLength(24);
         }
     }
 }

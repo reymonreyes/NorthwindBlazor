@@ -29,6 +29,7 @@ builder.Services.AddTransient<ISuppliersRepository, SuppliersRepository>();
 builder.Services.AddSingleton<IProductValidator, ProductValidator>();
 builder.Services.AddSingleton<ICategoryValidator, CategoryValidator>();
 builder.Services.AddSingleton<ISupplierValidator, SupplierValidator>();
+builder.Services.AddSingleton<IShipperValidator, ShipperValidator>();
 
 var app = builder.Build();
 

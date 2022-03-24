@@ -10,5 +10,6 @@ namespace Northwind.Core.Interfaces.Repositories
     public interface IShippersRepository
     {
         Task<ICollection<Shipper>> GetAll();
+        Task Create(Shipper shipper);
     }
 }

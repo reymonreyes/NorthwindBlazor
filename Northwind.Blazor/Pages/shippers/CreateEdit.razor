@@ -2,8 +2,10 @@
 @using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
+@using Northwind.Core.Interfaces.Services
 @inherits PageBase
 @inject NavigationManager NavigationManager
+@inject IShippersService ShippersService
 
 <MudPaper Elevation="2" Class="my-1">
     <MudToolBar>
@@ -48,7 +50,7 @@
         }
     }
 
-    private void Save()
+    private async Task Save()
     {
         var shipperDto = MapperHelper.ToShipperDto(_shipper);
 
@@ -61,9 +63,12 @@
                 switch (_mode)
                 {
                     case EntryMode.Create:
-                        
+                        await ShippersService.Create(shipperDto);
                         break;
                 }
+
+                Notify($"Shipper {(_mode == EntryMode.Create ? "created" : "updated")} successfully.", Severity.Success);
+                NavigationManager.NavigateTo("shippers");
             }
             catch(Exception exc)
             {
