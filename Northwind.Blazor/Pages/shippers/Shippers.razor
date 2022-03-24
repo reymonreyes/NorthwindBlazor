@@ -16,7 +16,7 @@
     <MudProgressLinear Indeterminate="true"/>
 }
 
-@if(_shippers is null)
+@if(!_shippers.Any())
 {
     <MudAlert Severity="Severity.Info" Variant="Variant.Text">No shippers found.</MudAlert>    
 }
@@ -47,17 +47,18 @@ else
 }
 
 @code {
-    private ICollection<Shipper?>? _shippers;
+    private ICollection<Shipper?> _shippers = new List<Shipper?>();
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
-        await Task.Delay(3000);
-        var shippers = ShippersService.GetAll();
+
+        var shippers = await ShippersService.GetAll();
         if (shippers is not null)
         {
             _shippers = shippers.Select(x => MapperHelper.ToShipper(x)).ToList();
         }
+
         IsLoading = false;
     }
 

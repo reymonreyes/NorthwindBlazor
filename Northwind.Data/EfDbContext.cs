@@ -14,19 +14,25 @@ namespace Northwind.Data
         public DbSet<Product> Products => Set<Product>();
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Supplier> Suppliers => Set<Supplier>();
+        public DbSet<Shipper> Shippers => Set<Shipper>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder.UseNpgsql(@"Host=localhost:5432;Username=postgres;Password=admin;Database=northwind").EnableDetailedErrors(true);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasSequence<int>("EFProductIdHiLoSequence").IncrementsBy(1);
-            modelBuilder.HasSequence<int>("EFCategoryIdHiLoSequence").IncrementsBy(1);
-            modelBuilder.HasSequence<int>("EFSupplierIdHiloSequence").IncrementsBy(1);
+            ConfigureProductEntity(modelBuilder);
+            ConfigureCategoryEntity(modelBuilder);
+            ConfigureSupplierEntity(modelBuilder);
+            ConfigureShipperEntity(modelBuilder);
+        }
 
+        private void ConfigureProductEntity(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasSequence<int>("EFProductIdHiLoSequence").IncrementsBy(1);
             modelBuilder.Entity<Product>().ToTable("products");
             modelBuilder.Entity<Product>().HasKey(x => x.Id).HasName("pk_products");
             modelBuilder.Entity<Product>().Property(x => x.Id).HasColumnName("product_id").HasColumnType("smallint").IsRequired(true).UseHiLo("EFProductIdHiLoSequence");
-            modelBuilder.Entity<Product>().Property(x => x.Name).HasColumnName("product_name").HasColumnType("character varying").IsRequired(true);            
+            modelBuilder.Entity<Product>().Property(x => x.Name).HasColumnName("product_name").HasColumnType("character varying").IsRequired(true);
             modelBuilder.Entity<Product>().Property(x => x.Code).HasColumnName("code").HasColumnType("character varying").IsRequired(true);
             modelBuilder.Entity<Product>().Property(x => x.Description).HasColumnName("description").HasColumnType("text");
             modelBuilder.Entity<Product>().Property(x => x.UnitPrice).HasColumnName("unit_price").HasColumnType("real");
@@ -35,7 +41,11 @@ namespace Northwind.Data
             modelBuilder.Entity<Product>().Property(x => x.UnitsInOrder).HasColumnName("units_on_order").HasColumnType("smallint");
             modelBuilder.Entity<Product>().Property(x => x.ReorderLevel).HasColumnName("reorder_level").HasColumnType("smallint");
             modelBuilder.Entity<Product>().Property(x => x.Discontinued).HasColumnName("discontinued").HasColumnType("integer");
-            
+        }
+
+        private void ConfigureCategoryEntity(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasSequence<int>("EFCategoryIdHiLoSequence").IncrementsBy(1);
             modelBuilder.Entity<Category>().ToTable("categories");
             modelBuilder.Entity<Category>().HasKey(x => x.Id).HasName("pk_categories");
             modelBuilder.Entity<Category>().Property(x => x.Id).HasColumnName("category_id").HasColumnType("smallint").IsRequired(true).UseHiLo("EFCategoryIdHiLoSequence");
@@ -43,7 +53,11 @@ namespace Northwind.Data
                 .HasMaxLength(15);
             modelBuilder.Entity<Category>().Property(x => x.Description).HasColumnName("description").HasColumnType("text");
             modelBuilder.Entity<Category>().Ignore(x => x.Picture);
+        }
 
+        private void ConfigureSupplierEntity(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasSequence<int>("EFSupplierIdHiloSequence").IncrementsBy(1);
             modelBuilder.Entity<Supplier>().ToTable("suppliers");
             modelBuilder.Entity<Supplier>().HasKey(x => x.Id).HasName("pk_suppliers");
             modelBuilder.Entity<Supplier>().Property(x => x.Id).HasColumnName("supplier_id").HasColumnType("smallint").IsRequired(true).UseHiLo("EFSupplierIdHiloSequence");
@@ -59,6 +73,16 @@ namespace Northwind.Data
             modelBuilder.Entity<Supplier>().Property(x => x.Fax).HasColumnName("fax").HasColumnType("character varying").HasMaxLength(24);
             modelBuilder.Entity<Supplier>().Property(x => x.Homepage).HasColumnName("homepage").HasColumnType("text");
             modelBuilder.Entity<Supplier>().Property(x => x.Email).HasColumnName("email").HasColumnType("character varying").HasMaxLength(254);
+        }
+
+        private void ConfigureShipperEntity(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasSequence<int>("EFShipperIdHiloSequence").IncrementsBy(1);
+            modelBuilder.Entity<Shipper>().ToTable("shippers");
+            modelBuilder.Entity<Shipper>().HasKey(x => x.Id).HasName("pk_shippers");
+            modelBuilder.Entity<Shipper>().Property(x => x.Id).HasColumnName("shipper_id").HasColumnType("smallint").IsRequired(true).UseHiLo("EFShipperIdHiloSequence");
+            modelBuilder.Entity<Shipper>().Property(x => x.Name).HasColumnName("company_name").HasColumnType("character varying").IsRequired(true).HasMaxLength(40);
+            modelBuilder.Entity<Shipper>().Property(x => x.Phone).HasColumnName("phone").HasColumnType("character varying").IsRequired(true).HasMaxLength(24);
         }
     }
 }

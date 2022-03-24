@@ -9,6 +9,6 @@ namespace Northwind.Core.Interfaces.Services
 {
     public interface IShippersService
     {
-        public ICollection<ShipperDto> GetAll();
+        public Task<ICollection<ShipperDto>> GetAll();
     }
 }
