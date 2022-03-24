@@ -1,0 +1,62 @@
+﻿@page "/shippers"
+@using Northwind.Blazor.Models
+@inherits PageBase
+
+<MudPaper Elevation="2" Class="my-1">
+    <MudToolBar>
+        <MudText>Shippers</MudText>
+        <MudSpacer />
+        <MudButton Link="shippers/create" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Create Shipper</MudButton>
+    </MudToolBar>
+</MudPaper>
+@if (IsLoading)
+{
+    <MudProgressLinear Indeterminate="true"/>
+}
+
+@if(_shippers is null)
+{
+    <MudAlert Severity="Severity.Info" Variant="Variant.Text">No shippers found.</MudAlert>    
+}
+else
+{
+<MudSimpleTable Style="overflow-x: auto;" Dense="true" Hover="true" Bordered="true">
+    <thead>
+        <tr class="text-center">
+            <th>Name</th>            
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var shipper in _shippers)
+    {        
+        <tr>               
+            <td class="d-flex">
+                <MudLink Href="@string.Format("suppliers/{0}", shipper.Id)" Underline="Underline.None" Class="flex-grow-1">@shipper.Name</MudLink>
+            </td>            
+            <td>@shipper.Phone</td>
+        </tr>
+    }
+    </tbody>
+</MudSimpleTable>
+}
+
+@code {
+    private ICollection<Shipper>? _shippers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        await Task.Delay(3000);
+        _shippers = new List<Shipper>
+        {
+            new Shipper{ Id = 1, Name = "Shipper One", Phone = "1234" },
+            new Shipper{ Id = 2, Name = "Shipper Two", Phone = "2234" },
+            new Shipper{ Id = 3, Name = "Shipper Three", Phone = "3234" },
+            new Shipper{ Id = 4, Name = "Shipper Four", Phone = "4234" },
+            new Shipper{ Id = 5, Name = "Shipper Five", Phone = "5234" }
+        };
+        IsLoading = false;
+    }
+
+}
