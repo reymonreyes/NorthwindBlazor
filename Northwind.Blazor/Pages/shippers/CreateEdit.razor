@@ -1,0 +1,80 @@
+﻿@page "/shippers/create"
+@using Northwind.Blazor.Helpers
+@using Northwind.Blazor.Models
+@using Northwind.Common.Enums
+@inherits PageBase
+@inject NavigationManager NavigationManager
+
+<MudPaper Elevation="2" Class="my-1">
+    <MudToolBar>
+        <MudText><EntryModePageHeader Mode="_mode" DisplayName="Shipper"/></MudText>        
+    </MudToolBar>
+</MudPaper>
+
+@if(IsLoading)
+{
+    <MudProgressLinear Indeterminate="true"/>
+}
+@if(_shipper is not null)
+{
+<EditForm Model="@_shipper" OnValidSubmit="Save">
+    <DataAnnotationsValidator/>
+    <MudGrid>
+        <MudItem lg="6" sm="12" xs="12">            
+            <MudTextField Label="Name" @bind-Value="_shipper.Name" For="@(() => _shipper.Name)"/>
+            <MudTextField Label="Phone" @bind-Value="_shipper.Phone" For="@(() => _shipper.Phone)"/>
+            <div class="d-flex justify-end mt-2">
+                <MudButton Link="categories" Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Small" Class="mr-1">Cancel</MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">@_saveButtonText</MudButton>
+            </div>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+}
+
+@code {
+    private EntryMode _mode = EntryMode.Create;
+    private Shipper? _shipper;
+    private string _saveButtonText = "Save";
+
+    protected override void OnInitialized()
+    {
+        _mode = NavigationManager.Uri.Contains("create") ? EntryMode.Create : EntryMode.Edit;
+        switch (_mode)
+        {
+            case EntryMode.Create:
+                _shipper = new Shipper();
+                break;
+        }
+    }
+
+    private void Save()
+    {
+        var shipperDto = MapperHelper.ToShipperDto(_shipper);
+
+        if (shipperDto is not null)
+        {
+            try
+            {
+                IsLoading = true;
+                _saveButtonText = "Saving...";
+                switch (_mode)
+                {
+                    case EntryMode.Create:
+                        
+                        break;
+                }
+            }
+            catch(Exception exc)
+            {
+                Notify("Something went wrong. Please try again.<br/>" + exc.Message, Severity.Error);
+            }
+            finally
+            {
+                IsLoading = false;
+                _saveButtonText = "Save";
+            }
+        }
+    }
+
+}
