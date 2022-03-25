@@ -1,0 +1,67 @@
+﻿@page "/shippers/{id:int}"
+@using Northwind.Blazor.Helpers
+@using Northwind.Blazor.Models
+@using Northwind.Core.Dtos
+@using Northwind.Core.Interfaces.Services
+@using System.Diagnostics
+@inject IShippersService ShippersService
+@inject ISnackbar Snackbar
+@inherits PageBase
+
+<MudPaper Elevation="1" Class="my-1">
+    <MudToolBar>
+        <MudIconButton Icon="@Icons.Filled.ChevronLeft" Link="shippers"></MudIconButton>
+        <MudText>Shipper Details</MudText>
+    </MudToolBar>
+</MudPaper>
+
+@if(IsLoading)
+{
+    <MudProgressLinear Indeterminate="true"/>
+}
+
+@if (_shipper is not null)
+{    
+    <MudGrid Class="mt-1">
+        <MudItem xs="12" md="12" lg="6" xl="6">
+            <MudPaper Class="px-2">
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Name</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_shipper.Name</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Phone</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_shipper.Phone</MudText></MudItem>
+                </MudGrid>
+                <MudDivider DividerType="DividerType.FullWidth" Class="my-1"/>
+                <MudGrid>
+                    <MudItem xs="12" md="12" lg="12" Class="d-flex justify-end">
+                        <MudButton Link="@String.Format("shippers/edit/{0}", _shipper.Id)" Variant="Variant.Filled" Color="Color.Primary">Edit</MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>                
+    </MudGrid>    
+}
+
+@code {
+    private Shipper? _shipper = null;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+
+        var shipperDto = await ShippersService.Get(Id);
+        IsLoading = false; 
+
+        if (shipperDto is null){
+            Snackbar.Add("Shipper not found.", Severity.Error);
+            return;
+        }
+
+        _shipper = MapperHelper.ToShipper(shipperDto);
+    }    
+}
