@@ -52,6 +52,54 @@ namespace Northwind.Core.Services
             return result;
         }
 
+        public async Task<ServiceResult> Edit(int shipperId, ShipperDto? shipperDto)
+        {
+            if (shipperDto is null)
+                throw new ArgumentNullException("shipper");
+            if(shipperId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(shipperId));
+
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
+
+            var validationResult = _shipperValidator.Validate(shipperDto);
+            if(validationResult?.Count > 0)
+            {
+                result.IsSuccessful = false;
+                result.Messages.AddRange(validationResult);
+                return result;
+            }
+
+            var shipper = await _unitOfWork.ShippersRepository.Get(shipperId);
+            if (shipper is null)
+                throw new Exception("shipper not found");
+
+            shipper.Name = shipperDto.Name;
+            shipper.Phone = shipperDto.Phone;
+            await _unitOfWork.Commit();
+
+            result.Messages.Clear();
+            result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", shipper.Id.ToString()) });
+
+            return result; 
+        }
+
+        public async Task<ShipperDto?> Get(int shipperId)
+        {
+            if (shipperId <= 0)
+                return null;
+
+            var shipper = await _unitOfWork.ShippersRepository.Get(shipperId);
+            if (shipper == null)
+                return null;
+
+            return new ShipperDto
+            {
+                Id = shipper.Id,
+                Name = shipper.Name,
+                Phone = shipper.Phone
+            };
+        }
+
         public async Task<ICollection<ShipperDto>> GetAll()
         {
             ICollection<ShipperDto> result = new List<ShipperDto>();

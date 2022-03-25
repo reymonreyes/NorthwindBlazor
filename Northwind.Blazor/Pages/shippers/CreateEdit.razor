@@ -1,4 +1,5 @@
 ﻿@page "/shippers/create"
+@page "/shippers/edit/{id:int}"
 @using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
@@ -26,7 +27,7 @@
             <MudTextField Label="Name" @bind-Value="_shipper.Name" For="@(() => _shipper.Name)"/>
             <MudTextField Label="Phone" @bind-Value="_shipper.Phone" For="@(() => _shipper.Phone)"/>
             <div class="d-flex justify-end mt-2">
-                <MudButton Link="categories" Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Small" Class="mr-1">Cancel</MudButton>
+                <MudButton Link="shippers" Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Small" Class="mr-1">Cancel</MudButton>
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">@_saveButtonText</MudButton>
             </div>
         </MudItem>
@@ -39,15 +40,36 @@
     private Shipper? _shipper;
     private string _saveButtonText = "Save";
 
-    protected override void OnInitialized()
-    {
-        _mode = NavigationManager.Uri.Contains("create") ? EntryMode.Create : EntryMode.Edit;
+    [Parameter]
+    public int Id{ get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {        
+        _mode = NavigationManager.Uri.Contains("create") ? EntryMode.Create : EntryMode.Edit;       
         switch (_mode)
         {
             case EntryMode.Create:
                 _shipper = new Shipper();
                 break;
+            case  EntryMode.Edit:
+                await LoadShipper();
+                break;
         }
+    }
+
+    private async Task LoadShipper()
+    {
+        IsLoading = false;
+
+        var shipper = await ShippersService.Get(Id);
+        if(shipper is null){
+            Notify("Supplier not found.", Severity.Error);
+            return;
+        }
+
+        _shipper = MapperHelper.ToShipper(shipper);
+
+        IsLoading = false;
     }
 
     private async Task Save()
@@ -64,6 +86,9 @@
                 {
                     case EntryMode.Create:
                         await ShippersService.Create(shipperDto);
+                        break;
+                    case EntryMode.Edit:
+                        await ShippersService.Edit(Id, shipperDto);
                         break;
                 }
 
