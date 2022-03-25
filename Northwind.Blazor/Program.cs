@@ -22,6 +22,7 @@ builder.Services.AddTransient<IProductsService, ProductsService>();
 builder.Services.AddTransient<ICategoriesService, CategoriesService>();
 builder.Services.AddTransient<ISuppliersService, SuppliersService>();
 builder.Services.AddTransient<IShippersService, ShippersService>();
+builder.Services.AddTransient<ICustomersService, CustomersService>();
 builder.Services.AddTransient<IUnitOfWork, EfUnitOfWork>();
 builder.Services.AddTransient<IProductsRepository, ProductsRepository>();
 builder.Services.AddTransient<ICategoriesRepository, CategoriesRepository>();

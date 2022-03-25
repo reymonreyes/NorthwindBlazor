@@ -1,6 +1,9 @@
 ﻿@page "/customers"
+@using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
+@using Northwind.Core.Interfaces.Services
 @inherits PageBase
+@inject ICustomersService CustomersService
 
 @if(IsLoading)
 {
@@ -36,22 +39,15 @@
 </MudSimpleTable>
 }
 @code {
-    private ICollection<Customer>? _customers;
+    private ICollection<Customer?>? _customers = new List<Customer?>();
 
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
-        await Task.Delay(3000);
-        _customers = new List<Customer>
-        {
-            new Customer { Id = 1, Name = "Alpha One" },
-            new Customer { Id = 2, Name = "Bravo Two" },
-            new Customer { Id = 3, Name = "Charlie Three" },
-            new Customer { Id = 4, Name = "Delta Four" },
-            new Customer { Id = 5, Name = "Eagle Five" }
-        };
-
+        var customers = await CustomersService.GetAll();
+        _customers = customers.Select(x => MapperHelper.ToCustomer(x)).ToList();
+        
         IsLoading = false;
     }
 }
