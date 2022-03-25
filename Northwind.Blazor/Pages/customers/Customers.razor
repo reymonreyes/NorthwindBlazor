@@ -1,0 +1,57 @@
+﻿@page "/customers"
+@using Northwind.Blazor.Models
+@inherits PageBase
+
+@if(IsLoading)
+{
+    <MudProgressLinear Indeterminate="true"/>
+}
+@if(_customers is not null)
+{
+<MudSimpleTable Style="overflow-x: auto;" Dense="true" Hover="true" Bordered="true">
+    <thead>
+        <tr class="text-center">
+            <th>Name</th>
+            <th>Contact Name</th>
+            <th>Contact Title</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var customer in _customers)
+    {
+        if (customer is not null)
+        {
+        <tr>               
+            <td class="d-flex">
+                <MudLink Href="@string.Format("suppliers/{0}", customer.Id)" Underline="Underline.None" Class="flex-grow-1">@customer.Name</MudLink>
+            </td>
+            <td>@customer.ContactName</td>
+            <td>@customer.ContactTitle</td>
+            <td>@customer.Phone</td>
+        </tr>
+        }
+    }
+    </tbody>
+</MudSimpleTable>
+}
+@code {
+    private ICollection<Customer>? _customers;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        await Task.Delay(3000);
+        _customers = new List<Customer>
+        {
+            new Customer { Id = 1, Name = "Alpha One" },
+            new Customer { Id = 2, Name = "Bravo Two" },
+            new Customer { Id = 3, Name = "Charlie Three" },
+            new Customer { Id = 4, Name = "Delta Four" },
+            new Customer { Id = 5, Name = "Eagle Five" }
+        };
+
+        IsLoading = false;
+    }
+}
