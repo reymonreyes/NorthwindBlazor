@@ -5,6 +5,14 @@
 @inherits PageBase
 @inject ICustomersService CustomersService
 
+<MudPaper Elevation="2" Class="my-1">
+    <MudToolBar>
+        <MudText>Customers</MudText>
+        <MudSpacer/>
+        <MudButton Link="customers/create" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small">Create Customer</MudButton>
+    </MudToolBar>
+</MudPaper>
+
 @if(IsLoading)
 {
     <MudProgressLinear Indeterminate="true"/>
@@ -27,7 +35,7 @@
         {
         <tr>               
             <td class="d-flex">
-                <MudLink Href="@string.Format("suppliers/{0}", customer.Id)" Underline="Underline.None" Class="flex-grow-1">@customer.Name</MudLink>
+                <MudLink Href="@string.Format("customers/{0}", customer.Id)" Underline="Underline.None" Class="flex-grow-1">@customer.Name</MudLink>
             </td>
             <td>@customer.ContactName</td>
             <td>@customer.ContactTitle</td>
@@ -46,8 +54,13 @@
     {
         IsLoading = true;
         var customers = await CustomersService.GetAll();
-        _customers = customers.Select(x => MapperHelper.ToCustomer(x)).ToList();
-        
         IsLoading = false;
+        
+        if(customers.Count == 0)
+        {
+            Notify("Customers not found.", Severity.Info);
+            return;
+        }
+        _customers = customers.Select(x => MapperHelper.ToCustomer(x)).ToList();        
     }
 }
