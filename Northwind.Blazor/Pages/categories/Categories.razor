@@ -7,6 +7,7 @@
 @using Northwind.Core.Dtos
 @using Northwind.Core.Interfaces.Services
 @inject ICategoriesService CategoriesService
+@inject IDialogService DialogService
 @inherits PageBase
 
 <MudPaper Elevation="2" Class="my-1">
@@ -31,15 +32,18 @@ else
 <MudSimpleTable Style="overflow-x: auto;" Dense="true" Hover="true" Bordered="true">
     <thead>
         <tr class="text-center">
-            <th>Name</th><th>Description</th>
+            <th>Name</th><th>Description</th><th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var category in _categories)
         {           
             <tr>
-                <td><NavLink href="@string.Format("categories/{0}", category.Id)">@category.Name</NavLink></td>
+                <td>@category.Name</td>
                 <td>@category.Description</td>
+                    <td>
+                        <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="Edit">Edit</MudButton>
+                   </td>
             </tr>
         }
     </tbody>
@@ -54,5 +58,10 @@ else
         ICollection<CategoryDto> categories = await CategoriesService.GetAll();
         _categories = categories.Select(x => MapperHelper.ToCategory(x)).ToList();
         IsLoading = false;
+    }
+
+    private async Task Edit()
+    {
+        var result = await DialogService.ShowMessageBox("Edit", "Edit message");
     }
 }
