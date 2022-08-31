@@ -1,4 +1,9 @@
 ﻿@page "/categories"
+@{
+    //using Northwind.Core.Dtos
+}
+@using Northwind.Blazor.Helpers
+@using Northwind.Blazor.Models
 @using Northwind.Core.Dtos
 @using Northwind.Core.Interfaces.Services
 @inject ICategoriesService CategoriesService
@@ -31,8 +36,8 @@ else
     </thead>
     <tbody>
         @foreach (var category in _categories)
-        {
-            <tr>               
+        {           
+            <tr>
                 <td><NavLink href="@string.Format("categories/{0}", category.Id)">@category.Name</NavLink></td>
                 <td>@category.Description</td>
             </tr>
@@ -41,12 +46,13 @@ else
 </MudSimpleTable>
 }
 @code {
-    private ICollection<CategoryDto> _categories = new List<CategoryDto>();
+    private ICollection<Category> _categories = new List<Category>();
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
-        var categories = await CategoriesService.GetAll();
+        ICollection<CategoryDto> categories = await CategoriesService.GetAll();
+        _categories = categories.Select(x => MapperHelper.ToCategory(x)).ToList();
         IsLoading = false;
     }
 }

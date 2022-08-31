@@ -33,10 +33,18 @@ namespace Northwind.Blazor.Helpers
             return TinyMapper.Map<CategoryDto>(category);
         }
 
-        public static Category? ToCategory(CategoryDto? categoryDto)
+        /// <summary>
+        /// Map a CategoryDto to CategoryModel
+        /// </summary>
+        /// <param name="categoryDto"></param>
+        /// <returns>Category</returns>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="categoryDto"/>
+        /// </exception>
+        public static Category ToCategory(CategoryDto categoryDto)
         {
             if (categoryDto is null)
-                return null;
+                throw new ArgumentNullException("categoryDto");
 
             TinyMapper.Bind<CategoryDto, Category>();
             return TinyMapper.Map<Category>(categoryDto);
