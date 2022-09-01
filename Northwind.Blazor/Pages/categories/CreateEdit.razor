@@ -37,7 +37,7 @@ else
 }
 @code {
     private EntryMode _mode = EntryMode.Create;
-    private Category? _category;
+    private Category? _category = null;
     private string _saveButtonText = "Save";
     [Parameter]
     public int Id { get; set; }
@@ -52,16 +52,17 @@ else
                 break;
             case EntryMode.Edit:
                 var category = await CategoriesService.Get(Id);
-                _category = MapperHelper.ToCategory(category);
+                if (category is not null)
+                    _category = MapperHelper.ToCategory(category);
                 break;
         }
     }
 
     private async Task Save()
     {
-        var categoryDto = MapperHelper.ToCategoryDto(_category);
-        if(categoryDto is not null)
+        if(_category is not null)
         {
+            var categoryDto = MapperHelper.ToCategoryDto(_category);
             _saveButtonText = "Saving...";
 
             try
