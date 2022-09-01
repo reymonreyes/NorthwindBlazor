@@ -39,11 +39,11 @@ else
         @foreach (var category in _categories)
         {           
             <tr>
-                <td>@category.Name</td>
+                <td><MudLink Href="@($"categories/{category.Id}")" Underline="Underline.None" Class="flex-grow-1">@category.Name</MudLink></td>
                 <td>@category.Description</td>
-                    <td>
-                        <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="Edit">Edit</MudButton>
-                   </td>
+                <td>
+                    <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="Edit">Edit</MudButton>
+                </td>
             </tr>
         }
     </tbody>
