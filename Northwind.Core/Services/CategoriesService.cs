@@ -1,5 +1,6 @@
 ﻿using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
@@ -26,7 +27,7 @@ namespace Northwind.Core.Services
             if(validationResult?.Count > 0)
             {
                 result.IsSuccessful = false;
-                validationResult.AddRange(validationResult);
+                result.Messages.AddRange(validationResult);
 
                 return result;
             }
@@ -44,6 +45,12 @@ namespace Northwind.Core.Services
             return result;
         }
 
+        public async Task Delete(int categoryId)
+        {
+            await _unitOfWork.CategoriesRepository.Delete(categoryId);
+            await _unitOfWork.Commit();
+        }
+
         public async Task Edit(int categoryId, CategoryDto? categoryDto)
         {
             if(categoryId <= 0)
@@ -53,10 +60,11 @@ namespace Northwind.Core.Services
 
             var category = await _unitOfWork.CategoriesRepository.Get(categoryId);
             if (category is null)
-                throw new Exception("not found");
+                throw new DataNotFoundException("Category data not found.");
 
             category.Name = categoryDto.Name;
             category.Description = categoryDto.Description;
+
             await _unitOfWork.Commit();
         }
 

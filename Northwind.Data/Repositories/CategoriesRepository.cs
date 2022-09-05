@@ -2,6 +2,7 @@
 using Northwind.Core;
 using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,15 @@ namespace Northwind.Data.Repositories
         public async Task Create(Category category)
         {
             await _dbContext.Categories.AddAsync(category);            
+        }
+
+        public async Task Delete(int categoryId)
+        {
+            var category = await Get(categoryId);
+            if (category is null)
+                throw new DataNotFoundException("Category data not found.");
+
+            _dbContext.Categories.Remove(category);
         }
 
         public async Task<Category?> Get(int categoryId)

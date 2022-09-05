@@ -13,5 +13,6 @@ namespace Northwind.Core.Interfaces.Services
         Task Edit(int categoryId, CategoryDto? categoryDto);
         Task<ICollection<CategoryDto>> GetAll();
         Task<CategoryDto?> Get(int categoryId);
+        Task Delete(int categoryId);
     }
 }

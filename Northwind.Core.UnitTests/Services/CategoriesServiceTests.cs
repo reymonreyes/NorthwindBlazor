@@ -2,6 +2,7 @@
 using Moq;
 using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
@@ -87,6 +88,33 @@ namespace Northwind.Core.UnitTests.Services
             ICategoriesService categoriesService = mock.Create<CategoriesService>();
             var exception = await Assert.ThrowsAsync<Exception>(() => categoriesService.Edit(1, new CategoryDto { Name = "Beverage", Description = "Test" }));
             Assert.True(exception.Message == "not found");
+        }
+
+        [Fact]
+        [Trait("CRUD", "Delete")]
+        public async Task Delete_ShouldThrowDataNotFoundException()
+        {
+            var mock = AutoMock.GetLoose();
+            var categoryRepo = mock.Mock<ICategoriesRepository>();
+            categoryRepo.Setup(x => x.Delete(It.IsAny<int>())).Throws<DataNotFoundException>();
+            var uOW = mock.Mock<IUnitOfWork>();
+            uOW.Setup(x => x.CategoriesRepository).Returns(categoryRepo.Object);
+            ICategoriesService categoriesService = mock.Create<CategoriesService>();
+            await Assert.ThrowsAsync<DataNotFoundException>(() => categoriesService.Delete(1));
+        }
+
+        [Fact]
+        [Trait("CRUD", "Delete")]
+        public async Task Delete_ShouldThrowDataStoreException()
+        {
+            var mock = AutoMock.GetLoose();
+            var categoryRepo = mock.Mock<ICategoriesRepository>();
+            categoryRepo.Setup(x => x.Delete(It.IsAny<int>())).Returns(Task.CompletedTask);
+            var uOW = mock.Mock<IUnitOfWork>();
+            uOW.Setup(x => x.CategoriesRepository).Returns(categoryRepo.Object);
+            uOW.Setup(x => x.Commit()).Throws<DataStoreException>();
+            ICategoriesService categoriesService = mock.Create<CategoriesService>();
+            await Assert.ThrowsAsync<DataStoreException>(() => categoriesService.Delete(1));
         }
 
         private ICategoriesService GetCategoriesServiceMock()

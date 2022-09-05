@@ -1,4 +1,5 @@
-﻿using Northwind.Core.Interfaces.Repositories;
+﻿using Northwind.Core.Exceptions;
+using Northwind.Core.Interfaces.Repositories;
 using Northwind.Data.Repositories;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,15 @@ namespace Northwind.Data
 
         public async Task Commit()
         {
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch(Exception exc)
+            {
+                //log exc...
+                throw new DataStoreException("DataStore exception occured.", exc);
+            }
         }
     }
 }

@@ -70,17 +70,26 @@ else
                 switch (_mode)
                 {
                     case EntryMode.Create:
-                        await CategoriesService.Create(categoryDto);
+                        var result = await CategoriesService.Create(categoryDto);
+                        if (!result.IsSuccessful){
+                            if (result.Messages is not null){
+                                var messages = String.Join("<br/>", result.Messages.Select(x => x.Message.Value).ToList());
+                                Notify(messages, false);
+                            }
+                            return;
+                        }
+                        
                         Notify("Category created successfully.", true);
                         break;
                     case EntryMode.Edit:
                         var category = MapperHelper.ToCategoryDto(_category);
                         if (category is not null)
+                        {
                             await CategoriesService.Edit(category.Id, category);
-
+                            Notify("Category updated successfully.", true);
+                        }
                         break;
                 }
-                Notify("Category updated successfully.", true);
                 NavigationManager.NavigateTo("categories");
             }
             catch(Exception exc)

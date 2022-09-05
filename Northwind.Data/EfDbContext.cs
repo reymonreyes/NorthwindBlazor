@@ -52,7 +52,7 @@ namespace Northwind.Data
             modelBuilder.Entity<Category>().Property(x => x.Name).HasColumnName("category_name").HasColumnType("character varying").IsRequired(true)
                 .HasMaxLength(15);
             modelBuilder.Entity<Category>().Property(x => x.Description).HasColumnName("description").HasColumnType("text");
-            modelBuilder.Entity<Category>().Ignore(x => x.Picture);
+            modelBuilder.Entity<Category>().Property(x => x.Picture).HasColumnName("picture").HasColumnType("bytea");
         }
 
         private void ConfigureSupplierEntity(ModelBuilder modelBuilder)
