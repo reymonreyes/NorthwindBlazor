@@ -86,8 +86,7 @@ namespace Northwind.Core.UnitTests.Services
             categoriesRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Category?)null);
             mock.Mock<IUnitOfWork>().Setup(x => x.CategoriesRepository).Returns(categoriesRepo.Object);
             ICategoriesService categoriesService = mock.Create<CategoriesService>();
-            var exception = await Assert.ThrowsAsync<Exception>(() => categoriesService.Edit(1, new CategoryDto { Name = "Beverage", Description = "Test" }));
-            Assert.True(exception.Message == "not found");
+            await Assert.ThrowsAsync<DataNotFoundException>(() => categoriesService.Edit(1, new CategoryDto { Name = "Beverage", Description = "Test" }));
         }
 
         [Fact]

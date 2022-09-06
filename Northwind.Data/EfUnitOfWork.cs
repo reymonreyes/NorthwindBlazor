@@ -30,7 +30,6 @@ namespace Northwind.Data
             }
             catch(Exception exc)
             {
-                //log exc...
                 throw new DataStoreException("DataStore exception occured.", exc);
             }
         }

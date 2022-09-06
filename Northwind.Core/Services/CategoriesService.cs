@@ -21,16 +21,9 @@ namespace Northwind.Core.Services
             if(categoryDto == null)
                 throw new ArgumentNullException("category");
 
-            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
-
-            var validationResult = _categoryValidator.Validate(categoryDto);            
-            if(validationResult?.Count > 0)
-            {
-                result.IsSuccessful = false;
-                result.Messages.AddRange(validationResult);
-
-                return result;
-            }
+            var serviceResult = Validate(categoryDto);
+            if(!serviceResult.IsSuccessful)
+                return serviceResult;
 
             var category = new Category
             {
@@ -41,7 +34,22 @@ namespace Northwind.Core.Services
             await _unitOfWork.CategoriesRepository.Create(category);
             await _unitOfWork.Commit();
 
-            result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", category.Id.ToString()) });
+            serviceResult!.Messages?.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", category.Id.ToString()) });
+            return serviceResult;
+        }
+
+        private ServiceResult Validate(CategoryDto categoryDto)
+        {
+            var result = new ServiceResult { Messages = new List<ServiceMessageResult>() };
+            var validationResult = _categoryValidator.Validate(categoryDto);
+            if (validationResult?.Count > 0)
+            {
+                result.IsSuccessful = false;
+                result.Messages.AddRange(validationResult);
+                return result;
+            }
+
+            result.IsSuccessful = true;
             return result;
         }
 
@@ -51,7 +59,7 @@ namespace Northwind.Core.Services
             await _unitOfWork.Commit();
         }
 
-        public async Task Edit(int categoryId, CategoryDto? categoryDto)
+        public async Task<ServiceResult> Edit(int categoryId, CategoryDto? categoryDto)
         {
             if(categoryId <= 0)
                 throw new ArgumentOutOfRangeException("categoryId");
@@ -62,10 +70,17 @@ namespace Northwind.Core.Services
             if (category is null)
                 throw new DataNotFoundException("Category data not found.");
 
+            var serviceResult = Validate(categoryDto);
+            if (!serviceResult.IsSuccessful)
+                return serviceResult;
+
             category.Name = categoryDto.Name;
             category.Description = categoryDto.Description;
-
             await _unitOfWork.Commit();
+
+            serviceResult!.Messages?.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Edit", "Category updated successfully.") });
+
+            return serviceResult;
         }
 
         public async Task<CategoryDto?> Get(int categoryId)
