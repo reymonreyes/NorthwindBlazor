@@ -10,7 +10,7 @@ namespace Northwind.Core.Interfaces.Services
     public interface ICategoriesService
     {
         Task<ServiceResult> Create(CategoryDto? categoryDto);
-        Task<ServiceResult> Edit(int categoryId, CategoryDto? categoryDto);
+        Task<ServiceResult> Update(int categoryId, CategoryDto categoryDto);
         Task<ICollection<CategoryDto>> GetAll();
         Task<CategoryDto?> Get(int categoryId);
         Task Delete(int categoryId);

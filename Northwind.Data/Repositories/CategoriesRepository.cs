@@ -42,5 +42,11 @@ namespace Northwind.Data.Repositories
         {
             return await _dbContext.Categories.OrderBy(c => c.Name).ToListAsync();
         }
+
+        public Task Update(Category category)
+        {
+            _dbContext.Update(category);
+            return Task.CompletedTask;
+        }
     }
 }

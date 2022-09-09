@@ -51,7 +51,7 @@ else
 </MudSimpleTable>
 }
 @code {
-    private ICollection<Category> _categories = new List<Category>();
+    ICollection<Category> _categories = new List<Category>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -75,7 +75,6 @@ else
                 await LoadCategories();
             }
             catch(Exception exc){
-                Console.WriteLine(exc.Message);
                 Debug.WriteLine(exc.Message);
                 Notify("Something went wrong. Please try again.", Severity.Error);
             }

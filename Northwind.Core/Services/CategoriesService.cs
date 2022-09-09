@@ -59,7 +59,7 @@ namespace Northwind.Core.Services
             await _unitOfWork.Commit();
         }
 
-        public async Task<ServiceResult> Edit(int categoryId, CategoryDto? categoryDto)
+        public async Task<ServiceResult> Update(int categoryId, CategoryDto categoryDto)
         {
             if(categoryId <= 0)
                 throw new ArgumentOutOfRangeException("categoryId");
@@ -76,6 +76,7 @@ namespace Northwind.Core.Services
 
             category.Name = categoryDto.Name;
             category.Description = categoryDto.Description;
+            await _unitOfWork.CategoriesRepository.Update(category);
             await _unitOfWork.Commit();
 
             serviceResult!.Messages?.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Edit", "Category updated successfully.") });

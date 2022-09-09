@@ -23,15 +23,8 @@ namespace Northwind.Data
         public IShippersRepository ShippersRepository => new ShippersRepository(_dbContext);
 
         public async Task Commit()
-        {
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-            }
-            catch(Exception exc)
-            {
-                throw new DataStoreException("DataStore exception occured.", exc);
-            }
+        {            
+            await _dbContext.SaveChangesAsync();            
         }
     }
 }

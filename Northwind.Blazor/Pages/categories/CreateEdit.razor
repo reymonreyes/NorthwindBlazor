@@ -85,7 +85,7 @@ else
                         var category = MapperHelper.ToCategoryDto(_category);
                         if (category is not null)
                         {
-                            await CategoriesService.Edit(category.Id, category);
+                            await CategoriesService.Update(category.Id, category);
                             Notify("Category updated successfully.", true);
                         }
                         break;

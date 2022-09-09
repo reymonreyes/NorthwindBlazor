@@ -65,7 +65,7 @@ namespace Northwind.Core.UnitTests.Services
         public async Task Edit_ShouldThrowExceptionIfInputIsNull()
         {           
             ICategoriesService categoriesService = GetCategoriesServiceMock();
-            await Assert.ThrowsAsync<ArgumentNullException>(() => categoriesService.Edit(1, null));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => categoriesService.Update(1, null!));
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Northwind.Core.UnitTests.Services
         public async Task Edit_ShouldThrowExceptionIfInvalidId()
         {
             ICategoriesService categoriesService = GetCategoriesServiceMock();
-            var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => categoriesService.Edit(0, null));
+            var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => categoriesService.Update(0, new CategoryDto { Name = "Beverage", Description = "Test" }));
             Assert.True(exception.ParamName == "categoryId");
         }
 
@@ -86,7 +86,7 @@ namespace Northwind.Core.UnitTests.Services
             categoriesRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Category?)null);
             mock.Mock<IUnitOfWork>().Setup(x => x.CategoriesRepository).Returns(categoriesRepo.Object);
             ICategoriesService categoriesService = mock.Create<CategoriesService>();
-            await Assert.ThrowsAsync<DataNotFoundException>(() => categoriesService.Edit(1, new CategoryDto { Name = "Beverage", Description = "Test" }));
+            await Assert.ThrowsAsync<DataNotFoundException>(() => categoriesService.Update(1, new CategoryDto { Name = "Beverage", Description = "Test" }));
         }
 
         [Fact]
