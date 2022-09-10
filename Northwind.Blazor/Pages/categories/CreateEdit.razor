@@ -4,6 +4,7 @@
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
 @using Northwind.Core.Interfaces.Services
+@using Northwind.Core.Exceptions as CoreExceptions
 @using System.Diagnostics
 @inject NavigationManager NavigationManager
 @inject ICategoriesService CategoriesService
@@ -78,7 +79,7 @@ else
                             }
                             return;
                         }
-                        
+
                         Notify("Category created successfully.", true);
                         break;
                     case EntryMode.Edit:
@@ -92,10 +93,14 @@ else
                 }
                 NavigationManager.NavigateTo("categories");
             }
+            catch(ValidationFailedException exc)
+            {
+                var errorMessage = String.Join("<br/>", exc.ValidationErrors.Select(x => $"{x.Message.Key}:{x.Message.Value}").ToList());
+                Notify(errorMessage, false);
+            }
             catch(Exception exc)
             {
-                Console.WriteLine(exc.Message);
-                Debug.WriteLine(exc.Message);
+                Debug.WriteLine(exc);
                 Notify("Something went wrong. Please try again.", false);
             }
             finally

@@ -1,5 +1,7 @@
-﻿using Autofac.Extras.Moq;
+﻿using Autofac;
+using Autofac.Extras.Moq;
 using Moq;
+using Northwind.Common.Validators;
 using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
 using Northwind.Core.Exceptions;
@@ -47,17 +49,13 @@ namespace Northwind.Core.UnitTests.Services
         [Fact]
         public async Task Create_ShouldFailIfInvalidInputs()
         {
-            var mock = AutoMock.GetLoose();
-            mock.Mock<ICategoryValidator>().Setup(x => x.Validate(It.IsAny<CategoryDto>())).Returns(new List<ServiceMessageResult>
+            var categoryValidator = new CategoryValidator();
+            var mock = AutoMock.GetLoose(config =>
             {
-                new ServiceMessageResult{
-                    MessageType = Enums.ServiceMessageType.Error,
-                    Message = new KeyValuePair<string, string>("Name", "Required")
-                }
+                config.RegisterInstance(categoryValidator).As<ICategoryValidator>();
             });
             ICategoriesService categoriesService = mock.Create<CategoriesService>();
-            var result = await categoriesService.Create(new CategoryDto());
-            Assert.False(result.IsSuccessful);
+            var exception = await Assert.ThrowsAsync<ValidationFailedException>(() => categoriesService.Create(new CategoryDto()));
         }
 
         [Fact]

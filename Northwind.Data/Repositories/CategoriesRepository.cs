@@ -27,10 +27,8 @@ namespace Northwind.Data.Repositories
         public async Task Delete(int categoryId)
         {
             var category = await Get(categoryId);
-            if (category is null)
-                throw new DataNotFoundException("Category data not found.");
-
-            _dbContext.Categories.Remove(category);
+            if (category is not null)
+                _dbContext.Categories.Remove(category);
         }
 
         public async Task<Category?> Get(int categoryId)

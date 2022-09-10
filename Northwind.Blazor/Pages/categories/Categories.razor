@@ -75,7 +75,7 @@ else
                 await LoadCategories();
             }
             catch(Exception exc){
-                Debug.WriteLine(exc.Message);
+                Debug.WriteLine(exc);
                 Notify("Something went wrong. Please try again.", Severity.Error);
             }
         }
