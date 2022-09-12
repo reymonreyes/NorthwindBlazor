@@ -2,6 +2,7 @@
 using Northwind.Core;
 using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,13 @@ namespace Northwind.Data.Repositories
             await _dbContext.Categories.AddAsync(category);            
         }
 
+        public async Task Delete(int categoryId)
+        {
+            var category = await Get(categoryId);
+            if (category is not null)
+                _dbContext.Categories.Remove(category);
+        }
+
         public async Task<Category?> Get(int categoryId)
         {
             return await _dbContext.Categories.FirstOrDefaultAsync(x => x.Id == categoryId);            
@@ -31,6 +39,12 @@ namespace Northwind.Data.Repositories
         public async Task<ICollection<Category>> GetAll()
         {
             return await _dbContext.Categories.OrderBy(c => c.Name).ToListAsync();
+        }
+
+        public Task Update(Category category)
+        {
+            _dbContext.Update(category);
+            return Task.CompletedTask;
         }
     }
 }

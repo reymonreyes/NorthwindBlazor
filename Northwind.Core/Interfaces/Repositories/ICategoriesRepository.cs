@@ -13,5 +13,7 @@ namespace Northwind.Core.Interfaces.Repositories
         Task Create(Category category);
         Task<ICollection<Category>> GetAll();
         Task<Category?> Get(int categoryId);
+        Task Delete(int categoryId);
+        Task Update(Category category);
     }
 }

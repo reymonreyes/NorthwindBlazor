@@ -6,7 +6,9 @@
 @using Northwind.Blazor.Models
 @using Northwind.Core.Dtos
 @using Northwind.Core.Interfaces.Services
+@using System.Diagnostics
 @inject ICategoriesService CategoriesService
+@inject IDialogService DialogService
 @inherits PageBase
 
 <MudPaper Elevation="2" Class="my-1">
@@ -31,28 +33,57 @@ else
 <MudSimpleTable Style="overflow-x: auto;" Dense="true" Hover="true" Bordered="true">
     <thead>
         <tr class="text-center">
-            <th>Name</th><th>Description</th>
+            <th>Name</th><th>Description</th><th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var category in _categories)
         {           
             <tr>
-                <td><NavLink href="@string.Format("categories/{0}", category.Id)">@category.Name</NavLink></td>
+                <td><MudLink Href="@($"categories/{category.Id}")" Underline="Underline.None" Class="flex-grow-1">@category.Name</MudLink></td>
                 <td>@category.Description</td>
+                <td>
+                    <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="() => Delete(category)">Delete</MudButton>
+                </td>
             </tr>
         }
     </tbody>
 </MudSimpleTable>
 }
 @code {
-    private ICollection<Category> _categories = new List<Category>();
+    ICollection<Category> _categories = new List<Category>();
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
+        await LoadCategories();
+        IsLoading = false;
+    }
+
+    private async Task Delete(Category category)
+    {
+        var confirm = await DialogService.ShowMessageBox("Warning", 
+            (MarkupString)$"Do you want to delete this category?<br/><b>{category.Name}</b>",
+            yesText: "Yes",
+            noText: "No"
+        );
+
+        if(confirm is not null && confirm.Value)
+        {
+            try{
+                await CategoriesService.Delete(category.Id);
+                await LoadCategories();
+            }
+            catch(Exception exc){
+                Debug.WriteLine(exc);
+                Notify("Something went wrong. Please try again.", Severity.Error);
+            }
+        }
+    }
+
+    private async Task LoadCategories()
+    {
         ICollection<CategoryDto> categories = await CategoriesService.GetAll();
         _categories = categories.Select(x => MapperHelper.ToCategory(x)).ToList();
-        IsLoading = false;
     }
 }

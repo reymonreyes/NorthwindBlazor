@@ -1,4 +1,5 @@
-﻿using Northwind.Core.Interfaces.Repositories;
+﻿using Northwind.Core.Exceptions;
+using Northwind.Core.Interfaces.Repositories;
 using Northwind.Data.Repositories;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,8 @@ namespace Northwind.Data
         public IShippersRepository ShippersRepository => new ShippersRepository(_dbContext);
 
         public async Task Commit()
-        {
-            await _dbContext.SaveChangesAsync();
+        {            
+            await _dbContext.SaveChangesAsync();            
         }
     }
 }

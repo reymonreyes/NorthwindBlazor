@@ -4,6 +4,7 @@
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
 @using Northwind.Core.Interfaces.Services
+@using Northwind.Core.Exceptions as CoreExceptions
 @using System.Diagnostics
 @inject NavigationManager NavigationManager
 @inject ICategoriesService CategoriesService
@@ -37,7 +38,7 @@ else
 }
 @code {
     private EntryMode _mode = EntryMode.Create;
-    private Category? _category;
+    private Category? _category = null;
     private string _saveButtonText = "Save";
     [Parameter]
     public int Id { get; set; }
@@ -52,16 +53,17 @@ else
                 break;
             case EntryMode.Edit:
                 var category = await CategoriesService.Get(Id);
-                _category = MapperHelper.ToCategory(category);
+                if (category is not null)
+                    _category = MapperHelper.ToCategory(category);
                 break;
         }
     }
 
     private async Task Save()
     {
-        var categoryDto = MapperHelper.ToCategoryDto(_category);
-        if(categoryDto is not null)
+        if(_category is not null)
         {
+            var categoryDto = MapperHelper.ToCategoryDto(_category);
             _saveButtonText = "Saving...";
 
             try
@@ -69,23 +71,36 @@ else
                 switch (_mode)
                 {
                     case EntryMode.Create:
-                        await CategoriesService.Create(categoryDto);
+                        var result = await CategoriesService.Create(categoryDto);
+                        if (!result.IsSuccessful){
+                            if (result.Messages is not null){
+                                var messages = String.Join("<br/>", result.Messages.Select(x => x.Message.Value).ToList());
+                                Notify(messages, false);
+                            }
+                            return;
+                        }
+
                         Notify("Category created successfully.", true);
                         break;
                     case EntryMode.Edit:
                         var category = MapperHelper.ToCategoryDto(_category);
                         if (category is not null)
-                            await CategoriesService.Edit(category.Id, category);
-
+                        {
+                            await CategoriesService.Update(category.Id, category);
+                            Notify("Category updated successfully.", true);
+                        }
                         break;
                 }
-                Notify("Category updated successfully.", true);
                 NavigationManager.NavigateTo("categories");
+            }
+            catch(ValidationFailedException exc)
+            {
+                var errorMessage = String.Join("<br/>", exc.ValidationErrors.Select(x => $"{x.Message.Key}:{x.Message.Value}").ToList());
+                Notify(errorMessage, false);
             }
             catch(Exception exc)
             {
-                Console.WriteLine(exc.Message);
-                Debug.WriteLine(exc.Message);
+                Debug.WriteLine(exc);
                 Notify("Something went wrong. Please try again.", false);
             }
             finally

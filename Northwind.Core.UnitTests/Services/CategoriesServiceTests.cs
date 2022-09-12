@@ -1,7 +1,10 @@
-﻿using Autofac.Extras.Moq;
+﻿using Autofac;
+using Autofac.Extras.Moq;
 using Moq;
+using Northwind.Common.Validators;
 using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
@@ -46,17 +49,13 @@ namespace Northwind.Core.UnitTests.Services
         [Fact]
         public async Task Create_ShouldFailIfInvalidInputs()
         {
-            var mock = AutoMock.GetLoose();
-            mock.Mock<ICategoryValidator>().Setup(x => x.Validate(It.IsAny<CategoryDto>())).Returns(new List<ServiceMessageResult>
+            var categoryValidator = new CategoryValidator();
+            var mock = AutoMock.GetLoose(config =>
             {
-                new ServiceMessageResult{
-                    MessageType = Enums.ServiceMessageType.Error,
-                    Message = new KeyValuePair<string, string>("Name", "Required")
-                }
+                config.RegisterInstance(categoryValidator).As<ICategoryValidator>();
             });
             ICategoriesService categoriesService = mock.Create<CategoriesService>();
-            var result = await categoriesService.Create(new CategoryDto());
-            Assert.False(result.IsSuccessful);
+            var exception = await Assert.ThrowsAsync<ValidationFailedException>(() => categoriesService.Create(new CategoryDto()));
         }
 
         [Fact]
@@ -64,7 +63,7 @@ namespace Northwind.Core.UnitTests.Services
         public async Task Edit_ShouldThrowExceptionIfInputIsNull()
         {           
             ICategoriesService categoriesService = GetCategoriesServiceMock();
-            await Assert.ThrowsAsync<ArgumentNullException>(() => categoriesService.Edit(1, null));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => categoriesService.Update(1, null!));
         }
 
         [Fact]
@@ -72,7 +71,7 @@ namespace Northwind.Core.UnitTests.Services
         public async Task Edit_ShouldThrowExceptionIfInvalidId()
         {
             ICategoriesService categoriesService = GetCategoriesServiceMock();
-            var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => categoriesService.Edit(0, null));
+            var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => categoriesService.Update(0, new CategoryDto { Name = "Beverage", Description = "Test" }));
             Assert.True(exception.ParamName == "categoryId");
         }
 
@@ -85,8 +84,34 @@ namespace Northwind.Core.UnitTests.Services
             categoriesRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Category?)null);
             mock.Mock<IUnitOfWork>().Setup(x => x.CategoriesRepository).Returns(categoriesRepo.Object);
             ICategoriesService categoriesService = mock.Create<CategoriesService>();
-            var exception = await Assert.ThrowsAsync<Exception>(() => categoriesService.Edit(1, new CategoryDto { Name = "Beverage", Description = "Test" }));
-            Assert.True(exception.Message == "not found");
+            await Assert.ThrowsAsync<DataNotFoundException>(() => categoriesService.Update(1, new CategoryDto { Name = "Beverage", Description = "Test" }));
+        }
+
+        [Fact]
+        [Trait("CRUD", "Delete")]
+        public async Task Delete_ShouldThrowDataNotFoundException()
+        {
+            var mock = AutoMock.GetLoose();
+            var categoryRepo = mock.Mock<ICategoriesRepository>();
+            categoryRepo.Setup(x => x.Delete(It.IsAny<int>())).Throws<DataNotFoundException>();
+            var uOW = mock.Mock<IUnitOfWork>();
+            uOW.Setup(x => x.CategoriesRepository).Returns(categoryRepo.Object);
+            ICategoriesService categoriesService = mock.Create<CategoriesService>();
+            await Assert.ThrowsAsync<DataNotFoundException>(() => categoriesService.Delete(1));
+        }
+
+        [Fact]
+        [Trait("CRUD", "Delete")]
+        public async Task Delete_ShouldThrowDataStoreException()
+        {
+            var mock = AutoMock.GetLoose();
+            var categoryRepo = mock.Mock<ICategoriesRepository>();
+            categoryRepo.Setup(x => x.Delete(It.IsAny<int>())).Returns(Task.CompletedTask);
+            var uOW = mock.Mock<IUnitOfWork>();
+            uOW.Setup(x => x.CategoriesRepository).Returns(categoryRepo.Object);
+            uOW.Setup(x => x.Commit()).Throws<DataStoreException>();
+            ICategoriesService categoriesService = mock.Create<CategoriesService>();
+            await Assert.ThrowsAsync<DataStoreException>(() => categoriesService.Delete(1));
         }
 
         private ICategoriesService GetCategoriesServiceMock()
