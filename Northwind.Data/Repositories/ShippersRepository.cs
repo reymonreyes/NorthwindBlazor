@@ -22,6 +22,13 @@ namespace Northwind.Data.Repositories
             await _efDbContext.Shippers.AddAsync(shipper);
         }
 
+        public async Task Delete(int shipperId)
+        {
+            var shipper = await Get(shipperId);
+            if (shipper is not null)
+                _efDbContext.Shippers.Remove(shipper);
+        }
+
         public async Task<Shipper?> Get(int shipperId)
         {
             return await _efDbContext.Shippers.FirstOrDefaultAsync(x => x.Id == shipperId);

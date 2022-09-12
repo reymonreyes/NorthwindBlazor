@@ -13,5 +13,6 @@ namespace Northwind.Core.Interfaces.Repositories
         Task Create(Shipper shipper);
         Task<Shipper?> Get(int shipperId);
         Task Update(Shipper shipper);
+        Task Delete(int shipperId);
     }
 }

@@ -94,5 +94,11 @@ namespace Northwind.Core.Services
             var shippers = await _unitOfWork.ShippersRepository.GetAll();
             return shippers.Select(x => x.ToShipperDto()).ToList();
         }
+
+        public async Task Delete(int shipperId)
+        {
+            await _unitOfWork.ShippersRepository.Delete(shipperId);
+            await _unitOfWork.Commit();
+        }
     }
 }
