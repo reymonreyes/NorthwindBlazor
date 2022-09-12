@@ -31,5 +31,12 @@ namespace Northwind.Data.Repositories
         {
             return await _efDbContext.Shippers.ToListAsync();
         }
+
+        public Task Update(Shipper shipper)
+        {
+            _efDbContext.Update(shipper);
+
+            return Task.CompletedTask;
+        }
     }
 }

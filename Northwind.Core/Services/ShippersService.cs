@@ -1,5 +1,6 @@
 ﻿using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Exceptions;
 using Northwind.Core.Extensions;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
@@ -22,21 +23,12 @@ namespace Northwind.Core.Services
             _shipperValidator = shipperValidator;
         }
 
-        public async Task<ServiceResult> Create(ShipperDto? shipperDto)
+        public async Task<ServiceResult> Create(ShipperDto shipperDto)
         {
             if(shipperDto is null)
                 throw new ArgumentNullException("shipper");
-            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
 
-            var validationResult = _shipperValidator.Validate(shipperDto);
-            if(validationResult?.Count > 0)
-            {
-                result.IsSuccessful = false;
-                result.Messages.AddRange(validationResult);
-            }
-
-            if (!result.IsSuccessful)
-                return result;
+            Validate(shipperDto);
 
             var shipper = new Shipper
             {
@@ -47,28 +39,27 @@ namespace Northwind.Core.Services
             await _unitOfWork.ShippersRepository.Create(shipper);
             await _unitOfWork.Commit();
 
-            result.Messages.Clear();
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", shipper.Id.ToString()) });
 
             return result;
         }
 
-        public async Task<ServiceResult> Edit(int shipperId, ShipperDto? shipperDto)
+        private void Validate(ShipperDto shipper)
+        {
+            var validationResult = _shipperValidator.Validate(shipper);
+            if (validationResult?.Count > 0)
+                throw new ValidationFailedException(validationResult);
+        }
+
+        public async Task<ServiceResult> Update(int shipperId, ShipperDto shipperDto)
         {
             if (shipperDto is null)
-                throw new ArgumentNullException("shipper");
+                throw new ArgumentNullException("shipperDto");
             if(shipperId <= 0)
                 throw new ArgumentOutOfRangeException(nameof(shipperId));
 
-            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
-
-            var validationResult = _shipperValidator.Validate(shipperDto);
-            if(validationResult?.Count > 0)
-            {
-                result.IsSuccessful = false;
-                result.Messages.AddRange(validationResult);
-                return result;
-            }
+            Validate(shipperDto);            
 
             var shipper = await _unitOfWork.ShippersRepository.Get(shipperId);
             if (shipper is null)
@@ -76,9 +67,10 @@ namespace Northwind.Core.Services
 
             shipper.Name = shipperDto.Name;
             shipper.Phone = shipperDto.Phone;
+            await _unitOfWork.ShippersRepository.Update(shipper);
             await _unitOfWork.Commit();
 
-            result.Messages.Clear();
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", shipper.Id.ToString()) });
 
             return result; 
