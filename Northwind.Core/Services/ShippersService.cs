@@ -1,5 +1,6 @@
 ﻿using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Extensions;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
@@ -92,24 +93,14 @@ namespace Northwind.Core.Services
             if (shipper == null)
                 return null;
 
-            return new ShipperDto
-            {
-                Id = shipper.Id,
-                Name = shipper.Name,
-                Phone = shipper.Phone
-            };
+            return shipper.ToShipperDto();
         }
 
         public async Task<ICollection<ShipperDto>> GetAll()
         {
             ICollection<ShipperDto> result = new List<ShipperDto>();
             var shippers = await _unitOfWork.ShippersRepository.GetAll();
-            return shippers.Select(x => new ShipperDto
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Phone = x.Phone
-            }).ToList();
+            return shippers.Select(x => x.ToShipperDto()).ToList();
         }
     }
 }
