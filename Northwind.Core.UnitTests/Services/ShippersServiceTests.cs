@@ -1,7 +1,10 @@
-﻿using Autofac.Extras.Moq;
+﻿using Autofac;
+using Autofac.Extras.Moq;
 using Moq;
+using Northwind.Common.Validators;
 using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
@@ -22,30 +25,28 @@ namespace Northwind.Core.UnitTests.Services
         {
             var mock = AutoMock.GetLoose();
             IShippersService shippersService = mock.Create<ShippersService>();
-            await Assert.ThrowsAsync<ArgumentNullException>(() => shippersService.Create(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => shippersService.Create(null!));
         }
 
         [Fact]
-        public async Task Create_ShouldReturnErrorsIfInputRequiredFieldsAreEmpty()
+        public async Task Create_ShouldThrowValidationExceptionForInvalidFields()
         {
-            var mock = AutoMock.GetLoose();
-            mock.Mock<IShipperValidator>().Setup(x => x.Validate(It.IsAny<ShipperDto>())).Returns(new List<ServiceMessageResult>
+            var validator = new ShipperValidator();
+            var mock = AutoMock.GetLoose(cfg =>
             {
-                new ServiceMessageResult{ MessageType = Enums.ServiceMessageType.Error, Message = new KeyValuePair<string, string>("Name", "Required") }
+                cfg.RegisterInstance(validator).As<IShipperValidator>();
             });
-            IShippersService shippersService = mock.Create<ShippersService>();
+            IShippersService service = mock.Create<ShippersService>();
 
-            var result = await shippersService.Create(new ShipperDto());
-
-            Assert.False(result.IsSuccessful);
-        }
+            await Assert.ThrowsAsync<ValidationFailedException>(() => service.Create(new ShipperDto()));
+        }        
 
         [Fact]
         public async Task Edit_ShouldThrowExceptionIfInputIsNull()
         {
             var mock = AutoMock.GetLoose();
             IShippersService shippersService = mock.Create<ShippersService>();
-            await Assert.ThrowsAsync<ArgumentNullException>(() => shippersService.Edit(1, null));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => shippersService.Update(1, null));
         }
 
         [Fact]
@@ -53,7 +54,7 @@ namespace Northwind.Core.UnitTests.Services
         {
             var mock = AutoMock.GetLoose();
             IShippersService shippersService = mock.Create<ShippersService>();
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => shippersService.Edit(0, new ShipperDto()));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => shippersService.Update(0, new ShipperDto()));
         }
 
         [Fact]
@@ -64,22 +65,21 @@ namespace Northwind.Core.UnitTests.Services
             shippersRepoMock.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Shipper?)null);
             mock.Mock<IUnitOfWork>().Setup(x => x.ShippersRepository).Returns(shippersRepoMock.Object);
             IShippersService shippersService = mock.Create<ShippersService>();
-            var result = await Assert.ThrowsAsync<Exception>(() => shippersService.Edit(1, new ShipperDto()));
+            var result = await Assert.ThrowsAsync<Exception>(() => shippersService.Update(1, new ShipperDto()));
             Assert.True(result.Message == "shipper not found");
         }
 
         [Fact]
-        public async Task Edit_ShouldReturnErrorsIfValidationFailed()
+        public async Task Edit_ShouldThrowValidationFailedExceptionForInvalidFields()
         {
-            var mock = AutoMock.GetLoose();
-            var validator = mock.Mock<IShipperValidator>();
-            validator.Setup(x => x.Validate(It.IsAny<ShipperDto>())).Returns(new List<ServiceMessageResult>
+            var validator = new ShipperValidator();
+            var mock = AutoMock.GetLoose(cfg =>
             {
-                new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Error, Message = new KeyValuePair<string, string>("Name", "Required")}
+                cfg.RegisterInstance(validator).As<IShipperValidator>();
             });
-            IShippersService shippersService = mock.Create<ShippersService>();
-            var result = await shippersService.Edit(1, new ShipperDto());
-            Assert.True(result.Messages?.Count > 0);
+            IShippersService service = mock.Create<ShippersService>();
+
+            await Assert.ThrowsAsync<ValidationFailedException>(() => service.Update(1, new ShipperDto()));
         }
     }
 }

@@ -10,8 +10,9 @@ namespace Northwind.Core.Interfaces.Services
     public interface IShippersService
     {
         public Task<ICollection<ShipperDto>> GetAll();
-        public Task<ServiceResult> Create(ShipperDto? shipperDto);
+        public Task<ServiceResult> Create(ShipperDto shipperDto);
         public Task<ShipperDto?> Get(int shipperId);
-        public Task<ServiceResult> Edit(int shipperId, ShipperDto? shipperDto);
+        public Task<ServiceResult> Update(int shipperId, ShipperDto shipperDto);
+        public Task Delete(int shipperId);
     }
 }

@@ -3,6 +3,7 @@
 @using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
+@using Northwind.Core.Exceptions
 @using Northwind.Core.Interfaces.Services
 @inherits PageBase
 @inject NavigationManager NavigationManager
@@ -74,10 +75,9 @@
 
     private async Task Save()
     {
-        var shipperDto = MapperHelper.ToShipperDto(_shipper);
-
-        if (shipperDto is not null)
+        if (_shipper is not null)
         {
+            var shipperDto = MapperHelper.ToShipperDto(_shipper);
             try
             {
                 IsLoading = true;
@@ -88,12 +88,17 @@
                         await ShippersService.Create(shipperDto);
                         break;
                     case EntryMode.Edit:
-                        await ShippersService.Edit(Id, shipperDto);
+                        await ShippersService.Update(Id, shipperDto);
                         break;
                 }
 
                 Notify($"Shipper {(_mode == EntryMode.Create ? "created" : "updated")} successfully.", Severity.Success);
                 NavigationManager.NavigateTo("shippers");
+            }
+            catch (ValidationFailedException exc)
+            {
+                var errorMessage = String.Join("<br/>", exc.ValidationErrors.Select(x => $"{x.Message.Key}:{x.Message.Value}").ToList());
+                Notify(errorMessage, Severity.Error);
             }
             catch(Exception exc)
             {

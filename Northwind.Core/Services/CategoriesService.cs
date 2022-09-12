@@ -32,14 +32,14 @@ namespace Northwind.Core.Services
             await _unitOfWork.CategoriesRepository.Create(category);
             await _unitOfWork.Commit();
 
-            var result = new ServiceResult { Messages = new List<ServiceMessageResult>() };
-            result!.Messages?.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", category.Id.ToString()) });
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
+            result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", category.Id.ToString()) });
+            
             return result;
         }
 
         private void Validate(CategoryDto categoryDto)
         {
-            var result = new ServiceResult { Messages = new List<ServiceMessageResult>() };
             var validationResult = _categoryValidator.Validate(categoryDto);
             if (validationResult?.Count > 0)
                 throw new ValidationFailedException(validationResult);

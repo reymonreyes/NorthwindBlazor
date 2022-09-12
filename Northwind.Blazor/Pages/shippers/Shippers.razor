@@ -1,8 +1,11 @@
 ﻿@page "/shippers"
 @using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
+@using Northwind.Core.Dtos
 @using Northwind.Core.Interfaces.Services
+@using System.Diagnostics
 @inherits PageBase
+@inject IDialogService DialogService
 @inject IShippersService ShippersService
 <MudPaper Elevation="2" Class="my-1">
     <MudToolBar>
@@ -27,39 +30,62 @@ else
         <tr class="text-center">
             <th>Name</th>            
             <th>Phone</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
     @foreach (var shipper in _shippers)
     {
-        if (shipper is not null)
-        {
         <tr>
-            <td class="d-flex">
+            <td>
                 <MudLink Href="@string.Format("shippers/{0}", shipper.Id)" Underline="Underline.None" Class="flex-grow-1">@shipper.Name</MudLink>
             </td>            
             <td>@shipper.Phone</td>
+            <td>
+                <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="() => Delete(shipper)">Delete</MudButton>
+            </td>
         </tr>
-        }
     }
     </tbody>
 </MudSimpleTable>
 }
 
 @code {
-    private ICollection<Shipper?> _shippers = new List<Shipper?>();
+    private ICollection<Shipper> _shippers = new List<Shipper>();
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
-
-        var shippers = await ShippersService.GetAll();
-        if (shippers is not null)
-        {
-            _shippers = shippers.Select(x => MapperHelper.ToShipper(x)).ToList();
-        }
-
+        await LoadShippers();
         IsLoading = false;
     }
 
+    private async Task Delete(Shipper shipper)
+    {
+        var confirm = await DialogService.ShowMessageBox("Warning",
+            (MarkupString)$"Do you want to delete this category?<br/><b>{shipper.Name}</b>",
+            yesText: "Yes",
+            noText: "No"
+        );
+
+        if (confirm is not null && confirm.Value)
+        {
+            try
+            {
+                await ShippersService.Delete(shipper.Id);
+                await LoadShippers();
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine(exc);
+                Notify("Something went wrong. Please try again.", Severity.Error);
+            }
+        }
+    }
+
+    private async Task LoadShippers()
+    {
+        ICollection<ShipperDto> shippers = await ShippersService.GetAll();        
+        _shippers = shippers.Select(x => MapperHelper.ToShipper(x)).ToList();
+    }
 }
