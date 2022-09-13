@@ -3,11 +3,12 @@
 @using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
+@using Northwind.Core.Exceptions
 @using Northwind.Core.Interfaces.Services
 @using System.Diagnostics
 @inject NavigationManager NavigationManager
 @inject IProductsService ProductsService
-@inject ISnackbar Snackbar
+@inherits PageBase
 
 <MudPaper Elevation="2" Class="my-1">
     <MudToolBar>
@@ -59,16 +60,17 @@ else{
                 break;
             case EntryMode.Edit:
                 var productDto = await ProductsService.Get(Id);
-                _product = MapperHelper.ToProduct(productDto);
+                if (productDto is not null)
+                    _product = MapperHelper.ToProduct(productDto);
                 break;
         }
     }
 
     private async Task Save()
     {
-        var productDto = MapperHelper.ToProductDto(_product);
-        if (productDto != null)
+        if (_product != null)
         {
+            var productDto = MapperHelper.ToProductDto(_product);
             _saveButtonText = "Saving...";
 
             try
@@ -79,18 +81,23 @@ else{
                         await ProductsService.Create(productDto);
                         break;
                     case EntryMode.Edit:
-                        await ProductsService.Edit(Id, productDto);
+                        await ProductsService.Update(Id, productDto);
                         break;
                 }
-                Notify("Product created successfully.", true);
+                Notify($"Product {(this._mode == EntryMode.Create ? "created" : "updated")} successfully.", Severity.Success);
                 Back();
+            }
+            catch (ValidationFailedException exc)
+            {
+                var errorMessage = String.Join("<br/>", exc.ValidationErrors.Select(x => $"{x.Message.Key}:{x.Message.Value}").ToList());
+                Notify(errorMessage, Severity.Error);
             }
             catch (Exception exc)
             {
                 //add persistent logging in future
                 Console.WriteLine(exc.Message);
                 Debug.WriteLine(exc.Message);
-                Notify("Something went wrong. Please try again.", false);
+                Notify("Something went wrong. Please try again.", Severity.Error);
             }
             finally { Reset(); }
         }
@@ -106,9 +113,9 @@ else{
         _saveButtonText = "Save";
     }
 
-    private void Notify(string message, bool isSuccessful)
-    {
-        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopEnd;
-        Snackbar.Add(message, isSuccessful ? Severity.Success : Severity.Error);
-    }
+    //private void Notify(string message, bool isSuccessful)
+    //{
+    //    Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopEnd;
+    //    Snackbar.Add(message, isSuccessful ? Severity.Success : Severity.Error);
+    //}
 }

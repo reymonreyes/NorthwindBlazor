@@ -33,5 +33,11 @@ namespace Northwind.Data.Repositories
         {
             return await _dbContext.Products.OrderBy(x => x.Name).ToListAsync();
         }
+
+        public Task Update(Product product)
+        {
+            _dbContext.Update(product);
+            return Task.CompletedTask;
+        }
     }
 }

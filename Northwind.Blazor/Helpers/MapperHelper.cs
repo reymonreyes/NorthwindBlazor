@@ -6,19 +6,19 @@ namespace Northwind.Blazor.Helpers
 {
     public static class MapperHelper
     {
-        public static Product? ToProduct(ProductDto? productDto)
+        public static Product ToProduct(ProductDto productDto)
         {
             if (productDto is null)
-                return null;
+                throw new ArgumentNullException("productDto");
 
             TinyMapper.Bind<ProductDto, Product>();
             return TinyMapper.Map<Product>(productDto);
         }
 
-        public static ProductDto? ToProductDto(Product? product)
+        public static ProductDto ToProductDto(Product product)
         {
             if (product is null)
-                return null;
+                throw new ArgumentNullException("product");
 
             TinyMapper.Bind<Product, ProductDto>();
             return TinyMapper.Map<ProductDto>(product);

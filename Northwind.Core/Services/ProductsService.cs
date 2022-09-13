@@ -1,5 +1,6 @@
 ﻿using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
@@ -23,22 +24,12 @@ namespace Northwind.Core.Services
 
         }
 
-        public async Task<ServiceResult> Create(ProductDto? productDto)
+        public async Task<ServiceResult> Create(ProductDto productDto)
         {
             if (productDto == null)
-                throw new ArgumentNullException("product");
+                throw new ArgumentNullException("productDto");
 
-            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
-
-            var validationResult = _productValidator.Validate(productDto);
-            if(validationResult?.Count > 0)
-            {
-                result.IsSuccessful = false;
-                result.Messages.AddRange(validationResult);
-            }
-
-            if (!result.IsSuccessful)
-                return result;
+            Validate(productDto);
 
             var product = new Product
             {
@@ -56,34 +47,33 @@ namespace Northwind.Core.Services
             await _unitOfWork.ProductsRepository.Create(product);
             await _unitOfWork.Commit();
 
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", product.Id.ToString()) });
             return result;
         }
 
-        public async Task<ServiceResult> Edit(int id, ProductDto productDto)
+        private void Validate(ProductDto productDto)
+        {
+            var validationResult = _productValidator.Validate(productDto);
+            if (validationResult?.Count > 0)
+                throw new ValidationFailedException(validationResult);
+        }
+
+        public async Task<ServiceResult> Update(int id, ProductDto productDto)
         {
             if (productDto == null)
                 throw new ArgumentNullException("product");
             if(id <= 0)
                 throw new ArgumentOutOfRangeException("id");
 
+            Validate(productDto);
+
             var product = await _unitOfWork.ProductsRepository.Get(id);
             if (product is null)
                 throw new Exception("not found");
 
             var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
-
-            var validationResult = _productValidator.Validate(productDto);
-            if (validationResult?.Count > 0)
-            {
-                result.IsSuccessful = false;
-                result.Messages.AddRange(validationResult);
-            }
-
-            if (!result.IsSuccessful)
-                return result;
-
-
+            
             product.Name = productDto.Name;
             product.Code = productDto.Code;
             product.UnitPrice = productDto.UnitPrice;
@@ -93,7 +83,7 @@ namespace Northwind.Core.Services
             product.ReorderLevel = productDto.ReorderLevel;
             product.Discontinued = productDto.Discontinued;
             product.Description = productDto.Description;
-
+            await _unitOfWork.ProductsRepository.Update(product);
             await _unitOfWork.Commit();
             result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", product.Id.ToString()) });
 
