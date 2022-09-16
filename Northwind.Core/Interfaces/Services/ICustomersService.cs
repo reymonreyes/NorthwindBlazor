@@ -10,5 +10,6 @@ namespace Northwind.Core.Interfaces.Services
     public interface ICustomersService
     {
         Task<ICollection<CustomerDto>> GetAll();
+        Task<CustomerDto?> Get(string customerId);
     }
 }

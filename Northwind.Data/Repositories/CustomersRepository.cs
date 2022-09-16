@@ -16,9 +16,20 @@ namespace Northwind.Data.Repositories
         {
             _dbContext = dbContext;
         }
+
+        public Task<Customer?> Get(string customerId)
+        {
+            if (string.IsNullOrEmpty(customerId))
+                return null!;
+
+            return _dbContext.Customers.FirstOrDefaultAsync(x => x.Id == customerId);
+        }
+
         public async Task<ICollection<Customer>> GetAll()
         {
             return await _dbContext.Customers.ToListAsync();
         }
+
+
     }
 }

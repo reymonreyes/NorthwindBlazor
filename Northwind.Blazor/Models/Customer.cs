@@ -24,8 +24,6 @@ namespace Northwind.Blazor.Models
         [MaxLength(24)]
         public string? Phone { get; set; }
         [MaxLength(24)]
-        public string? Fax { get; set; }
-        //[EmailAddress, MaxLength(254)]
-        //public string? Email { get; set; }
+        public string? Fax { get; set; }        
     }
 }

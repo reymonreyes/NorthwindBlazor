@@ -1,0 +1,90 @@
+﻿@page "/customers/{id}"
+@using Northwind.Blazor.Helpers
+@using Northwind.Blazor.Models
+@using Northwind.Core.Interfaces.Services
+@inherits PageBase
+@inject ICustomersService CustomersService
+<MudPaper Elevation="1" Class="my-1">
+    <MudToolBar>
+        <MudIconButton Icon="@Icons.Filled.ChevronLeft" Link="customers"></MudIconButton>
+        <MudText>Customer Details</MudText>
+    </MudToolBar>
+</MudPaper>
+@if (IsLoading)
+{
+    <MudProgressLinear Indeterminate="true" />
+}
+@if(_customer is not null){
+    <MudGrid Class="mt-1">
+        <MudItem xs="12" md="12" lg="6" xl="6">
+            <MudPaper Class="px-2">
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Name</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_customer.Name</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Contact Name</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_customer.ContactName</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Contact Title</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_customer.ContactTitle</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Address</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_customer.Address</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">City</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_customer.City</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Region</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_customer.Region</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Country</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_customer.Country</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Postal Code</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_customer.PostalCode</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Phone</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_customer.Phone</MudText></MudItem>
+                </MudGrid>
+                <MudGrid>
+                    <MudItem xs="3" md="2" lg="2"><MudText Style="font-weight: bold;">Fax</MudText></MudItem>
+                    <MudItem xs="10" md="10" lg="10"><MudText>@_customer.Fax</MudText></MudItem>
+                </MudGrid>
+                <MudDivider DividerType="DividerType.FullWidth" Class="my-1"/>
+                <MudGrid>
+                    <MudItem xs="12" md="12" lg="12" Class="d-flex justify-end">
+                        <MudButton Link="@String.Format("customers/{0}/edit", _customer.Id)" Variant="Variant.Filled" Color="Color.Primary">Edit</MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+}
+else{
+    <MudAlert Severity="Severity.Info" Variant="Variant.Text">Customer not found.</MudAlert>
+}
+@code {
+    private Customer? _customer;
+
+    [Parameter]
+    public string Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        var customer = await CustomersService.Get(Id!);
+        if(customer is not null)
+            _customer = MapperHelper.ToCustomer(customer);
+
+        IsLoading = false;
+    }
+}
