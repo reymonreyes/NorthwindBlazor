@@ -3,7 +3,9 @@
 @using Northwind.Blazor.Models
 @using Northwind.Core.Dtos
 @using Northwind.Core.Interfaces.Services
-@inject IProductsService _productsSvc
+@using System.Diagnostics
+@inject IDialogService DialogService
+@inject IProductsService ProductsService
 @inherits PageBase
 
 <MudPaper Elevation="2" Class="my-1">
@@ -27,7 +29,7 @@ else
 <MudSimpleTable Style="overflow-x: auto;" Dense="true" Hover="true" Bordered="true">
     <thead>
         <tr class="text-center">
-            <th>Name</th><th>Unit Price</th><th>Description</th>
+            <th>Name</th><th>Unit Price</th><th>Description</th><th></th>
         </tr>
     </thead>
     <tbody>
@@ -37,6 +39,9 @@ else
                 <td><MudLink href="@string.Format("products/{0}", product.Id)">@product.Name</MudLink></td>
                 <td class="text-end">@product.UnitPrice.ToString("C")</td>
                 <td>@product.Description</td>
+                <td>
+                    <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="() => Delete(product)">Delete</MudButton>
+                </td>
             </tr>
         }
     </tbody>
@@ -46,8 +51,38 @@ else
     private ICollection<Product> _products = new List<Product>();
 
     protected override async Task OnInitializedAsync()
-    {        
-        var products = await _productsSvc.GetAll();
+    {
+        IsLoading = true;
+        await LoadProducts();
+        IsLoading = false;
+    }
+
+    private async Task Delete(Product product)
+    {
+        var confirm = await DialogService.ShowMessageBox("Warning",
+            (MarkupString)$"Do you want to delete this product?<br/><b>{product.Name}</b>",
+            yesText: "Yes",
+            noText: "No"
+        );
+
+        if (confirm is not null && confirm.Value)
+        {
+            try
+            {
+                await ProductsService.Delete(product.Id);
+                _products.Remove(product);
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine(exc);
+                Notify("Something went wrong. Please try again.", Severity.Error);
+            }
+        }
+    }
+
+    private async Task LoadProducts()
+    {
+        var products = await ProductsService.GetAll();
         _products = products.Select(x => MapperHelper.ToProduct(x)).ToList();
     }
 }

@@ -72,7 +72,7 @@ else
         {
             try{
                 await CategoriesService.Delete(category.Id);
-                await LoadCategories();
+                _categories.Remove(category);
             }
             catch(Exception exc){
                 Debug.WriteLine(exc);

@@ -12,5 +12,7 @@ namespace Northwind.Core.Interfaces.Repositories
         Task<ICollection<Supplier>> GetAll();
         Task<Supplier?> Get(int id);
         Task Create(Supplier supplier);
+        Task Update(Supplier supplier);
+        Task Delete(int supplierId);
     }
 }

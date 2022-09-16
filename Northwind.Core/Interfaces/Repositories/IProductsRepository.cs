@@ -14,5 +14,6 @@ namespace Northwind.Core.Interfaces.Repositories
         Task Create(Product product);
         Task<Product?> Get(int productId);
         Task Update(Product product);
+        Task Delete(int productId);
     }
 }

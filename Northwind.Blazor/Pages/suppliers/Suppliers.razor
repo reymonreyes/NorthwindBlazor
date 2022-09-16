@@ -2,7 +2,9 @@
 @using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Core.Interfaces.Services
+@using System.Diagnostics
 @inherits PageBase
+@inject IDialogService DialogService
 @inject ISuppliersService SuppliersService
 <MudPaper Elevation="2" Class="my-1">
     <MudToolBar>
@@ -29,48 +31,70 @@ else
             <th>Contact Name</th>
             <th>Contact Title</th>
             <th>Phone</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
     @foreach (var supplier in _suppliers)
     {
-        if (supplier is not null)
-        {
         <tr>               
-            <td class="d-flex">
+            <td>
                 <MudLink Href="@string.Format("suppliers/{0}", supplier.Id)" Underline="Underline.None" Class="flex-grow-1">@supplier.Name</MudLink>
             </td>
             <td>@supplier.ContactName</td>
             <td>@supplier.ContactTitle</td>
             <td>@supplier.Phone</td>
+            <td>
+                <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="() => Delete(supplier)">Delete</MudButton>
+            </td>
         </tr>
-        }
     }
     </tbody>
 </MudSimpleTable>
 }
 @code {
-    private ICollection<Supplier?> _suppliers = new List<Supplier?>();
+    private ICollection<Supplier> _suppliers = new List<Supplier>();
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
+        await LoadSuppliers();
+        IsLoading = false;
+    }
 
+    private async Task Delete(Supplier supplier)
+    {
+        var confirm = await DialogService.ShowMessageBox("Warning",
+            (MarkupString)$"Do you want to delete this supplier?<br/><b>{supplier.Name}</b>",
+            yesText: "Yes",
+            noText: "No"
+        );
+
+        if (confirm is not null && confirm.Value)
+        {
+            try
+            {
+                await SuppliersService.Delete(supplier.Id);
+                _suppliers.Remove(supplier);
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine(exc);
+                Notify("Something went wrong. Please try again.", Severity.Error);
+            }
+        }
+    }
+
+    private async Task LoadSuppliers()
+    {
         try
         {
             var suppliers = await SuppliersService.GetAll();
-
-            if(suppliers is not null)
-            {
-                _suppliers = suppliers.Select(x => MapperHelper.ToSupplier(x)).ToList();
-            }
+            _suppliers = suppliers.Select(x => MapperHelper.ToSupplier(x)).ToList();
         }
         catch(Exception exc)
         {
-            //add some error logging
-            throw exc;    
+            Notify("Something went wrong. Please try again.", Severity.Error);
         }
-
-        IsLoading = false;
     }
 }

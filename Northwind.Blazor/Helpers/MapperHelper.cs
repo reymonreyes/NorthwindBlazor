@@ -50,10 +50,10 @@ namespace Northwind.Blazor.Helpers
             return TinyMapper.Map<Category>(categoryDto);
         }
 
-        public static Supplier? ToSupplier(SupplierDto? supplierDto)
+        public static Supplier ToSupplier(SupplierDto supplierDto)
         {
             if (supplierDto is null)
-                return null;
+                throw new ArgumentNullException("supplierDto");
 
             TinyMapper.Bind<SupplierDto, Supplier>();
             return TinyMapper.Map<Supplier>(supplierDto);

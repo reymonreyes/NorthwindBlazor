@@ -1,5 +1,6 @@
 ﻿using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
@@ -23,7 +24,9 @@ namespace Northwind.Core.Services
         public async Task<ICollection<SupplierDto>> GetAll()
         {
             var result = new List<SupplierDto>();
+            await _unitOfWork.Start();
             var suppliers = await _unitOfWork.SuppliersRepository.GetAll();
+            await _unitOfWork.Stop();
 
             if(suppliers is not null)
             {
@@ -43,7 +46,10 @@ namespace Northwind.Core.Services
         public async Task<SupplierDto?> Get(int supplierId)
         {
             SupplierDto? result = null;
+            await _unitOfWork.Start();
             var supplier = await _unitOfWork.SuppliersRepository.Get(supplierId);
+            await _unitOfWork.Stop();
+
             if(supplier is not null)
             {
                 result = new SupplierDto
@@ -67,21 +73,11 @@ namespace Northwind.Core.Services
             return result;
         }
 
-        public async Task<ServiceResult> Create(SupplierDto? supplierDto)
+        public async Task<ServiceResult> Create(SupplierDto supplierDto)
         {
-            if(supplierDto == null)
+            if (supplierDto == null)
                 throw new ArgumentNullException("supplier");
-
-            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
-            var validationResult = _supplierValidator.Validate(supplierDto);
-            if(validationResult?.Count > 0)
-            {
-                result.IsSuccessful = false;
-                result.Messages.AddRange(validationResult);
-            }
-
-            if (!result.IsSuccessful)
-                return result;
+            Validate(supplierDto);
 
             var supplier = new Supplier
             {
@@ -99,9 +95,12 @@ namespace Northwind.Core.Services
                 Homepage = supplierDto.Homepage
             };
 
+            await _unitOfWork.Start();
             await _unitOfWork.SuppliersRepository.Create(supplier);
             await _unitOfWork.Commit();
-            result.Messages.Clear();
+            await _unitOfWork.Stop();
+
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("supplier", supplier.Id.ToString()) });
 
             return result;
@@ -113,22 +112,13 @@ namespace Northwind.Core.Services
                 throw new ArgumentOutOfRangeException("supplierId");
             if (supplierDto == null)
                 throw new ArgumentNullException("supplier");
-            
+            Validate(supplierDto);            
+
+            await _unitOfWork.Start();
             var supplierEntity = await _unitOfWork.SuppliersRepository.Get(supplierId);
             if (supplierEntity == null)
-                throw new Exception("supplier not found");
+                throw new DataNotFoundException("Supplier not found.");
             
-            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
-            var validationResult = _supplierValidator.Validate(supplierDto);
-            if (validationResult?.Count > 0)
-            {
-                result.IsSuccessful = false;
-                result.Messages.AddRange(validationResult);
-            }
-
-            if (!result.IsSuccessful)
-                return result;
-
             supplierEntity.Name = supplierDto.Name;
             supplierEntity.ContactName = supplierDto.ContactName;
             supplierEntity.ContactTitle = supplierDto.ContactTitle;
@@ -142,10 +132,29 @@ namespace Northwind.Core.Services
             supplierEntity.Email = supplierDto.Email;
             supplierEntity.Homepage = supplierDto.Homepage;
 
+            await _unitOfWork.SuppliersRepository.Update(supplierEntity);
             await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", supplierEntity.Id.ToString()) });
 
             return result;
+        }
+
+        public async Task Delete(int supplierId)
+        {
+            await _unitOfWork.Start();
+            await _unitOfWork.SuppliersRepository.Delete(supplierId);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+        }
+
+        private void Validate(SupplierDto supplier)
+        {
+            var validationResult = _supplierValidator.Validate(supplier);
+            if (validationResult?.Count > 0)
+                throw new ValidationFailedException(validationResult);            
         }
     }
 }

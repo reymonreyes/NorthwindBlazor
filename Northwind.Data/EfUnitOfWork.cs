@@ -10,13 +10,12 @@ using System.Threading.Tasks;
 namespace Northwind.Data
 {
     public class EfUnitOfWork : IUnitOfWork
-    {
-        private readonly EfDbContext _dbContext;
-        public EfUnitOfWork(EfDbContext efDbContext)
+    {        
+        private EfDbContext _dbContext;
+        public EfUnitOfWork()
         {
-            _dbContext = efDbContext;
+            _dbContext = null!;
         }
-
         public IProductsRepository ProductsRepository => new ProductsRepository(_dbContext);
         public ICategoriesRepository CategoriesRepository => new CategoriesRepository(_dbContext);        
         public ISuppliersRepository SuppliersRepository => new SuppliersRepository(_dbContext);
@@ -24,7 +23,18 @@ namespace Northwind.Data
 
         public async Task Commit()
         {            
-            await _dbContext.SaveChangesAsync();            
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public Task Start()
+        {
+            _dbContext = new EfDbContext();
+            return Task.CompletedTask;
+        }
+
+        public async Task Stop()
+        {
+            await _dbContext.DisposeAsync();
         }
     }
 }

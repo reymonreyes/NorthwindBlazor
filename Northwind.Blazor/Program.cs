@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using MudBlazor.Services;
 using Northwind.Blazor.Data;
 using Northwind.Common.Validators;
@@ -8,7 +6,6 @@ using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
 using Northwind.Core.Services;
 using Northwind.Data;
-using Northwind.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,16 +14,12 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
 builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddDbContextFactory<EfDbContext>();
 builder.Services.AddTransient<IProductsService, ProductsService>();
 builder.Services.AddTransient<ICategoriesService, CategoriesService>();
 builder.Services.AddTransient<ISuppliersService, SuppliersService>();
 builder.Services.AddTransient<IShippersService, ShippersService>();
 builder.Services.AddTransient<ICustomersService, CustomersService>();
 builder.Services.AddTransient<IUnitOfWork, EfUnitOfWork>();
-builder.Services.AddTransient<IProductsRepository, ProductsRepository>();
-builder.Services.AddTransient<ICategoriesRepository, CategoriesRepository>();
-builder.Services.AddTransient<ISuppliersRepository, SuppliersRepository>();
 builder.Services.AddSingleton<IProductValidator, ProductValidator>();
 builder.Services.AddSingleton<ICategoryValidator, CategoryValidator>();
 builder.Services.AddSingleton<ISupplierValidator, SupplierValidator>();
