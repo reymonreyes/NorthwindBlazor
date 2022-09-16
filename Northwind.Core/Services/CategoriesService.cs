@@ -29,8 +29,10 @@ namespace Northwind.Core.Services
                 Description = categoryDto.Description
             };
 
+            await _unitOfWork.Start();
             await _unitOfWork.CategoriesRepository.Create(category);
             await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
 
             var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", category.Id.ToString()) });
@@ -47,8 +49,10 @@ namespace Northwind.Core.Services
 
         public async Task Delete(int categoryId)
         {
+            await _unitOfWork.Start();
             await _unitOfWork.CategoriesRepository.Delete(categoryId);
             await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
         }
 
         public async Task<ServiceResult> Update(int categoryId, CategoryDto categoryDto)
@@ -57,10 +61,12 @@ namespace Northwind.Core.Services
                 throw new ArgumentOutOfRangeException("categoryId");
             if(categoryDto is null)
                 throw new ArgumentNullException("category");
+            Validate(categoryDto);
 
+            await _unitOfWork.Start();
             var category = await _unitOfWork.CategoriesRepository.Get(categoryId);
             if (category is null)
-                throw new DataNotFoundException("Category data not found.");
+                throw new DataNotFoundException("Category not found.");
 
             Validate(categoryDto);
             
@@ -68,6 +74,7 @@ namespace Northwind.Core.Services
             category.Description = categoryDto.Description;
             await _unitOfWork.CategoriesRepository.Update(category);
             await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
 
             var result = new ServiceResult { Messages = new List<ServiceMessageResult>() };
             result!.Messages?.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Edit", "Category updated successfully.") });
@@ -77,7 +84,9 @@ namespace Northwind.Core.Services
 
         public async Task<CategoryDto?> Get(int categoryId)
         {
+            await _unitOfWork.Start();
             var category = await _unitOfWork.CategoriesRepository.Get(categoryId);
+            await _unitOfWork.Stop();
             if (category == null)
                 return null;
 
@@ -91,7 +100,9 @@ namespace Northwind.Core.Services
 
         public async Task<ICollection<CategoryDto>> GetAll()
         {
+            await _unitOfWork.Start();
             var categories = await _unitOfWork.CategoriesRepository.GetAll();
+            await _unitOfWork.Stop();
 
             return categories.Select(x => new CategoryDto
             {
@@ -100,7 +111,5 @@ namespace Northwind.Core.Services
                 Description = x.Description
             }).ToList();
         }
-
-
     }
 }

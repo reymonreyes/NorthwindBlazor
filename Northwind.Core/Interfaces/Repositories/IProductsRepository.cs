@@ -13,5 +13,7 @@ namespace Northwind.Core.Interfaces.Repositories
         Task<ICollection<Product>> GetAll();
         Task Create(Product product);
         Task<Product?> Get(int productId);
+        Task Update(Product product);
+        Task Delete(int productId);
     }
 }

@@ -5,7 +5,7 @@
 @using Northwind.Core.Interfaces.Services
 @using System.Diagnostics
 @inject ICategoriesService CategoriesService
-@inject ISnackbar Snackbar
+@inherits PageBase
 
 
 <MudPaper Elevation="1" Class="my-1">
@@ -65,7 +65,7 @@ else
         _isLoading = false;        
 
         if (categoryDto is null){
-            Snackbar.Add("Category not found.", Severity.Error);
+            Notify("Category not found.", Severity.Error);
             return;
         }
 

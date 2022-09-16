@@ -5,7 +5,6 @@
 @using Northwind.Core.Interfaces.Services
 @using System.Diagnostics
 @inject IShippersService ShippersService
-@inject ISnackbar Snackbar
 @inherits PageBase
 
 <MudPaper Elevation="1" Class="my-1">
@@ -53,12 +52,11 @@
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
-
         var shipperDto = await ShippersService.Get(Id);
         IsLoading = false; 
 
         if (shipperDto is null){
-            Snackbar.Add("Shipper not found.", Severity.Error);
+            Notify("Shipper not found.", Severity.Error);
             return;
         }
 
