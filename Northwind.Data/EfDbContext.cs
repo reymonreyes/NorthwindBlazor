@@ -15,6 +15,7 @@ namespace Northwind.Data
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Supplier> Suppliers => Set<Supplier>();
         public DbSet<Shipper> Shippers => Set<Shipper>();
+        public DbSet<Customer> Customers => Set<Customer>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder.UseNpgsql(@"Host=localhost:5432;Username=postgres;Password=admin;Database=northwind").EnableDetailedErrors(true);
 
@@ -24,6 +25,7 @@ namespace Northwind.Data
             ConfigureCategoryEntity(modelBuilder);
             ConfigureSupplierEntity(modelBuilder);
             ConfigureShipperEntity(modelBuilder);
+            ConfigureCustomerEntity(modelBuilder);
         }
 
         private void ConfigureProductEntity(ModelBuilder modelBuilder)
@@ -83,6 +85,23 @@ namespace Northwind.Data
             modelBuilder.Entity<Shipper>().Property(x => x.Id).HasColumnName("shipper_id").HasColumnType("smallint").IsRequired(true).UseHiLo("EFShipperIdHiloSequence");
             modelBuilder.Entity<Shipper>().Property(x => x.Name).HasColumnName("company_name").HasColumnType("character varying").IsRequired(true).HasMaxLength(40);
             modelBuilder.Entity<Shipper>().Property(x => x.Phone).HasColumnName("phone").HasColumnType("character varying").HasMaxLength(24);
+        }
+
+        private void ConfigureCustomerEntity(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Customer>().ToTable("customers");
+            modelBuilder.Entity<Customer>().HasKey(x => x.Id).HasName("pk_customers");
+            modelBuilder.Entity<Customer>().Property(x => x.Id).HasColumnName("customer_id").HasColumnType("bpchar").IsRequired(true);
+            modelBuilder.Entity<Customer>().Property(x => x.Name).HasColumnName("company_name").HasColumnType("character varying").HasMaxLength(40).IsRequired(true);
+            modelBuilder.Entity<Customer>().Property(x => x.ContactName).HasColumnName("contact_name").HasColumnType("character varying").HasMaxLength(30);
+            modelBuilder.Entity<Customer>().Property(x => x.ContactTitle).HasColumnName("contact_title").HasColumnType("character varying").HasMaxLength(30);
+            modelBuilder.Entity<Customer>().Property(x => x.Address).HasColumnName("address").HasColumnType("character varying").HasMaxLength(60);
+            modelBuilder.Entity<Customer>().Property(x => x.City).HasColumnName("city").HasColumnType("character varying").HasMaxLength(15);
+            modelBuilder.Entity<Customer>().Property(x => x.Region).HasColumnName("region").HasColumnType("character varying").HasMaxLength(15).HasDefaultValue(string.Empty);
+            modelBuilder.Entity<Customer>().Property(x => x.PostalCode).HasColumnName("postal_code").HasColumnType("character varying").HasMaxLength(10);
+            modelBuilder.Entity<Customer>().Property(x => x.Country).HasColumnName("country").HasColumnType("character varying").HasMaxLength(15);
+            modelBuilder.Entity<Customer>().Property(x => x.Phone).HasColumnName("phone").HasColumnType("character varying").HasMaxLength(24);
+            modelBuilder.Entity<Customer>().Property(x => x.Fax).HasColumnName("fax").HasColumnType("character varying").HasMaxLength(24);            
         }
     }
 }

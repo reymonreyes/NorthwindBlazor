@@ -31,8 +31,6 @@
     <tbody>
     @foreach (var customer in _customers)
     {
-        if (customer is not null)
-        {
         <tr>               
             <td class="d-flex">
                 <MudLink Href="@string.Format("customers/{0}", customer.Id)" Underline="Underline.None" Class="flex-grow-1">@customer.Name</MudLink>
@@ -41,26 +39,26 @@
             <td>@customer.ContactTitle</td>
             <td>@customer.Phone</td>
         </tr>
-        }
     }
     </tbody>
 </MudSimpleTable>
 }
+else{
+    <MudAlert Severity="Severity.Info" Variant="Variant.Text">No shippers found.</MudAlert>
+}
 @code {
-    private ICollection<Customer?>? _customers = new List<Customer?>();
-
+    private ICollection<Customer> _customers = new List<Customer>();
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
-        var customers = await CustomersService.GetAll();
+        await LoadCustomers();
         IsLoading = false;
-        
-        if(customers.Count == 0)
-        {
-            Notify("Customers not found.", Severity.Info);
-            return;
-        }
-        _customers = customers.Select(x => MapperHelper.ToCustomer(x)).ToList();        
+    }
+
+    private async Task LoadCustomers()
+    {
+        var customers = await CustomersService.GetAll();
+        _customers = customers.Select(x => MapperHelper.ToCustomer(x)).ToList();
     }
 }

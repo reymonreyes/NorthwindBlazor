@@ -20,6 +20,7 @@ namespace Northwind.Data
         public ICategoriesRepository CategoriesRepository => new CategoriesRepository(_dbContext);        
         public ISuppliersRepository SuppliersRepository => new SuppliersRepository(_dbContext);
         public IShippersRepository ShippersRepository => new ShippersRepository(_dbContext);
+        public ICustomersRepository CustomersRepository => new CustomersRepository(_dbContext);
 
         public async Task Commit()
         {            

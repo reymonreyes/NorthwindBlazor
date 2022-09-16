@@ -1,4 +1,5 @@
 ﻿using Northwind.Core.Dtos;
+using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using System;
 using System.Collections.Generic;
@@ -10,18 +11,18 @@ namespace Northwind.Core.Services
 {
     public class CustomersService : ICustomersService
     {
-        public Task<ICollection<CustomerDto>> GetAll()
+        private readonly IUnitOfWork _unitOfWork;
+        public CustomersService(IUnitOfWork unitOfWork)
         {
-            ICollection<CustomerDto> result = new List<CustomerDto>
-            {
-                new CustomerDto { Id = 1, Name = "Alpha One" },
-                new CustomerDto { Id = 2, Name = "Bravo Two" },
-                new CustomerDto { Id = 3, Name = "Charlie Three" },
-                new CustomerDto { Id = 4, Name = "Delta Four" },
-                new CustomerDto { Id = 5, Name = "Eagle Five" }
-            };
+            _unitOfWork = unitOfWork;
+        }
+        public async Task<ICollection<CustomerDto>> GetAll()
+        {
+            await _unitOfWork.Start();
+            var customers = await _unitOfWork.CustomersRepository.GetAll();
+            await _unitOfWork.Stop();
 
-            return Task.FromResult(result);
+            return customers.Select(x => new CustomerDto { Id = x.Id, Name = x.Name, ContactName = x.ContactName, ContactTitle = x.ContactTitle }).ToList();
         }
     }
 }
