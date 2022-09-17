@@ -40,7 +40,7 @@ else
         @foreach (var category in _categories)
         {           
             <tr>
-                <td><MudLink Href="@($"categories/{category.Id}")" Underline="Underline.None" Class="flex-grow-1">@category.Name</MudLink></td>
+                <td><MudLink Href="@($"categories/{category.Id}")" Underline="Underline.None" Class="d-flex flex-grow-1">@category.Name</MudLink></td>
                 <td>@category.Description</td>
                 <td>
                     <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="() => Delete(category)">Delete</MudButton>

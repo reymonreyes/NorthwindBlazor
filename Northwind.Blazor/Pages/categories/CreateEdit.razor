@@ -1,10 +1,10 @@
 ﻿@page "/categories/create"
-@page "/categories/edit/{id:int}"
+@page "/categories/{id:int}/edit"
 @using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
 @using Northwind.Core.Interfaces.Services
-@using Northwind.Core.Exceptions as CoreExceptions
+@using Northwind.Core.Exceptions
 @using System.Diagnostics
 @inject NavigationManager NavigationManager
 @inject ICategoriesService CategoriesService
