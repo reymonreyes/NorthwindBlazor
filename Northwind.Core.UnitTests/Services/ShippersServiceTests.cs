@@ -65,8 +65,8 @@ namespace Northwind.Core.UnitTests.Services
             shippersRepoMock.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Shipper?)null);
             mock.Mock<IUnitOfWork>().Setup(x => x.ShippersRepository).Returns(shippersRepoMock.Object);
             IShippersService shippersService = mock.Create<ShippersService>();
-            var result = await Assert.ThrowsAsync<Exception>(() => shippersService.Update(1, new ShipperDto()));
-            Assert.True(result.Message == "shipper not found");
+            
+            await Assert.ThrowsAsync<DataNotFoundException>(() => shippersService.Update(1, new ShipperDto()));
         }
 
         [Fact]

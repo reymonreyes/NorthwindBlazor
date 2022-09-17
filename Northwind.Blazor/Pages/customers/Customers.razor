@@ -2,7 +2,9 @@
 @using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Core.Interfaces.Services
+@using System.Diagnostics
 @inherits PageBase
+@inject IDialogService DialogService
 @inject ICustomersService CustomersService
 
 <MudPaper Elevation="2" Class="my-1">
@@ -22,45 +24,77 @@
 <MudSimpleTable Style="overflow-x: auto;" Dense="true" Hover="true" Bordered="true">
     <thead>
         <tr class="text-center">
+            <th>Id</th>
             <th>Name</th>
             <th>Contact Name</th>
             <th>Contact Title</th>
             <th>Phone</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
     @foreach (var customer in _customers)
     {
-        if (customer is not null)
-        {
         <tr>               
-            <td class="d-flex">
-                <MudLink Href="@string.Format("customers/{0}", customer.Id)" Underline="Underline.None" Class="flex-grow-1">@customer.Name</MudLink>
+            <td>@customer.Id</td>
+            <td>
+                <MudLink Href="@string.Format("customers/{0}", customer.Id)" Underline="Underline.None" Class="d-flex flex-grow-1">@customer.Name</MudLink>
             </td>
             <td>@customer.ContactName</td>
             <td>@customer.ContactTitle</td>
             <td>@customer.Phone</td>
+            <td>
+                <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="() => Delete(customer)">Delete</MudButton>
+            </td>
         </tr>
-        }
     }
     </tbody>
 </MudSimpleTable>
 }
+else{
+    <MudAlert Severity="Severity.Info" Variant="Variant.Text">No shippers found.</MudAlert>
+}
 @code {
-    private ICollection<Customer?>? _customers = new List<Customer?>();
-
+    private ICollection<Customer> _customers = new List<Customer>();
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
-        var customers = await CustomersService.GetAll();
+        await LoadCustomers();
         IsLoading = false;
-        
-        if(customers.Count == 0)
+    }
+
+    private async Task LoadCustomers()
+    {
+        var customers = await CustomersService.GetAll();
+        _customers = customers.Select(x => MapperHelper.ToCustomer(x)).ToList();
+    }
+
+    private async Task Delete(Customer customer)
+    {
+        var confirm = await DialogService.ShowMessageBox("Warning",
+            (MarkupString)$"Do you want to delete this customer?<br/><b>{customer.Name}</b>",
+            yesText: "Yes",
+            noText: "No"
+        );
+
+        if (confirm is not null && confirm.Value)
         {
-            Notify("Customers not found.", Severity.Info);
-            return;
+            try
+            {
+                IsLoading = true;
+                await CustomersService.Delete(customer.Id!);
+                _customers.Remove(customer);
+                Notify("Customer deleted successfully.", Severity.Success);
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine(exc);
+                Notify("Something went wrong. Please try again.", Severity.Error);
+            }
+            finally{
+                IsLoading = false;
+            }
         }
-        _customers = customers.Select(x => MapperHelper.ToCustomer(x)).ToList();        
     }
 }

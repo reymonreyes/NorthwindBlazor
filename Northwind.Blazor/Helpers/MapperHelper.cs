@@ -86,13 +86,22 @@ namespace Northwind.Blazor.Helpers
             return TinyMapper.Map<ShipperDto>(shipper);
         }
 
-        public static Customer? ToCustomer(CustomerDto customerDto)
+        public static Customer ToCustomer(CustomerDto customerDto)
         {
             if (customerDto is null)
-                return null;
+                throw new ArgumentNullException("customerDto");
 
             TinyMapper.Bind<CustomerDto, Customer>();
             return TinyMapper.Map<Customer>(customerDto);
+        }
+
+        public static CustomerDto ToCustomerDto(Customer customer)
+        {
+            if (customer is null)
+                throw new ArgumentNullException("customer");
+
+            TinyMapper.Bind<Customer, CustomerDto>();
+            return TinyMapper.Map<CustomerDto>(customer);
         }
     }
 }

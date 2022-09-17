@@ -1,7 +1,10 @@
-﻿using Autofac.Extras.Moq;
+﻿using Autofac;
+using Autofac.Extras.Moq;
 using Moq;
+using Northwind.Common.Validators;
 using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
@@ -42,17 +45,16 @@ namespace Northwind.Core.UnitTests.Services
         }
 
         [Fact]
-        public async Task Create_ShouldReturnErrorsIfInvalidInputFields()
+        public async Task Create_ShouldThrowValidationFailedExceptionForInvalidFields()
         {
-            var mock = AutoMock.GetLoose();
-            ISuppliersService service = mock.Create<SuppliersService>();
-            var validatorMock = mock.Mock<ISupplierValidator>();
-            validatorMock.Setup(x => x.Validate(It.IsAny<SupplierDto>())).Returns(new List<ServiceMessageResult> {
-                new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Error, Message = new KeyValuePair<string, string>("Name", "Required") }
+            var mock = AutoMock.GetLoose(cfg =>
+            {
+                cfg.RegisterInstance(new SupplierValidator()).As<ISupplierValidator>();
             });
+            ISuppliersService service = mock.Create<SuppliersService>();            
             var supplier = new SupplierDto();
-            var result = await service.Create(supplier);
-            Assert.True(result.Messages != null && result.Messages.Count(x => x.MessageType == Enums.ServiceMessageType.Error) > 0);
+
+            await Assert.ThrowsAsync<ValidationFailedException>(() => service.Create(supplier));
         }
         
         [Fact]
@@ -65,7 +67,7 @@ namespace Northwind.Core.UnitTests.Services
                 Id = 1,
                 Name = "Supplier One"
             };
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => service.Edit(0, supplierDto));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => service.Update(0, supplierDto));
         }
 
         [Fact]
@@ -73,7 +75,7 @@ namespace Northwind.Core.UnitTests.Services
         {
             var mock = AutoMock.GetLoose();
             ISuppliersService service = mock.Create<SuppliersService>();            
-            await Assert.ThrowsAsync<ArgumentNullException>(() => service.Edit(1, It.IsAny<SupplierDto>()));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => service.Update(1, It.IsAny<SupplierDto>()));
         }
 
         [Fact]
@@ -85,33 +87,21 @@ namespace Northwind.Core.UnitTests.Services
             mock.Mock<IUnitOfWork>().Setup(x => x.SuppliersRepository).Returns(suppliersRepoMock.Object);
             ISuppliersService service = mock.Create<SuppliersService>();
 
-            var result = await Assert.ThrowsAsync<Exception>(() => service.Edit(1, new SupplierDto { Name = "Supplier One" }));
-            
-            Assert.True(result.Message == "supplier not found");
+            await Assert.ThrowsAsync<DataNotFoundException>(() => service.Update(1, new SupplierDto { Name = "Supplier One" }));            
         }
         
         [Fact]
-        public async Task Edit_ShouldReturnErrorsIfInvalidInputFields()
-        {
-            var supplier = new Supplier
+        public async Task Edit_ShouldThrowValidationFailedExceptionForInvalidFields()
+        {            
+            var mock = AutoMock.GetLoose(cfg =>
             {
-                Name = String.Empty
-            };
-
-            var mock = AutoMock.GetLoose();
-            var suppliersRepoMock = mock.Mock<ISuppliersRepository>();
-            suppliersRepoMock.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync(supplier);
-            mock.Mock<IUnitOfWork>().Setup(x => x.SuppliersRepository).Returns(suppliersRepoMock.Object);
-            ISuppliersService service = mock.Create<SuppliersService>();
-            var validatorMock = mock.Mock<ISupplierValidator>();
-            validatorMock.Setup(x => x.Validate(It.IsAny<SupplierDto>())).Returns(new List<ServiceMessageResult> {
-                new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Error, Message = new KeyValuePair<string, string>("Name", "Required") }
+                cfg.RegisterInstance(new SupplierValidator()).As<ISupplierValidator>();
             });
+            var suppliersRepoMock = mock.Mock<ISuppliersRepository>();
+            ISuppliersService service = mock.Create<SuppliersService>();
             var supplierDto = new SupplierDto();
-
-            var result = await service.Edit(1, supplierDto);
-
-            Assert.True(result.Messages != null && result.Messages.Count(x => x.MessageType == Enums.ServiceMessageType.Error) > 0);
+            
+            await Assert.ThrowsAsync<ValidationFailedException>(() => service.Update(1, supplierDto));
         }
         
     }

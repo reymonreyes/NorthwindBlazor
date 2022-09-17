@@ -3,6 +3,7 @@
 @using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
+@using Northwind.Core.Exceptions
 @using Northwind.Core.Interfaces.Services
 @using System.Diagnostics
 @inject NavigationManager NavigationManager
@@ -97,12 +98,17 @@
                         await SuppliersService.Create(supplierDto);
                         break;
                     case EntryMode.Edit:
-                        await SuppliersService.Edit(Id, supplierDto);
+                        await SuppliersService.Update(Id, supplierDto);
                         break;
                 }
                 Notify($"Supplier {(_mode == EntryMode.Create ? "created" : "updated")} successfully.", Severity.Success);
                 NavigationManager.NavigateTo("suppliers");
             }
+        }
+        catch (ValidationFailedException exc)
+        {
+            var errorMessage = String.Join("<br/>", exc.ValidationErrors.Select(x => $"{x.Message.Key}:{x.Message.Value}").ToList());
+            Notify(errorMessage, Severity.Error);
         }
         catch(Exception exc)
         {

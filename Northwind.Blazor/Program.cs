@@ -24,6 +24,7 @@ builder.Services.AddSingleton<IProductValidator, ProductValidator>();
 builder.Services.AddSingleton<ICategoryValidator, CategoryValidator>();
 builder.Services.AddSingleton<ISupplierValidator, SupplierValidator>();
 builder.Services.AddSingleton<IShipperValidator, ShipperValidator>();
+builder.Services.AddSingleton<ICustomerValidator, CustomerValidator>();
 
 var app = builder.Build();
 

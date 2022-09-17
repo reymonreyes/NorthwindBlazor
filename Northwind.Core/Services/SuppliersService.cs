@@ -106,7 +106,7 @@ namespace Northwind.Core.Services
             return result;
         }
 
-        public async Task<ServiceResult> Edit(int supplierId, SupplierDto supplierDto)
+        public async Task<ServiceResult> Update(int supplierId, SupplierDto supplierDto)
         {
             if (supplierId <= 0 || supplierId == int.MinValue)
                 throw new ArgumentOutOfRangeException("supplierId");
