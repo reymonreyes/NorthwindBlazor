@@ -11,5 +11,6 @@ namespace Northwind.Core.Interfaces.Services
     {
         Task<ICollection<CustomerDto>> GetAll();
         Task<CustomerDto?> Get(string customerId);
+        Task Create(CustomerDto customer);
     }
 }

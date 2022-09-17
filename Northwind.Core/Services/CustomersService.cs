@@ -1,7 +1,9 @@
 ﻿using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
+using Northwind.Core.Interfaces.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +15,12 @@ namespace Northwind.Core.Services
     public class CustomersService : ICustomersService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CustomersService(IUnitOfWork unitOfWork)
+        private readonly ICustomerValidator _customerValidator;
+
+        public CustomersService(IUnitOfWork unitOfWork, ICustomerValidator validator)
         {
             _unitOfWork = unitOfWork;
+            _customerValidator = validator;
         }
         public async Task<ICollection<CustomerDto>> GetAll()
         {
@@ -52,6 +57,37 @@ namespace Northwind.Core.Services
             }
 
             return result;
+        }
+        public async Task Create(CustomerDto customer)
+        {
+            if (customer is null)
+                throw new ArgumentNullException("customer");
+            Validate(customer);
+
+            var customerEntity = new Customer
+            {
+                Name = customer.Name,
+                ContactName = customer.ContactName,
+                ContactTitle = customer.ContactTitle,
+                Address = customer.Address,
+                City = customer.City,
+                Region = customer.Region,
+                Country = customer.Country,
+                PostalCode = customer.PostalCode,
+                Phone = customer.Phone,
+                Fax = customer.Fax
+            };
+            await _unitOfWork.Start();
+            await _unitOfWork.CustomersRepository.Create(customerEntity);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+        }
+
+        private void Validate(CustomerDto customer)
+        {
+            var validationResult = _customerValidator.Validate(customer);
+            if (validationResult?.Count > 0)
+                throw new ValidationFailedException(validationResult);
         }
     }
 }

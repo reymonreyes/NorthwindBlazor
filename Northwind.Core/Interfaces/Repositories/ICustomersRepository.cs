@@ -11,5 +11,6 @@ namespace Northwind.Core.Interfaces.Repositories
     {
         Task<ICollection<Customer>> GetAll();
         Task<Customer?> Get(string customerId);
+        Task Create(Customer customer);
     }
 }

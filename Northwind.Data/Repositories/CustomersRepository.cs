@@ -17,6 +17,11 @@ namespace Northwind.Data.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task Create(Customer customer)
+        {
+            await _dbContext.Customers.AddAsync(customer);            
+        }
+
         public Task<Customer?> Get(string customerId)
         {
             if (string.IsNullOrEmpty(customerId))

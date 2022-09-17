@@ -1,5 +1,5 @@
-﻿@page "/suppliers/create"
-@page "/suppliers/edit/{id:int}"
+﻿@page "/customers/create"
+@page "/customers/{id}/edit"
 @using Northwind.Blazor.Helpers
 @using Northwind.Blazor.Models
 @using Northwind.Common.Enums
@@ -105,11 +105,11 @@
                 NavigationManager.NavigateTo("suppliers");
             }
         }
-        catch (ValidationFailedException exc)
-        {
-            var errorMessage = String.Join("<br/>", exc.ValidationErrors.Select(x => $"{x.Message.Key}:{x.Message.Value}").ToList());
-            Notify(errorMessage, Severity.Error);
-        }
+        catch(ValidationFailedException exc)
+            {
+                var errorMessage = String.Join("<br/>", exc.ValidationErrors.Select(x => $"{x.Message.Key}:{x.Message.Value}").ToList());
+                Notify(errorMessage, Severity.Error);
+            }
         catch(Exception exc)
         {
             Debug.WriteLine(exc.Message);
