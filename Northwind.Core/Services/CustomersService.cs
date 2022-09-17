@@ -67,7 +67,7 @@ namespace Northwind.Core.Services
 
             var customerEntity = new Customer
             {
-                Id = customer.Id,
+                Id = customer!.Id!.Trim(),
                 Name = customer.Name,
                 ContactName = customer.ContactName,
                 ContactTitle = customer.ContactTitle,
@@ -95,7 +95,7 @@ namespace Northwind.Core.Services
         private async Task ValidateUniqueId(string customerId)
         {
             await _unitOfWork.Start();
-            var customer = await _unitOfWork.CustomersRepository.Get(customerId);
+            var customer = await _unitOfWork.CustomersRepository.Get(customerId.Trim());
             if(customer is not null)
                 throw new ValidationFailedException(new List<ServiceMessageResult> { new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Error, Message = new KeyValuePair<string, string>("Id", "Id must be unique.")} });
         }
