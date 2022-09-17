@@ -76,8 +76,8 @@ namespace Northwind.Core.UnitTests.Services
             var uowMock = mock.Mock<IUnitOfWork>();
             uowMock.Setup(x => x.ProductsRepository).Returns(productsRepoMock.Object);
             var productsService = mock.Create<ProductsService>();
-            var result = await Assert.ThrowsAsync<Exception>(() => productsService.Update(1, new ProductDto()));
-            Assert.True(result.Message == "not found");
+            
+            await Assert.ThrowsAsync<DataNotFoundException>(() => productsService.Update(1, new ProductDto()));
         }
 
         [Fact]

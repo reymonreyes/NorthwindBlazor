@@ -79,7 +79,7 @@ namespace Northwind.Core.UnitTests.Services
         }
 
         [Fact]
-        public async Task Edit_ShouldThrowValidationFailedException()
+        public async Task Edit_ShouldThrowValidationFailedExceptionForInvalidFields()
         {
             var mock = AutoMock.GetLoose(cfg =>
             {
