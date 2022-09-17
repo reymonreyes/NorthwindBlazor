@@ -12,7 +12,7 @@ namespace Northwind.Core.Interfaces.Services
         Task<ICollection<SupplierDto>> GetAll();
         Task<SupplierDto?> Get(int id);
         Task<ServiceResult> Create(SupplierDto supplierDto);
-        Task<ServiceResult> Edit(int supplierId, SupplierDto supplier);
+        Task<ServiceResult> Update(int supplierId, SupplierDto supplier);
         Task Delete(int supplierId);
     }
 }
