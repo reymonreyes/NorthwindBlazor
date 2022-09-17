@@ -98,7 +98,7 @@
                         await SuppliersService.Create(supplierDto);
                         break;
                     case EntryMode.Edit:
-                        await SuppliersService.Edit(Id, supplierDto);
+                        await SuppliersService.Update(Id, supplierDto);
                         break;
                 }
                 Notify($"Supplier {(_mode == EntryMode.Create ? "created" : "updated")} successfully.", Severity.Success);

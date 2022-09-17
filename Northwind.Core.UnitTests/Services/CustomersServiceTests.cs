@@ -105,5 +105,13 @@ namespace Northwind.Core.UnitTests.Services
 
             await Assert.ThrowsAsync<DataNotFoundException>(() => service.Update("AAAA", new CustomerDto { Id = "AAAA", Name = "AAAA" }));
         }
+
+        [Fact]
+        public async Task Delete_ShouldThrowArgumentNullExceptionForInvalidIdAsync()
+        {
+            var mock = AutoMock.GetLoose();
+            var service = mock.Create<CustomersService>();
+            await Assert.ThrowsAsync<ArgumentNullException>(() => service.Delete(null!));
+        }
     }
 }

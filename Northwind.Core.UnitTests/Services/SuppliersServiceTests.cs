@@ -67,7 +67,7 @@ namespace Northwind.Core.UnitTests.Services
                 Id = 1,
                 Name = "Supplier One"
             };
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => service.Edit(0, supplierDto));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => service.Update(0, supplierDto));
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace Northwind.Core.UnitTests.Services
         {
             var mock = AutoMock.GetLoose();
             ISuppliersService service = mock.Create<SuppliersService>();            
-            await Assert.ThrowsAsync<ArgumentNullException>(() => service.Edit(1, It.IsAny<SupplierDto>()));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => service.Update(1, It.IsAny<SupplierDto>()));
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace Northwind.Core.UnitTests.Services
             mock.Mock<IUnitOfWork>().Setup(x => x.SuppliersRepository).Returns(suppliersRepoMock.Object);
             ISuppliersService service = mock.Create<SuppliersService>();
 
-            await Assert.ThrowsAsync<DataNotFoundException>(() => service.Edit(1, new SupplierDto { Name = "Supplier One" }));            
+            await Assert.ThrowsAsync<DataNotFoundException>(() => service.Update(1, new SupplierDto { Name = "Supplier One" }));            
         }
         
         [Fact]
@@ -101,7 +101,7 @@ namespace Northwind.Core.UnitTests.Services
             ISuppliersService service = mock.Create<SuppliersService>();
             var supplierDto = new SupplierDto();
             
-            await Assert.ThrowsAsync<ValidationFailedException>(() => service.Edit(1, supplierDto));
+            await Assert.ThrowsAsync<ValidationFailedException>(() => service.Update(1, supplierDto));
         }
         
     }

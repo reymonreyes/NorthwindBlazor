@@ -22,6 +22,16 @@ namespace Northwind.Data.Repositories
             await _dbContext.Customers.AddAsync(customer);            
         }
 
+        public async Task Delete(string customerId)
+        {
+            if (!string.IsNullOrWhiteSpace(customerId))
+            {
+                var customer = await Get(customerId);
+                if (customer is not null)
+                    _dbContext.Customers.Remove(customer);
+            }
+        }
+
         public Task<Customer?> Get(string customerId)
         {
             if (string.IsNullOrEmpty(customerId))

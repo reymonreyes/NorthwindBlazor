@@ -13,5 +13,6 @@ namespace Northwind.Core.Interfaces.Repositories
         Task<Customer?> Get(string customerId);
         Task Create(Customer customer);
         Task Update(Customer customer);
+        Task Delete(string customerId);
     }
 }

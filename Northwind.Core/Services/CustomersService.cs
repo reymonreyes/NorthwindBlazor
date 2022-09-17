@@ -128,5 +128,16 @@ namespace Northwind.Core.Services
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
         }
+
+        public async Task Delete(string customerId)
+        {
+            if (string.IsNullOrWhiteSpace(customerId))
+                throw new ArgumentNullException("customerId");
+
+            await _unitOfWork.Start();
+            await _unitOfWork.CustomersRepository.Delete(customerId);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+        }
     }
 }
