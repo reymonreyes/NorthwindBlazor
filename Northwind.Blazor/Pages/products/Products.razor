@@ -36,7 +36,7 @@ else
         @foreach (var product in _products)
         {
             <tr>
-                <td><MudLink href="@string.Format("products/{0}", product.Id)">@product.Name</MudLink></td>
+                <td><MudLink href="@string.Format("products/{0}", product.Id)" Class="d-flex flex-grow-1">@product.Name</MudLink></td>
                 <td class="text-end">@product.UnitPrice.ToString("C")</td>
                 <td>@product.Description</td>
                 <td>
