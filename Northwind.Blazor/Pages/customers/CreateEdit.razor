@@ -7,13 +7,12 @@
 @using Northwind.Core.Interfaces.Services
 @using System.Diagnostics
 @inject NavigationManager NavigationManager
-@inject ISuppliersService SuppliersService
+@inject ICustomersService CustomersService
 @inherits PageBase
 
 <MudPaper Elevation="1" Class="my-1">
     <MudToolBar>
-        <MudIconButton Icon="@Icons.Filled.ChevronLeft" Link="suppliers"></MudIconButton>
-        <MudText>Supplier Details</MudText>
+        <MudText><EntryModePageHeader Mode="_mode" DisplayName="Customer" /></MudText>
     </MudToolBar>
 </MudPaper>
 
@@ -21,39 +20,43 @@
 {
     <MudProgressLinear Indeterminate="true"/>
 }
-@if(_supplier is not null)
+@if(_customer is not null)
 {
-    <EditForm Model="@_supplier" OnValidSubmit="Save">
+    <EditForm Model="@_customer" OnValidSubmit="Save">
         <MudGrid>
             <MudItem lg="6" sm="12" xs="12">
                 <DataAnnotationsValidator/>
-                <MudTextField Label="Name" @bind-Value="_supplier.Name" For="@(() => _supplier.Name)"/>
-                <MudTextField Label="Contact Name" @bind-Value="_supplier.ContactName" For="@(() => _supplier.ContactName)"/>
-                <MudTextField Label="Contact Title" @bind-Value="_supplier.ContactTitle" For="@(() => _supplier.ContactTitle)"/>
-                <MudTextField Label="Address" @bind-Value="_supplier.Address" For="@(() => _supplier.Address)"/>
-                <MudTextField Label="City" @bind-Value="_supplier.City" For="@(() => _supplier.City)"/>
-                <MudTextField Label="Region" @bind-Value="_supplier.Region" For="@(() => _supplier.Region)"/>
-                <MudTextField Label="Countr" @bind-Value="_supplier.Country" For="@(() => _supplier.Country)"/>
-                <MudTextField Label="Postal Code" @bind-Value="_supplier.PostalCode" For="@(() => _supplier.PostalCode)"/>
-                <MudTextField Label="Phone" @bind-Value="_supplier.Phone" For="@(() => _supplier.Phone)"/>
-                <MudTextField Label="Fax" @bind-Value="_supplier.Fax" For="@(() => _supplier.Fax)"/>
-                <MudTextField Label="Email Address" @bind-Value="_supplier.Email" For="@(() => _supplier.Email)"/>
+                <MudTextField Label="Id" @bind-Value="_customer.Id" For="@(() => _customer.Id)" Disabled="(_mode == EntryMode.Edit)"/>
+                <MudTextField Label="Name" @bind-Value="_customer.Name" For="@(() => _customer.Name)"/>
+                <MudTextField Label="Contact Name" @bind-Value="_customer.ContactName" For="@(() => _customer.ContactName)"/>
+                <MudTextField Label="Contact Title" @bind-Value="_customer.ContactTitle" For="@(() => _customer.ContactTitle)"/>
+                <MudTextField Label="Address" @bind-Value="_customer.Address" For="@(() => _customer.Address)"/>
+                <MudTextField Label="City" @bind-Value="_customer.City" For="@(() => _customer.City)"/>
+                <MudTextField Label="Region" @bind-Value="_customer.Region" For="@(() => _customer.Region)"/>
+                <MudTextField Label="Countr" @bind-Value="_customer.Country" For="@(() => _customer.Country)"/>
+                <MudTextField Label="Postal Code" @bind-Value="_customer.PostalCode" For="@(() => _customer.PostalCode)"/>
+                <MudTextField Label="Phone" @bind-Value="_customer.Phone" For="@(() => _customer.Phone)"/>
+                <MudTextField Label="Fax" @bind-Value="_customer.Fax" For="@(() => _customer.Fax)"/>
                 <div class="d-flex justify-end mt-2">
-                    <MudButton Link="suppliers" Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Small" Class="mr-1">Cancel</MudButton>
+                    <MudButton Link="customers" Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Small" Class="mr-1">Cancel</MudButton>
                     <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">@_saveButtonText</MudButton>
                 </div>    
             </MudItem>
         </MudGrid>
     </EditForm>
 }
+else
+{
+    <MudAlert Severity="Severity.Info" Variant="Variant.Text">Customer not found.</MudAlert>
+}
 
 @code {
-    private Supplier? _supplier;
+    private Customer? _customer;
     private EntryMode _mode = EntryMode.Create;
     private string _saveButtonText = "Save";
 
     [Parameter]
-    public int Id { get; set; }
+    public string Id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -62,22 +65,22 @@
         switch (_mode)
         {
             case EntryMode.Create:
-                _supplier = new Supplier();
+                _customer = new Customer();
                 break;
             case EntryMode.Edit:
-                await LoadSupplier();
+                await LoadCustomer();
                 break;
         }
 
     }
 
-    private async Task LoadSupplier()
+    private async Task LoadCustomer()
     {
         IsLoading = true;
 
-        var supplier = await SuppliersService.Get(Id);
-        if (supplier is not null)
-            _supplier = MapperHelper.ToSupplier(supplier);
+        var customer = await CustomersService.Get(Id);
+        if (customer is not null)
+            _customer = MapperHelper.ToCustomer(customer);
         else
             Notify("Supplier not found.", Severity.Error);
 
@@ -86,33 +89,33 @@
 
     private async Task Save()
     {
-        var supplierDto = MapperHelper.ToSupplierDto(_supplier);
         IsLoading = true;
         try
         {
-            if (supplierDto is not null)
+            if (_customer is not null)
             {
+                var customerDto = MapperHelper.ToCustomerDto(_customer);
                 switch (_mode)
                 {
                     case EntryMode.Create:
-                        await SuppliersService.Create(supplierDto);
+                        await CustomersService.Create(customerDto);
                         break;
                     case EntryMode.Edit:
-                        await SuppliersService.Edit(Id, supplierDto);
+                        await CustomersService.Update(Id, customerDto);
                         break;
                 }
-                Notify($"Supplier {(_mode == EntryMode.Create ? "created" : "updated")} successfully.", Severity.Success);
-                NavigationManager.NavigateTo("suppliers");
+                Notify($"Customer {(_mode == EntryMode.Create ? "created" : "updated")} successfully.", Severity.Success);
+                NavigationManager.NavigateTo("customers");
             }
         }
         catch(ValidationFailedException exc)
-            {
-                var errorMessage = String.Join("<br/>", exc.ValidationErrors.Select(x => $"{x.Message.Key}:{x.Message.Value}").ToList());
-                Notify(errorMessage, Severity.Error);
-            }
+        {
+            var errorMessage = String.Join("<br/>", exc.ValidationErrors.Select(x => $"{x.Message.Key}:{x.Message.Value}").ToList());
+            Notify(errorMessage, Severity.Error);
+        }
         catch(Exception exc)
         {
-            Debug.WriteLine(exc.Message);
+            Debug.WriteLine(exc);
             Notify("Something went wrong. Please try again.", Severity.Error);
         }
         IsLoading = false;        

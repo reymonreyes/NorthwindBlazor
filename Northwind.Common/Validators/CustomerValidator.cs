@@ -13,6 +13,7 @@ namespace Northwind.Common.Validators
     {
         public CustomerValidator()
         {
+            RuleFor(x => x.Id).NotEmpty();
             RuleFor(x => x.Name).NotEmpty();
         }
 

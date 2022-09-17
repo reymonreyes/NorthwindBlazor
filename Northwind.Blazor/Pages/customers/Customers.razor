@@ -22,6 +22,7 @@
 <MudSimpleTable Style="overflow-x: auto;" Dense="true" Hover="true" Bordered="true">
     <thead>
         <tr class="text-center">
+            <th>Id</th>
             <th>Name</th>
             <th>Contact Name</th>
             <th>Contact Title</th>
@@ -32,6 +33,7 @@
     @foreach (var customer in _customers)
     {
         <tr>               
+            <td>@customer.Id</td>
             <td class="d-flex">
                 <MudLink Href="@string.Format("customers/{0}", customer.Id)" Underline="Underline.None" Class="flex-grow-1">@customer.Name</MudLink>
             </td>

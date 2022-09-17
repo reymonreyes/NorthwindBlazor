@@ -35,6 +35,10 @@ namespace Northwind.Data.Repositories
             return await _dbContext.Customers.ToListAsync();
         }
 
-
+        public Task Update(Customer customer)
+        {
+            _dbContext.Update(customer);
+            return Task.CompletedTask;
+        }
     }
 }
