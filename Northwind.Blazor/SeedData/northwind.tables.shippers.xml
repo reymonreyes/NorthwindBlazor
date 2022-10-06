@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+	<record>
+		<Name>Speedy Express</Name>
+		<ContactName>Earle MacCarlich</ContactName>
+		<ContactTitle>Recruiter</ContactTitle>
+		<Address>70 Eastlawn Drive</Address>
+		<City>‘Alāqahdārī Gēlān</City>
+		<State>Cataluna</State>
+		<PostalCode>08904</PostalCode>
+		<Country>Spain</Country>
+		<Phone>942-861-7304</Phone>
+		<Fax>711-168-2508</Fax>
+		<Website>https://spiegel.de/est/donec/odio/justo/sollicitudin/ut/suscipit.html</Website>
+		<Email>emaccarlich0@apple.com</Email>
+	</record>
+	<record>
+		<Name>United Package</Name>
+		<ContactName>Johna Clelle</ContactName>
+		<ContactTitle>Biostatistician I</ContactTitle>
+		<Address>63829 Elmside Street</Address>
+		<City>Sang-e Chārak</City>
+		<State>Cataluna</State>
+		<PostalCode>25198</PostalCode>
+		<Country>Spain</Country>
+		<Phone>613-463-5750</Phone>
+		<Fax>598-416-5472</Fax>
+		<Website>http://github.io/viverra.js</Website>
+		<Email>jclelle1@wunderground.com</Email>
+	</record>
+	<record>
+		<Name>Federal Shipping</Name>
+		<ContactName>Ramsey Stebbin</ContactName>
+		<ContactTitle>Environmental Tech</ContactTitle>
+		<Address>901 Badeau Lane</Address>
+		<City>Masma</City>
+		<State>Berlin</State>
+		<PostalCode>14199</PostalCode>
+		<Country>Germany</Country>
+		<Phone>713-480-0052</Phone>
+		<Fax>457-445-3282</Fax>
+		<Website>https://thetimes.co.uk/sociis/natoque.json</Website>
+		<Email>rstebbin2@usa.gov</Email>
+	</record>
+</dataset>
