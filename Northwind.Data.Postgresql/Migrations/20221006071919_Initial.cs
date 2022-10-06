@@ -5,7 +5,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Northwind.Data.Postgresql.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,7 +15,7 @@ namespace Northwind.Data.Postgresql.Migrations
                 {
                     Id = table.Column<int>(type: "smallserial", nullable: false),
                     Name = table.Column<string>(type: "varchar", maxLength: 64, nullable: false),
-                    description = table.Column<string>(type: "text", nullable: true)
+                    Description = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -52,7 +52,7 @@ namespace Northwind.Data.Postgresql.Migrations
                 {
                     Id = table.Column<int>(type: "serial", nullable: false),
                     Name = table.Column<string>(type: "varchar", maxLength: 128, nullable: false),
-                    Code = table.Column<string>(type: "varchar", maxLength: 64, nullable: false),
+                    Code = table.Column<string>(type: "varchar", maxLength: 64, nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     StandardCost = table.Column<float>(type: "real", nullable: false),
                     ListPrice = table.Column<float>(type: "real", nullable: false),

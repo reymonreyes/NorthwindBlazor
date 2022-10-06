@@ -52,7 +52,7 @@ namespace Northwind.Data.Postgresql
             modelBuilder.Entity<Category>().HasKey(x => x.Id);
             modelBuilder.Entity<Category>().Property(x => x.Id).HasColumnType("smallserial").IsRequired(true);
             modelBuilder.Entity<Category>().Property(x => x.Name).HasColumnType("varchar").HasMaxLength(64).IsRequired(true);
-            modelBuilder.Entity<Category>().Property(x => x.Description).HasColumnName("description").HasColumnType("text");
+            modelBuilder.Entity<Category>().Property(x => x.Description).HasColumnType("text");
         }
 
         private void ConfigureSupplierEntity(ModelBuilder modelBuilder)

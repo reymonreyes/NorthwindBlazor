@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Northwind.Data.Postgresql.Migrations
 {
     [DbContext(typeof(EfDbContext))]
-    [Migration("20221006031341_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20221006071919_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,8 +32,7 @@ namespace Northwind.Data.Postgresql.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -123,7 +122,6 @@ namespace Northwind.Data.Postgresql.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<string>("Code")
-                        .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("varchar");
 
