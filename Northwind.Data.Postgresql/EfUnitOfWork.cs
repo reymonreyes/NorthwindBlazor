@@ -1,6 +1,6 @@
 ﻿using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
-using Northwind.Data.Postresql.Repositories;
+using Northwind.Data.Postgresql.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Northwind.Data.Postresql.Repositories
+namespace Northwind.Data.Postgresql.Repositories
 {
     public class CategoriesRepository : ICategoriesRepository
     {

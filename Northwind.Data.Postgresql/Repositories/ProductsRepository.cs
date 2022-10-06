@@ -2,7 +2,6 @@
 using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
-using Northwind.Data.Postgresql;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Northwind.Data.Postresql.Repositories
+namespace Northwind.Data.Postgresql.Repositories
 {
     public class ProductsRepository : IProductsRepository
     {

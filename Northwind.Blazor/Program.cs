@@ -5,7 +5,7 @@ using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
 using Northwind.Core.Services;
-using Northwind.Data;
+using Northwind.Data.Postgresql;
 
 var builder = WebApplication.CreateBuilder(args);
 
