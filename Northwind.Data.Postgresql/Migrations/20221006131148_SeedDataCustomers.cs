@@ -26,11 +26,11 @@ namespace Northwind.Data.Postgresql.Migrations
                             record.Element("ContactTitle")?.Value,
                             record.Element("Address")?.Value,
                             record.Element("City")?.Value,
-                            record.Element("State").Value ?? null,
+                            record.Element("State").Value == "NULL" ? null : record.Element("State").Value,
                             record.Element("PostalCode")?.Value,
                             record.Element("Country")?.Value,
                             record.Element("Phone")?.Value,
-                            record.Element("Fax").Value ?? null,
+                            record.Element("Fax").Value == "NULL" ? null : record.Element("Fax").Value,
                             record.Element("Website")?.Value,
                             record.Element("Email")?.Value,
                         }
