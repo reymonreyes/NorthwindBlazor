@@ -35,13 +35,15 @@ namespace Northwind.Core.Services
             {
                 Name = productDto.Name,
                 Code = productDto.Code,
-                ListPrice = productDto.UnitPrice,
-                QuantityPerUnit = productDto.QuantityPerUnit,
-                //UnitsInStock = productDto.UnitsInStock, - revisit
-                //UnitsInOrder = productDto.UnitsInOrder, - revisit
+                Description = productDto.Description,
+                StandardCost = productDto.StandardCost,
+                ListPrice = productDto.ListPrice,
                 ReorderLevel = productDto.ReorderLevel,
+                TargetLevel = productDto.TargetLevel,
+                QuantityPerUnit = productDto.QuantityPerUnit,
                 Discontinued = productDto.Discontinued,
-                Description = productDto.Description
+                MinimumReorderQuantity = productDto.MinimumReorderQuantity,
+                CategoryId = productDto.CategoryId
             };
 
             await _unitOfWork.Start();
@@ -79,13 +81,15 @@ namespace Northwind.Core.Services
             
             product.Name = productDto.Name;
             product.Code = productDto.Code;
-            //product.UnitPrice = productDto.UnitPrice; - revisit
-            product.QuantityPerUnit = productDto.QuantityPerUnit;
-            //product.UnitsInStock = productDto.UnitsInStock; - revisit
-            //product.UnitsInOrder = productDto.UnitsInOrder; - revisit
-            product.ReorderLevel = productDto.ReorderLevel;
-            product.Discontinued = productDto.Discontinued;
             product.Description = productDto.Description;
+            product.StandardCost = productDto.StandardCost;
+            product.ListPrice = productDto.ListPrice;
+            product.ReorderLevel = productDto.ReorderLevel;
+            product.TargetLevel = productDto.TargetLevel;
+            product.QuantityPerUnit = productDto.QuantityPerUnit;            
+            product.Discontinued = productDto.Discontinued;
+            product.MinimumReorderQuantity = productDto.MinimumReorderQuantity;
+            product.CategoryId = productDto.CategoryId;
             
             await _unitOfWork.ProductsRepository.Update(product);
             await _unitOfWork.Commit();
@@ -110,13 +114,15 @@ namespace Northwind.Core.Services
                     Id = product.Id,
                     Name = product.Name,
                     Code = product.Code,
-                    //UnitPrice = product.UnitPrice,-revisit
-                    QuantityPerUnit = product.QuantityPerUnit,
-                    //UnitsInStock = product.UnitsInStock,-revisit
-                    //UnitsInOrder = product.UnitsInOrder,-revisit
+                    Description = product.Description,
+                    StandardCost = product.StandardCost,
+                    ListPrice = product.ListPrice,
                     ReorderLevel = product.ReorderLevel,
+                    TargetLevel = product.TargetLevel,
+                    QuantityPerUnit = product.QuantityPerUnit,
                     Discontinued = product.Discontinued,
-                    Description = product.Description
+                    MinimumReorderQuantity = product.MinimumReorderQuantity,
+                    CategoryId = product.CategoryId
                 };
             }
 
@@ -133,7 +139,7 @@ namespace Northwind.Core.Services
             {
                 Id = x.Id,
                 Name = x.Name,
-                //UnitPrice = x.UnitPrice,revisit
+                ListPrice= x.ListPrice,
                 Code = x.Code,
                 Description = x.Description
             }).ToList();

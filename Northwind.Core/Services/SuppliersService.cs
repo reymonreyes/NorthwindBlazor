@@ -42,7 +42,7 @@ namespace Northwind.Core.Services
 
             return result;
         }
-
+        
         public async Task<SupplierDto?> Get(int supplierId)
         {
             SupplierDto? result = null;
@@ -58,15 +58,16 @@ namespace Northwind.Core.Services
                     Name = supplier.Name,
                     ContactName = supplier.ContactName,
                     ContactTitle = supplier.ContactTitle,
+                    Email = supplier.Email,
                     Address = supplier.Address,
                     City = supplier.City,
-                    //Region = supplier.Region,-revisit
+                    State = supplier.State,
                     Country = supplier.Country,
                     PostalCode = supplier.PostalCode,
                     Phone = supplier.Phone,
-                    Fax = supplier.Fax,
-                    Email = supplier.Email,
-                    //Homepage = supplier.Homepage-revisit
+                    Fax = supplier.Fax,                    
+                    Website = supplier.Website,
+                    Notes = supplier.Notes
                 };
             }
 
@@ -84,15 +85,15 @@ namespace Northwind.Core.Services
                 Name = supplierDto.Name,
                 ContactName = supplierDto.ContactName,
                 ContactTitle = supplierDto.ContactTitle,
+                Email = supplierDto.Email,
                 Address = supplierDto.Address,
                 City = supplierDto.City,
-                //Region = supplierDto.Region,-revisit
+                State = supplierDto.State,
                 Country = supplierDto.Country,
                 PostalCode = supplierDto.PostalCode,
                 Phone = supplierDto.Phone,
                 Fax = supplierDto.Fax,
-                Email = supplierDto.Email,
-                //Homepage = supplierDto.Homepage-revisit
+                Website = supplierDto.Website
             };
 
             await _unitOfWork.Start();
@@ -124,13 +125,14 @@ namespace Northwind.Core.Services
             supplierEntity.ContactTitle = supplierDto.ContactTitle;
             supplierEntity.Address = supplierDto.Address;
             supplierEntity.City = supplierDto.City;
-            //supplierEntity.Region = supplierDto.Region;-revisit
+            supplierEntity.State = supplierDto.State;
             supplierEntity.Country = supplierDto.Country;
             supplierEntity.PostalCode = supplierDto.PostalCode;
             supplierEntity.Phone = supplierDto.Phone;
             supplierEntity.Fax = supplierDto.Fax;
             supplierEntity.Email = supplierDto.Email;
-            //supplierEntity.Homepage = supplierDto.Homepage;-revisit
+            supplierEntity.Website = supplierDto.Website;
+            supplierEntity.Notes = supplierDto.Notes;
 
             await _unitOfWork.SuppliersRepository.Update(supplierEntity);
             await _unitOfWork.Commit();

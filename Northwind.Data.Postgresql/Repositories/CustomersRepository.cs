@@ -23,20 +23,14 @@ namespace Northwind.Data.Postgresql.Repositories
         }
 
         public async Task Delete(int customerId)
-        {
-            //if (!string.IsNullOrWhiteSpace(customerId))-revisit
-            //{
-                var customer = await Get(customerId);
-                if (customer is not null)
-                    _dbContext.Customers.Remove(customer);
-            //}
+        {            
+            var customer = await Get(customerId);
+            if (customer is not null)
+                _dbContext.Customers.Remove(customer);
         }
 
         public Task<Customer?> Get(int customerId)
         {
-            //if (string.IsNullOrEmpty(customerId))-revisit
-            //    return null!;
-
             return _dbContext.Customers.FirstOrDefaultAsync(x => x.Id == customerId);
         }
 

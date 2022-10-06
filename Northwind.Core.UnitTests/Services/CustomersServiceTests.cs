@@ -39,35 +39,7 @@ namespace Northwind.Core.UnitTests.Services
             ICustomersService service = mock.Create<CustomersService>();
 
             await Assert.ThrowsAsync<ValidationFailedException>(() => service.Create(new CustomerDto()));
-        }
-
-        //[Fact]-revisit
-        //public async Task Create_ShouldThrowValidationFailedExceptionIdIsNotUnique()
-        //{
-        //    var mock = AutoMock.GetLoose(cfg =>
-        //    {
-        //        cfg.RegisterInstance(new CustomerValidator()).As<ICustomerValidator>();
-        //    });
-        //    var uow = mock.Mock<IUnitOfWork>();
-        //    var customersRepo = mock.Mock<ICustomersRepository>();
-        //    customersRepo.Setup(x => x.Get(It.IsAny<string>())).ReturnsAsync(new Customer { Id = "ALFKI", Name = "Company One" });
-        //    uow.Setup(x => x.CustomersRepository).Returns(customersRepo.Object);
-        //    ICustomersService service = mock.Create<CustomersService>();
-
-        //    var exception = await Assert.ThrowsAsync<ValidationFailedException>(() => service.Create(new CustomerDto { Id = "ALFKI", Name = "Company One" }));
-        //    Assert.Contains("Id must be unique.", exception.ValidationErrors?.FirstOrDefault()?.Message.Value); 
-        //}
-
-        //[Fact]-revisit
-        //public async Task Edit_ShouldThrowExceptionIfInvalidCustomerIdParameter()
-        //{
-        //    var mock = AutoMock.GetLoose();
-        //    ICustomersService service = mock.Create<CustomersService>();
-
-        //    var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => service.Update(string.Empty, new CustomerDto()));
-
-        //    Assert.Equal("customerId", exception.ParamName);
-        //}
+        }        
 
         [Fact]
         public async Task Edit_ShouldThrowExceptionIfArgumentIsNull()
@@ -104,14 +76,6 @@ namespace Northwind.Core.UnitTests.Services
             var service = mock.Create<CustomersService>();
 
             await Assert.ThrowsAsync<DataNotFoundException>(() => service.Update(1, new CustomerDto { Id = 1, Name = "AAAA" }));
-        }
-
-        //[Fact]-revisit
-        //public async Task Delete_ShouldThrowArgumentNullExceptionForInvalidIdAsync()
-        //{
-        //    var mock = AutoMock.GetLoose();
-        //    var service = mock.Create<CustomersService>();
-        //    await Assert.ThrowsAsync<ArgumentNullException>(() => service.Delete(null!));
-        //}
+        }        
     }
 }

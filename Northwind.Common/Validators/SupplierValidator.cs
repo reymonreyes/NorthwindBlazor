@@ -14,7 +14,7 @@ namespace Northwind.Common.Validators
             RuleFor(x => x.ContactTitle).MaximumLength(30);
             RuleFor(x => x.Address).MaximumLength(60);
             RuleFor(x => x.City).MaximumLength(15);
-            RuleFor(x => x.Region).MaximumLength(15);
+            RuleFor(x => x.State).MaximumLength(15);
             RuleFor(x => x.PostalCode).MaximumLength(15);
             RuleFor(x => x.Country).MaximumLength(15);
             RuleFor(x => x.Phone).MaximumLength(24);

@@ -46,13 +46,16 @@ namespace Northwind.Core.Services
                     Name = customer.Name,
                     ContactName = customer.ContactName,
                     ContactTitle = customer.ContactTitle,
+                    Email = customer.Email,
                     Address = customer.Address,
-                    City = customer.City,
-                    //Region = customer.Region,-revisit
+                    City = customer.City,                    
+                    State = customer.State,
                     Country = customer.Country,
                     PostalCode = customer.PostalCode,
                     Phone = customer.Phone,
-                    Fax = customer.Fax
+                    Fax = customer.Fax,
+                    Website = customer.Website,
+                    Notes = customer.Notes
                 };
             }
 
@@ -71,13 +74,16 @@ namespace Northwind.Core.Services
                 Name = customer.Name,
                 ContactName = customer.ContactName,
                 ContactTitle = customer.ContactTitle,
+                Email = customer.Email,
                 Address = customer.Address,
                 City = customer.City,
-                //Region = customer.Region,-revisit
+                State = customer.State,
                 Country = customer.Country,
                 PostalCode = customer.PostalCode,
                 Phone = customer.Phone,
-                Fax = customer.Fax
+                Fax = customer.Fax,
+                Website = customer.Website,
+                Notes = customer.Notes
             };
             await _unitOfWork.Start();
             await _unitOfWork.CustomersRepository.Create(customerEntity);
@@ -92,18 +98,8 @@ namespace Northwind.Core.Services
                 throw new ValidationFailedException(validationResult);
         }
 
-        //private async Task ValidateUniqueId(string customerId)-revisit
-        //{
-        //    await _unitOfWork.Start();
-        //    var customer = await _unitOfWork.CustomersRepository.Get(customerId.Trim());
-        //    if(customer is not null)
-        //        throw new ValidationFailedException(new List<ServiceMessageResult> { new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Error, Message = new KeyValuePair<string, string>("Id", "Id must be unique.")} });
-        //}
-
         public async Task Update(int customerId, CustomerDto customerDto)
-        {
-            //if (string.IsNullOrWhiteSpace(customerId))
-            //    throw new ArgumentNullException("customerId");
+        {            
             if (customerDto is null)
                 throw new ArgumentNullException("customerDto");
             Validate(customerDto);
@@ -116,13 +112,16 @@ namespace Northwind.Core.Services
             customer.Name = customerDto.Name;
             customer.ContactName = customerDto.ContactName;
             customer.ContactTitle = customerDto.ContactTitle;
+            customer.Email = customerDto.Email;
             customer.Address = customerDto.Address;
             customer.City = customerDto.City;
-            //customer.Region = customerDto.Region;-revisit
+            customer.State = customerDto.State;
             customer.Country = customerDto.Country;
             customer.PostalCode = customerDto.PostalCode;
             customer.Phone = customerDto.Phone;
             customer.Fax = customerDto.Fax;
+            customer.Website = customerDto.Website;
+            customer.Notes = customerDto.Notes;
 
             await _unitOfWork.CustomersRepository.Update(customer);
             await _unitOfWork.Commit();
@@ -131,9 +130,6 @@ namespace Northwind.Core.Services
 
         public async Task Delete(int customerId)
         {
-            //if (string.IsNullOrWhiteSpace(customerId))-revisit
-            //    throw new ArgumentNullException("customerId");
-
             await _unitOfWork.Start();
             await _unitOfWork.CustomersRepository.Delete(customerId);
             await _unitOfWork.Commit();

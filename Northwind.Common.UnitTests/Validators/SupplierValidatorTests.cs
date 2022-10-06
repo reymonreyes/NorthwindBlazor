@@ -39,7 +39,7 @@ namespace Northwind.Common.UnitTests.Validators
                 ContactTitle = new string('a', 31),
                 Address = new string('a', 61),
                 City = new string('a', 16),
-                Region = new string('a', 16),
+                State = new string('a', 16),
                 PostalCode = new string('a', 16),
                 Country = new string('a', 16),
                 Phone = new string('a', 25),

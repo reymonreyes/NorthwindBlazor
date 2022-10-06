@@ -89,7 +89,7 @@
         try
         {
             IsLoading = true;
-            var supplierData = await SuppliersService.Get(Id);
+            var supplierData = await SuppliersService.Get(Id, SuppliersService.GetEmail());
             if (supplierData is not null)
             {
                 _supplier = MapperHelper.ToSupplier(supplierData);
