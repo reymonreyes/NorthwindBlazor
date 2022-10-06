@@ -80,12 +80,12 @@ else{
     private Customer? _customer;
 
     [Parameter]
-    public string Id { get; set; }
+    public int Id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
-        var customer = await CustomersService.Get(Id!);
+        var customer = await CustomersService.Get(Id);
         if(customer is not null)
             _customer = MapperHelper.ToCustomer(customer);
 

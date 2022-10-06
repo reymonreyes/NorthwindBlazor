@@ -37,10 +37,10 @@ namespace Northwind.Data
             modelBuilder.Entity<Product>().Property(x => x.Name).HasColumnName("product_name").HasColumnType("character varying").IsRequired(true);
             modelBuilder.Entity<Product>().Property(x => x.Code).HasColumnName("code").HasColumnType("character varying").IsRequired(true);
             modelBuilder.Entity<Product>().Property(x => x.Description).HasColumnName("description").HasColumnType("text");
-            modelBuilder.Entity<Product>().Property(x => x.UnitPrice).HasColumnName("unit_price").HasColumnType("real");
+            //modelBuilder.Entity<Product>().Property(x => x.UnitPrice).HasColumnName("unit_price").HasColumnType("real");-revisit
             modelBuilder.Entity<Product>().Property(x => x.QuantityPerUnit).HasColumnName("quantity_per_unit").HasColumnType("character varying");
-            modelBuilder.Entity<Product>().Property(x => x.UnitsInStock).HasColumnName("units_in_stock").HasColumnType("smallint");
-            modelBuilder.Entity<Product>().Property(x => x.UnitsInOrder).HasColumnName("units_on_order").HasColumnType("smallint");
+            //modelBuilder.Entity<Product>().Property(x => x.UnitsInStock).HasColumnName("units_in_stock").HasColumnType("smallint");-revisit
+            //modelBuilder.Entity<Product>().Property(x => x.UnitsInOrder).HasColumnName("units_on_order").HasColumnType("smallint");-revisit
             modelBuilder.Entity<Product>().Property(x => x.ReorderLevel).HasColumnName("reorder_level").HasColumnType("smallint");
             modelBuilder.Entity<Product>().Property(x => x.Discontinued).HasColumnName("discontinued").HasColumnType("integer");
         }
@@ -54,7 +54,7 @@ namespace Northwind.Data
             modelBuilder.Entity<Category>().Property(x => x.Name).HasColumnName("category_name").HasColumnType("character varying").IsRequired(true)
                 .HasMaxLength(15);
             modelBuilder.Entity<Category>().Property(x => x.Description).HasColumnName("description").HasColumnType("text");
-            modelBuilder.Entity<Category>().Property(x => x.Picture).HasColumnName("picture").HasColumnType("bytea");
+            //modelBuilder.Entity<Category>().Property(x => x.Picture).HasColumnName("picture").HasColumnType("bytea");
         }
 
         private void ConfigureSupplierEntity(ModelBuilder modelBuilder)
@@ -68,12 +68,12 @@ namespace Northwind.Data
             modelBuilder.Entity<Supplier>().Property(x => x.ContactTitle).HasColumnName("contact_title").HasColumnType("character varying").HasMaxLength(30);
             modelBuilder.Entity<Supplier>().Property(x => x.Address).HasColumnName("address").HasColumnType("character varying").HasMaxLength(60);
             modelBuilder.Entity<Supplier>().Property(x => x.City).HasColumnName("city").HasColumnType("character varying").HasMaxLength(15);
-            modelBuilder.Entity<Supplier>().Property(x => x.Region).HasColumnName("region").HasColumnType("character varying").HasMaxLength(15).HasDefaultValue(string.Empty);
+            //modelBuilder.Entity<Supplier>().Property(x => x.Region).HasColumnName("region").HasColumnType("character varying").HasMaxLength(15).HasDefaultValue(string.Empty);-revisit
             modelBuilder.Entity<Supplier>().Property(x => x.PostalCode).HasColumnName("postal_code").HasColumnType("character varying").HasMaxLength(15);
             modelBuilder.Entity<Supplier>().Property(x => x.Country).HasColumnName("country").HasColumnType("character varying").HasMaxLength(15);
             modelBuilder.Entity<Supplier>().Property(x => x.Phone).HasColumnName("phone").HasColumnType("character varying").HasMaxLength(24);
             modelBuilder.Entity<Supplier>().Property(x => x.Fax).HasColumnName("fax").HasColumnType("character varying").HasMaxLength(24);
-            modelBuilder.Entity<Supplier>().Property(x => x.Homepage).HasColumnName("homepage").HasColumnType("text");
+            //modelBuilder.Entity<Supplier>().Property(x => x.Homepage).HasColumnName("homepage").HasColumnType("text");-revisit
             modelBuilder.Entity<Supplier>().Property(x => x.Email).HasColumnName("email").HasColumnType("character varying").HasMaxLength(254);
         }
 
@@ -97,7 +97,7 @@ namespace Northwind.Data
             modelBuilder.Entity<Customer>().Property(x => x.ContactTitle).HasColumnName("contact_title").HasColumnType("character varying").HasMaxLength(30);
             modelBuilder.Entity<Customer>().Property(x => x.Address).HasColumnName("address").HasColumnType("character varying").HasMaxLength(60);
             modelBuilder.Entity<Customer>().Property(x => x.City).HasColumnName("city").HasColumnType("character varying").HasMaxLength(15);
-            modelBuilder.Entity<Customer>().Property(x => x.Region).HasColumnName("region").HasColumnType("character varying").HasMaxLength(15).HasDefaultValue(string.Empty);
+            //modelBuilder.Entity<Customer>().Property(x => x.Region).HasColumnName("region").HasColumnType("character varying").HasMaxLength(15).HasDefaultValue(string.Empty);-revisit
             modelBuilder.Entity<Customer>().Property(x => x.PostalCode).HasColumnName("postal_code").HasColumnType("character varying").HasMaxLength(10);
             modelBuilder.Entity<Customer>().Property(x => x.Country).HasColumnName("country").HasColumnType("character varying").HasMaxLength(15);
             modelBuilder.Entity<Customer>().Property(x => x.Phone).HasColumnName("phone").HasColumnType("character varying").HasMaxLength(24);

@@ -83,7 +83,7 @@ else{
             try
             {
                 IsLoading = true;
-                await CustomersService.Delete(customer.Id!);
+                await CustomersService.Delete(customer.Id);
                 _customers.Remove(customer);
                 Notify("Customer deleted successfully.", Severity.Success);
             }

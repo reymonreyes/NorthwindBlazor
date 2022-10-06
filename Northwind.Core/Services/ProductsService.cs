@@ -35,10 +35,10 @@ namespace Northwind.Core.Services
             {
                 Name = productDto.Name,
                 Code = productDto.Code,
-                UnitPrice = productDto.UnitPrice,
+                ListPrice = productDto.UnitPrice,
                 QuantityPerUnit = productDto.QuantityPerUnit,
-                UnitsInStock = productDto.UnitsInStock,
-                UnitsInOrder = productDto.UnitsInOrder,
+                //UnitsInStock = productDto.UnitsInStock, - revisit
+                //UnitsInOrder = productDto.UnitsInOrder, - revisit
                 ReorderLevel = productDto.ReorderLevel,
                 Discontinued = productDto.Discontinued,
                 Description = productDto.Description
@@ -79,10 +79,10 @@ namespace Northwind.Core.Services
             
             product.Name = productDto.Name;
             product.Code = productDto.Code;
-            product.UnitPrice = productDto.UnitPrice;
+            //product.UnitPrice = productDto.UnitPrice; - revisit
             product.QuantityPerUnit = productDto.QuantityPerUnit;
-            product.UnitsInStock = productDto.UnitsInStock;
-            product.UnitsInOrder = productDto.UnitsInOrder;
+            //product.UnitsInStock = productDto.UnitsInStock; - revisit
+            //product.UnitsInOrder = productDto.UnitsInOrder; - revisit
             product.ReorderLevel = productDto.ReorderLevel;
             product.Discontinued = productDto.Discontinued;
             product.Description = productDto.Description;
@@ -110,10 +110,10 @@ namespace Northwind.Core.Services
                     Id = product.Id,
                     Name = product.Name,
                     Code = product.Code,
-                    UnitPrice = product.UnitPrice,
+                    //UnitPrice = product.UnitPrice,-revisit
                     QuantityPerUnit = product.QuantityPerUnit,
-                    UnitsInStock = product.UnitsInStock,
-                    UnitsInOrder = product.UnitsInOrder,
+                    //UnitsInStock = product.UnitsInStock,-revisit
+                    //UnitsInOrder = product.UnitsInOrder,-revisit
                     ReorderLevel = product.ReorderLevel,
                     Discontinued = product.Discontinued,
                     Description = product.Description
@@ -133,7 +133,7 @@ namespace Northwind.Core.Services
             {
                 Id = x.Id,
                 Name = x.Name,
-                UnitPrice = x.UnitPrice,
+                //UnitPrice = x.UnitPrice,revisit
                 Code = x.Code,
                 Description = x.Description
             }).ToList();

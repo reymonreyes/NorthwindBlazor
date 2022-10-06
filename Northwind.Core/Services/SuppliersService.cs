@@ -60,13 +60,13 @@ namespace Northwind.Core.Services
                     ContactTitle = supplier.ContactTitle,
                     Address = supplier.Address,
                     City = supplier.City,
-                    Region = supplier.Region,
+                    //Region = supplier.Region,-revisit
                     Country = supplier.Country,
                     PostalCode = supplier.PostalCode,
                     Phone = supplier.Phone,
                     Fax = supplier.Fax,
                     Email = supplier.Email,
-                    Homepage = supplier.Homepage
+                    //Homepage = supplier.Homepage-revisit
                 };
             }
 
@@ -86,13 +86,13 @@ namespace Northwind.Core.Services
                 ContactTitle = supplierDto.ContactTitle,
                 Address = supplierDto.Address,
                 City = supplierDto.City,
-                Region = supplierDto.Region,
+                //Region = supplierDto.Region,-revisit
                 Country = supplierDto.Country,
                 PostalCode = supplierDto.PostalCode,
                 Phone = supplierDto.Phone,
                 Fax = supplierDto.Fax,
                 Email = supplierDto.Email,
-                Homepage = supplierDto.Homepage
+                //Homepage = supplierDto.Homepage-revisit
             };
 
             await _unitOfWork.Start();
@@ -124,13 +124,13 @@ namespace Northwind.Core.Services
             supplierEntity.ContactTitle = supplierDto.ContactTitle;
             supplierEntity.Address = supplierDto.Address;
             supplierEntity.City = supplierDto.City;
-            supplierEntity.Region = supplierDto.Region;
+            //supplierEntity.Region = supplierDto.Region;-revisit
             supplierEntity.Country = supplierDto.Country;
             supplierEntity.PostalCode = supplierDto.PostalCode;
             supplierEntity.Phone = supplierDto.Phone;
             supplierEntity.Fax = supplierDto.Fax;
             supplierEntity.Email = supplierDto.Email;
-            supplierEntity.Homepage = supplierDto.Homepage;
+            //supplierEntity.Homepage = supplierDto.Homepage;-revisit
 
             await _unitOfWork.SuppliersRepository.Update(supplierEntity);
             await _unitOfWork.Commit();

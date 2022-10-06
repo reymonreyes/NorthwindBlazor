@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
+using Northwind.Data.Postgresql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Northwind.Data.Repositories
+namespace Northwind.Data.Postresql.Repositories
 {
     public class CustomersRepository : ICustomersRepository
     {

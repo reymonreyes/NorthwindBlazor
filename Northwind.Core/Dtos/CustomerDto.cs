@@ -8,7 +8,7 @@ namespace Northwind.Core.Dtos
 {
     public class CustomerDto
     {
-        public string? Id { get; set; }
+        public int Id { get; set; }
         public string? Name { get; set; }
         public string? ContactName { get; set; }
         public string? ContactTitle { get; set; }

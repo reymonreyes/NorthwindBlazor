@@ -5,7 +5,7 @@ namespace Northwind.Blazor.Models
     public class Customer
     {
         [Required]
-        public string? Id { get; set; }
+        public int Id { get; set; }
         [Required, MaxLength(40)]
         public string? Name { get; set; }
         [MaxLength(30)]

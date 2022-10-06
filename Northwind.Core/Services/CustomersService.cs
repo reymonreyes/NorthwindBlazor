@@ -31,7 +31,7 @@ namespace Northwind.Core.Services
             return customers.Select(x => new CustomerDto { Id = x.Id, Name = x.Name, ContactName = x.ContactName, ContactTitle = x.ContactTitle }).ToList();
         }
 
-        public async Task<CustomerDto?> Get(string customerId)
+        public async Task<CustomerDto?> Get(int customerId)
         {
             CustomerDto? result = null;
             await _unitOfWork.Start();
@@ -48,7 +48,7 @@ namespace Northwind.Core.Services
                     ContactTitle = customer.ContactTitle,
                     Address = customer.Address,
                     City = customer.City,
-                    Region = customer.Region,
+                    //Region = customer.Region,-revisit
                     Country = customer.Country,
                     PostalCode = customer.PostalCode,
                     Phone = customer.Phone,
@@ -63,17 +63,17 @@ namespace Northwind.Core.Services
             if (customer is null)
                 throw new ArgumentNullException("customer");
             Validate(customer);
-            await ValidateUniqueId(customer.Id!);
+            //await ValidateUniqueId(customer.Id!);
 
             var customerEntity = new Customer
             {
-                Id = customer!.Id!.Trim(),
+                Id = customer.Id,
                 Name = customer.Name,
                 ContactName = customer.ContactName,
                 ContactTitle = customer.ContactTitle,
                 Address = customer.Address,
                 City = customer.City,
-                Region = customer.Region,
+                //Region = customer.Region,-revisit
                 Country = customer.Country,
                 PostalCode = customer.PostalCode,
                 Phone = customer.Phone,
@@ -92,18 +92,18 @@ namespace Northwind.Core.Services
                 throw new ValidationFailedException(validationResult);
         }
 
-        private async Task ValidateUniqueId(string customerId)
-        {
-            await _unitOfWork.Start();
-            var customer = await _unitOfWork.CustomersRepository.Get(customerId.Trim());
-            if(customer is not null)
-                throw new ValidationFailedException(new List<ServiceMessageResult> { new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Error, Message = new KeyValuePair<string, string>("Id", "Id must be unique.")} });
-        }
+        //private async Task ValidateUniqueId(string customerId)-revisit
+        //{
+        //    await _unitOfWork.Start();
+        //    var customer = await _unitOfWork.CustomersRepository.Get(customerId.Trim());
+        //    if(customer is not null)
+        //        throw new ValidationFailedException(new List<ServiceMessageResult> { new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Error, Message = new KeyValuePair<string, string>("Id", "Id must be unique.")} });
+        //}
 
-        public async Task Update(string customerId, CustomerDto customerDto)
+        public async Task Update(int customerId, CustomerDto customerDto)
         {
-            if (string.IsNullOrWhiteSpace(customerId))
-                throw new ArgumentNullException("customerId");
+            //if (string.IsNullOrWhiteSpace(customerId))
+            //    throw new ArgumentNullException("customerId");
             if (customerDto is null)
                 throw new ArgumentNullException("customerDto");
             Validate(customerDto);
@@ -118,7 +118,7 @@ namespace Northwind.Core.Services
             customer.ContactTitle = customerDto.ContactTitle;
             customer.Address = customerDto.Address;
             customer.City = customerDto.City;
-            customer.Region = customerDto.Region;
+            //customer.Region = customerDto.Region;-revisit
             customer.Country = customerDto.Country;
             customer.PostalCode = customerDto.PostalCode;
             customer.Phone = customerDto.Phone;
@@ -129,10 +129,10 @@ namespace Northwind.Core.Services
             await _unitOfWork.Stop();
         }
 
-        public async Task Delete(string customerId)
+        public async Task Delete(int customerId)
         {
-            if (string.IsNullOrWhiteSpace(customerId))
-                throw new ArgumentNullException("customerId");
+            //if (string.IsNullOrWhiteSpace(customerId))-revisit
+            //    throw new ArgumentNullException("customerId");
 
             await _unitOfWork.Start();
             await _unitOfWork.CustomersRepository.Delete(customerId);
