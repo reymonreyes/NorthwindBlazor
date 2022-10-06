@@ -361,3 +361,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Northwind.Data.Postgresql/Migrations/20221006084732_SeedDataSuppliers.Designer.cs

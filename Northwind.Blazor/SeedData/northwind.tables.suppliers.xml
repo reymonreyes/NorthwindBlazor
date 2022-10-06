@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+  <columns>
+    <Address index="4">Address</Address>
+    <City index="5">City</City>
+    <ContactName index="2">ContactName</ContactName>
+    <ContactTitle index="3">ContactTitle</ContactTitle>
+    <Country index="8">Country</Country>
+    <Email index="12">Email</Email>
+    <Fax index="10">Fax</Fax>
+    <Name index="1">Name</Name>
+    <Phone index="9">Phone</Phone>
+    <PostalCode index="7">PostalCode</PostalCode>
+    <State index="6">State</State>
+    <Website index="11">Website</Website>
+  </columns>
+  <records>
+    <record index="1">
+      <Address>49 Gilbert St.</Address>
+      <City>London</City>
+      <ContactName>Charlotte Cooper</ContactName>
+      <ContactTitle>Purchasing Manager</ContactTitle>
+      <Country>UK</Country>
+      <Email>tfriskey0@wufoo.com</Email>
+      <Fax>NULL</Fax>
+      <Name>Exotic Liquids</Name>
+      <Phone>(171) 555-2222</Phone>
+      <PostalCode>EC1 4SD</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="2">
+      <Address>P.O. Box 78934</Address>
+      <City>New Orleans</City>
+      <ContactName>Shelley Burke</ContactName>
+      <ContactTitle>Order Administrator</ContactTitle>
+      <Country>USA</Country>
+      <Email>fstride1@freewebs.com</Email>
+      <Fax>NULL</Fax>
+      <Name>New Orleans Cajun Delights</Name>
+      <Phone>(100) 555-4822</Phone>
+      <PostalCode>70117</PostalCode>
+      <State>LA</State>
+      <Website>#CAJUN.HTM#</Website>
+    </record>
+    <record index="3">
+      <Address>707 Oxford Rd.</Address>
+      <City>Ann Arbor</City>
+      <ContactName>Regina Murphy</ContactName>
+      <ContactTitle>Sales Representative</ContactTitle>
+      <Country>USA</Country>
+      <Email>ntunbridge2@miitbeian.gov.cn</Email>
+      <Fax>(313) 555-3349</Fax>
+      <Name>Grandma Kelly's Homestead</Name>
+      <Phone>(313) 555-5735</Phone>
+      <PostalCode>48104</PostalCode>
+      <State>MI</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="4">
+      <Address>9-8 Sekimai Musashino-shi</Address>
+      <City>Tokyo</City>
+      <ContactName>Yoshi Nagase</ContactName>
+      <ContactTitle>Marketing Manager</ContactTitle>
+      <Country>Japan</Country>
+      <Email>vmather3@opera.com</Email>
+      <Fax>NULL</Fax>
+      <Name>Tokyo Traders</Name>
+      <Phone>(03) 3555-5011</Phone>
+      <PostalCode>100</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="5">
+      <Address>Calle del Rosal 4</Address>
+      <City>Oviedo</City>
+      <ContactName>Antonio del Valle Saavedra</ContactName>
+      <ContactTitle>Export Administrator</ContactTitle>
+      <Country>Spain</Country>
+      <Email>bclaricoates4@zdnet.com</Email>
+      <Fax>NULL</Fax>
+      <Name>Cooperativa de Quesos 'Las Cabras'</Name>
+      <Phone>(98) 598 76 54</Phone>
+      <PostalCode>33007</PostalCode>
+      <State>Asturias</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="6">
+      <Address>92 Setsuko Chuo-ku</Address>
+      <City>Osaka</City>
+      <ContactName>Mayumi Ohno</ContactName>
+      <ContactTitle>Marketing Representative</ContactTitle>
+      <Country>Japan</Country>
+      <Email>cfawthrop5@dion.ne.jp</Email>
+      <Fax>NULL</Fax>
+      <Name>Mayumi's</Name>
+      <Phone>(06) 431-7877</Phone>
+      <PostalCode>545</PostalCode>
+      <State>NULL</State>
+      <Website>Mayumi's (on the World Wide Web)#http://www.microsoft.com/accessdev/sampleapps/mayumi.htm#</Website>
+    </record>
+    <record index="7">
+      <Address>74 Rose St. Moonie Ponds</Address>
+      <City>Melbourne</City>
+      <ContactName>Ian Devling</ContactName>
+      <ContactTitle>Marketing Manager</ContactTitle>
+      <Country>Australia</Country>
+      <Email>xgudd6@simplemachines.org</Email>
+      <Fax>(03) 444-6588</Fax>
+      <Name>Pavlova, Ltd.</Name>
+      <Phone>(03) 444-2343</Phone>
+      <PostalCode>3058</PostalCode>
+      <State>Victoria</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="8">
+      <Address>29 King's Way</Address>
+      <City>Manchester</City>
+      <ContactName>Peter Wilson</ContactName>
+      <ContactTitle>Sales Representative</ContactTitle>
+      <Country>UK</Country>
+      <Email>pmulligan7@businessweek.com</Email>
+      <Fax>NULL</Fax>
+      <Name>Specialty Biscuits, Ltd.</Name>
+      <Phone>(161) 555-4448</Phone>
+      <PostalCode>M14 GSD</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="9">
+      <Address>Kaloadagatan 13</Address>
+      <City>Göteborg</City>
+      <ContactName>Lars Peterson</ContactName>
+      <ContactTitle>Sales Agent</ContactTitle>
+      <Country>Sweden</Country>
+      <Email>amcnellis8@furl.net</Email>
+      <Fax>031-987 65 91</Fax>
+      <Name>PB Knäckebröd AB</Name>
+      <Phone>031-987 65 43</Phone>
+      <PostalCode>S-345 67</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="10">
+      <Address>Av. das Americanas 12.890</Address>
+      <City>Sao Paulo</City>
+      <ContactName>Carlos Diaz</ContactName>
+      <ContactTitle>Marketing Manager</ContactTitle>
+      <Country>Brazil</Country>
+      <Email>steanby9@amazon.co.uk</Email>
+      <Fax>NULL</Fax>
+      <Name>Refrescos Americanas LTDA</Name>
+      <Phone>(11) 555 4640</Phone>
+      <PostalCode>5442</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="11">
+      <Address>Tiergartenstraße 5</Address>
+      <City>Berlin</City>
+      <ContactName>Petra Winkler</ContactName>
+      <ContactTitle>Sales Manager</ContactTitle>
+      <Country>Germany</Country>
+      <Email>hbouchiera@de.vu</Email>
+      <Fax>NULL</Fax>
+      <Name>Heli Süßwaren GmbH &amp; Co. KG</Name>
+      <Phone>(010) 9984510</Phone>
+      <PostalCode>10785</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="12">
+      <Address>Bogenallee 51</Address>
+      <City>Frankfurt</City>
+      <ContactName>Martin Bein</ContactName>
+      <ContactTitle>International Marketing Mgr.</ContactTitle>
+      <Country>Germany</Country>
+      <Email>sgarmanb@lycos.com</Email>
+      <Fax>NULL</Fax>
+      <Name>Plutzer Lebensmittelgroßmärkte AG</Name>
+      <Phone>(069) 992755</Phone>
+      <PostalCode>60439</PostalCode>
+      <State>NULL</State>
+      <Website>Plutzer (on the World Wide Web)#http://www.microsoft.com/accessdev/sampleapps/plutzer.htm#</Website>
+    </record>
+    <record index="13">
+      <Address>Frahmredder 112a</Address>
+      <City>Cuxhaven</City>
+      <ContactName>Sven Petersen</ContactName>
+      <ContactTitle>Coordinator Foreign Markets</ContactTitle>
+      <Country>Germany</Country>
+      <Email>chealc@dailymotion.com</Email>
+      <Fax>(04721) 8714</Fax>
+      <Name>Nord-Ost-Fisch Handelsgesellschaft mbH</Name>
+      <Phone>(04721) 8713</Phone>
+      <PostalCode>27478</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="14">
+      <Address>Viale Dante, 75</Address>
+      <City>Ravenna</City>
+      <ContactName>Elio Rossi</ContactName>
+      <ContactTitle>Sales Representative</ContactTitle>
+      <Country>Italy</Country>
+      <Email>ggrimsdyked@ucoz.com</Email>
+      <Fax>(0544) 60603</Fax>
+      <Name>Formaggi Fortini s.r.l.</Name>
+      <Phone>(0544) 60323</Phone>
+      <PostalCode>48100</PostalCode>
+      <State>NULL</State>
+      <Website>#FORMAGGI.HTM#</Website>
+    </record>
+    <record index="15">
+      <Address>Hatlevegen 5</Address>
+      <City>Sandvika</City>
+      <ContactName>Beate Vileid</ContactName>
+      <ContactTitle>Marketing Manager</ContactTitle>
+      <Country>Norway</Country>
+      <Email>ebragere@mac.com</Email>
+      <Fax>NULL</Fax>
+      <Name>Norske Meierier</Name>
+      <Phone>(0)2-953010</Phone>
+      <PostalCode>1320</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="16">
+      <Address>3400 - 8th Avenue Suite 210</Address>
+      <City>Bend</City>
+      <ContactName>Cheryl Saylor</ContactName>
+      <ContactTitle>Regional Account Rep.</ContactTitle>
+      <Country>USA</Country>
+      <Email>ggreasleyf@businesswire.com</Email>
+      <Fax>NULL</Fax>
+      <Name>Bigfoot Breweries</Name>
+      <Phone>(503) 555-9931</Phone>
+      <PostalCode>97101</PostalCode>
+      <State>OR</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="17">
+      <Address>Brovallavägen 231</Address>
+      <City>Stockholm</City>
+      <ContactName>Michael Björn</ContactName>
+      <ContactTitle>Sales Representative</ContactTitle>
+      <Country>Sweden</Country>
+      <Email>npendleberyg@arizona.edu</Email>
+      <Fax>NULL</Fax>
+      <Name>Svensk Sjöföda AB</Name>
+      <Phone>08-123 45 67</Phone>
+      <PostalCode>S-123 45</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="18">
+      <Address>203, Rue des Francs-Bourgeois</Address>
+      <City>Paris</City>
+      <ContactName>Guylène Nodier</ContactName>
+      <ContactTitle>Sales Manager</ContactTitle>
+      <Country>France</Country>
+      <Email>ibernadeh@wikipedia.org</Email>
+      <Fax>(1) 03.83.00.62</Fax>
+      <Name>Aux joyeux ecclésiastiques</Name>
+      <Phone>(1) 03.83.00.68</Phone>
+      <PostalCode>75004</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="19">
+      <Address>Order Processing Dept. 2100 Paul Revere Blvd.</Address>
+      <City>Boston</City>
+      <ContactName>Robb Merchant</ContactName>
+      <ContactTitle>Wholesale Account Agent</ContactTitle>
+      <Country>USA</Country>
+      <Email>mwranklingi@vkontakte.ru</Email>
+      <Fax>(617) 555-3389</Fax>
+      <Name>New England Seafood Cannery</Name>
+      <Phone>(617) 555-3267</Phone>
+      <PostalCode>2134</PostalCode>
+      <State>MA</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="20">
+      <Address>471 Serangoon Loop, Suite #402</Address>
+      <City>Singapore</City>
+      <ContactName>Chandra Leka</ContactName>
+      <ContactTitle>Owner</ContactTitle>
+      <Country>Singapore</Country>
+      <Email>mmccourtj@si.edu</Email>
+      <Fax>NULL</Fax>
+      <Name>Leka Trading</Name>
+      <Phone>555-8787</Phone>
+      <PostalCode>512</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="21">
+      <Address>Lyngbysild Fiskebakken 10</Address>
+      <City>Lyngby</City>
+      <ContactName>Niels Petersen</ContactName>
+      <ContactTitle>Sales Manager</ContactTitle>
+      <Country>Denmark</Country>
+      <Email>rdorosariok@usda.gov</Email>
+      <Fax>43844115</Fax>
+      <Name>Lyngbysild</Name>
+      <Phone>43844108</Phone>
+      <PostalCode>2800</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="22">
+      <Address>Verkoop Rijnweg 22</Address>
+      <City>Zaandam</City>
+      <ContactName>Dirk Luchte</ContactName>
+      <ContactTitle>Accounting Manager</ContactTitle>
+      <Country>Netherlands</Country>
+      <Email>cavrahamoffl@wiley.com</Email>
+      <Fax>(12345) 1210</Fax>
+      <Name>Zaanse Snoepfabriek</Name>
+      <Phone>(12345) 1212</Phone>
+      <PostalCode>9999 ZZ</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="23">
+      <Address>Valtakatu 12</Address>
+      <City>Lappeenranta</City>
+      <ContactName>Anne Heikkonen</ContactName>
+      <ContactTitle>Product Manager</ContactTitle>
+      <Country>Finland</Country>
+      <Email>gscritchm@altervista.org</Email>
+      <Fax>NULL</Fax>
+      <Name>Karkki Oy</Name>
+      <Phone>(953) 10956</Phone>
+      <PostalCode>53120</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="24">
+      <Address>170 Prince Edward Parade Hunter's Hill</Address>
+      <City>Sydney</City>
+      <ContactName>Wendy Mackenzie</ContactName>
+      <ContactTitle>Sales Representative</ContactTitle>
+      <Country>Australia</Country>
+      <Email>rnapthinen@live.com</Email>
+      <Fax>(02) 555-4873</Fax>
+      <Name>G'day, Mate</Name>
+      <Phone>(02) 555-5914</Phone>
+      <PostalCode>2042</PostalCode>
+      <State>NSW</State>
+      <Website>G'day Mate (on the World Wide Web)#http://www.microsoft.com/accessdev/sampleapps/gdaymate.htm#</Website>
+    </record>
+    <record index="25">
+      <Address>2960 Rue St. Laurent</Address>
+      <City>Montréal</City>
+      <ContactName>Jean-Guy Lauzon</ContactName>
+      <ContactTitle>Marketing Manager</ContactTitle>
+      <Country>Canada</Country>
+      <Email>tmessageo@mlb.com</Email>
+      <Fax>NULL</Fax>
+      <Name>Ma Maison</Name>
+      <Phone>(514) 555-9022</Phone>
+      <PostalCode>H1J 1C3</PostalCode>
+      <State>Québec</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="26">
+      <Address>Via dei Gelsomini, 153</Address>
+      <City>Salerno</City>
+      <ContactName>Giovanni Giudici</ContactName>
+      <ContactTitle>Order Administrator</ContactTitle>
+      <Country>Italy</Country>
+      <Email>ddurdenp@ucsd.edu</Email>
+      <Fax>(089) 6547667</Fax>
+      <Name>Pasta Buttini s.r.l.</Name>
+      <Phone>(089) 6547665</Phone>
+      <PostalCode>84100</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="27">
+      <Address>22, rue H. Voiron</Address>
+      <City>Montceau</City>
+      <ContactName>Marie Delamare</ContactName>
+      <ContactTitle>Sales Manager</ContactTitle>
+      <Country>France</Country>
+      <Email>rtamburiq@cbc.ca</Email>
+      <Fax>NULL</Fax>
+      <Name>Escargots Nouveaux</Name>
+      <Phone>85.57.00.07</Phone>
+      <PostalCode>71300</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="28">
+      <Address>Bat. B 3, rue des Alpes</Address>
+      <City>Annecy</City>
+      <ContactName>Eliane Noz</ContactName>
+      <ContactTitle>Sales Representative</ContactTitle>
+      <Country>France</Country>
+      <Email>lbarabichr@usatoday.com</Email>
+      <Fax>38.76.98.58</Fax>
+      <Name>Gai pâturage</Name>
+      <Phone>38.76.98.06</Phone>
+      <PostalCode>74000</PostalCode>
+      <State>NULL</State>
+      <Website>NULL</Website>
+    </record>
+    <record index="29">
+      <Address>148 rue Chasseur</Address>
+      <City>Ste-Hyacinthe</City>
+      <ContactName>Chantal Goulet</ContactName>
+      <ContactTitle>Accounting Manager</ContactTitle>
+      <Country>Canada</Country>
+      <Email>mrivlins@ibm.com</Email>
+      <Fax>(514) 555-2921</Fax>
+      <Name>Forêts d'érables</Name>
+      <Phone>(514) 555-2955</Phone>
+      <PostalCode>J2S 7S8</PostalCode>
+      <State>Québec</State>
+      <Website>NULL</Website>
+    </record>
+  </records>
+</data>
