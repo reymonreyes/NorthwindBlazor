@@ -1,0 +1,1004 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<record index="1">
+		<CategoryId>1</CategoryId>
+		<Description>Fusce consequat. Nulla nisl. Nunc nisl. Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>18</ListPrice>
+		<MinimumReorderQuantity>10</MinimumReorderQuantity>
+		<Name>Chai</Name>
+		<QuantityPerUnit>10 boxes x 20 bags</QuantityPerUnit>
+		<ReorderLevel>10</ReorderLevel>
+		<StandardCost>13.50 </StandardCost>
+		<SupplierId>1</SupplierId>
+		<TargetLevel>40</TargetLevel>
+	</record>
+	<record index="2">
+		<CategoryId>1</CategoryId>
+		<Description>Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>19</ListPrice>
+		<MinimumReorderQuantity>25</MinimumReorderQuantity>
+		<Name>Chang</Name>
+		<QuantityPerUnit>24 - 12 oz bottles</QuantityPerUnit>
+		<ReorderLevel>25</ReorderLevel>
+		<StandardCost>14.25 </StandardCost>
+		<SupplierId>1</SupplierId>
+		<TargetLevel>100</TargetLevel>
+	</record>
+	<record index="3">
+		<CategoryId>2</CategoryId>
+		<Description>Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>10</ListPrice>
+		<MinimumReorderQuantity>25</MinimumReorderQuantity>
+		<Name>Aniseed Syrup</Name>
+		<QuantityPerUnit>12 - 550 ml bottles</QuantityPerUnit>
+		<ReorderLevel>25</ReorderLevel>
+		<StandardCost>7.50 </StandardCost>
+		<SupplierId>1</SupplierId>
+		<TargetLevel>100</TargetLevel>
+	</record>
+	<record index="4">
+		<CategoryId>2</CategoryId>
+		<Description>Morbi a ipsum. Integer a nibh.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>22</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Chef Anton's Cajun Seasoning</Name>
+		<QuantityPerUnit>48 - 6 oz jars</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>16.50 </StandardCost>
+		<SupplierId>2</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="5">
+		<CategoryId>2</CategoryId>
+		<Description>In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet. Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo.</Description>
+		<Discontinued>1</Discontinued>
+		<ListPrice>21.35</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Chef Anton's Gumbo Mix</Name>
+		<QuantityPerUnit>36 boxes</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>16.01 </StandardCost>
+		<SupplierId>2</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="6">
+		<CategoryId>2</CategoryId>
+		<Description>Quisque ut erat.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>25</ListPrice>
+		<MinimumReorderQuantity>25</MinimumReorderQuantity>
+		<Name>Grandma's Boysenberry Spread</Name>
+		<QuantityPerUnit>12 - 8 oz jars</QuantityPerUnit>
+		<ReorderLevel>25</ReorderLevel>
+		<StandardCost>18.75 </StandardCost>
+		<SupplierId>3</SupplierId>
+		<TargetLevel>100</TargetLevel>
+	</record>
+	<record index="7">
+		<CategoryId>7</CategoryId>
+		<Description>Phasellus sit amet erat. Nulla tempus.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>30</ListPrice>
+		<MinimumReorderQuantity>10</MinimumReorderQuantity>
+		<Name>Uncle Bob's Organic Dried Pears</Name>
+		<QuantityPerUnit>12 - 1 lb pkgs.</QuantityPerUnit>
+		<ReorderLevel>10</ReorderLevel>
+		<StandardCost>22.50 </StandardCost>
+		<SupplierId>3</SupplierId>
+		<TargetLevel>40</TargetLevel>
+	</record>
+	<record index="8">
+		<CategoryId>2</CategoryId>
+		<Description>Praesent lectus. Vestibulum quam sapien, varius ut, blandit non, interdum in, ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>40</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Northwoods Cranberry Sauce</Name>
+		<QuantityPerUnit>12 - 12 oz jars</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>30.00 </StandardCost>
+		<SupplierId>3</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="9">
+		<CategoryId>6</CategoryId>
+		<Description>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros.</Description>
+		<Discontinued>1</Discontinued>
+		<ListPrice>97</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Mishi Kobe Niku</Name>
+		<QuantityPerUnit>18 - 500 g pkgs.</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>72.75 </StandardCost>
+		<SupplierId>4</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="10">
+		<CategoryId>8</CategoryId>
+		<Description>Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>31</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Ikura</Name>
+		<QuantityPerUnit>12 - 200 ml jars</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>23.25 </StandardCost>
+		<SupplierId>4</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="11">
+		<CategoryId>4</CategoryId>
+		<Description>Morbi ut odio. Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>21</ListPrice>
+		<MinimumReorderQuantity>30</MinimumReorderQuantity>
+		<Name>Queso Cabrales</Name>
+		<QuantityPerUnit>1 kg pkg.</QuantityPerUnit>
+		<ReorderLevel>30</ReorderLevel>
+		<StandardCost>15.75 </StandardCost>
+		<SupplierId>5</SupplierId>
+		<TargetLevel>120</TargetLevel>
+	</record>
+	<record index="12">
+		<CategoryId>4</CategoryId>
+		<Description>Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet. Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>38</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Queso Manchego La Pastora</Name>
+		<QuantityPerUnit>10 - 500 g pkgs.</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>28.50 </StandardCost>
+		<SupplierId>5</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="13">
+		<CategoryId>8</CategoryId>
+		<Description>Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique. Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat. In congue.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>6</ListPrice>
+		<MinimumReorderQuantity>5</MinimumReorderQuantity>
+		<Name>Konbu</Name>
+		<QuantityPerUnit>2 kg box</QuantityPerUnit>
+		<ReorderLevel>5</ReorderLevel>
+		<StandardCost>4.50 </StandardCost>
+		<SupplierId>6</SupplierId>
+		<TargetLevel>20</TargetLevel>
+	</record>
+	<record index="14">
+		<CategoryId>7</CategoryId>
+		<Description>In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet. Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>23.25</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Tofu</Name>
+		<QuantityPerUnit>40 - 100 g pkgs.</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>17.44 </StandardCost>
+		<SupplierId>6</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="15">
+		<CategoryId>2</CategoryId>
+		<Description>Ut at dolor quis odio consequat varius. Integer ac leo.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>15.5</ListPrice>
+		<MinimumReorderQuantity>5</MinimumReorderQuantity>
+		<Name>Genen Shouyu</Name>
+		<QuantityPerUnit>24 - 250 ml bottles</QuantityPerUnit>
+		<ReorderLevel>5</ReorderLevel>
+		<StandardCost>11.62 </StandardCost>
+		<SupplierId>6</SupplierId>
+		<TargetLevel>20</TargetLevel>
+	</record>
+	<record index="16">
+		<CategoryId>3</CategoryId>
+		<Description>Maecenas pulvinar lobortis est. Phasellus sit amet erat.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>17.45</ListPrice>
+		<MinimumReorderQuantity>10</MinimumReorderQuantity>
+		<Name>Pavlova</Name>
+		<QuantityPerUnit>32 - 500 g boxes</QuantityPerUnit>
+		<ReorderLevel>10</ReorderLevel>
+		<StandardCost>13.09 </StandardCost>
+		<SupplierId>7</SupplierId>
+		<TargetLevel>40</TargetLevel>
+	</record>
+	<record index="17">
+		<CategoryId>6</CategoryId>
+		<Description>Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque. Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla.</Description>
+		<Discontinued>1</Discontinued>
+		<ListPrice>39</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Alice Mutton</Name>
+		<QuantityPerUnit>20 - 1 kg tins</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>29.25 </StandardCost>
+		<SupplierId>7</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="18">
+		<CategoryId>8</CategoryId>
+		<Description>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>62.5</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Carnarvon Tigers</Name>
+		<QuantityPerUnit>16 kg pkg.</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>46.88 </StandardCost>
+		<SupplierId>7</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="19">
+		<CategoryId>3</CategoryId>
+		<Description>Ut at dolor quis odio consequat varius. Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>9.2</ListPrice>
+		<MinimumReorderQuantity>5</MinimumReorderQuantity>
+		<Name>Teatime Chocolate Biscuits</Name>
+		<QuantityPerUnit>10 boxes x 12 pieces</QuantityPerUnit>
+		<ReorderLevel>5</ReorderLevel>
+		<StandardCost>6.90 </StandardCost>
+		<SupplierId>8</SupplierId>
+		<TargetLevel>20</TargetLevel>
+	</record>
+	<record index="20">
+		<CategoryId>3</CategoryId>
+		<Description>Aliquam sit amet diam in magna bibendum imperdiet.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>81</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Sir Rodney's Marmalade</Name>
+		<QuantityPerUnit>30 gift boxes</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>60.75 </StandardCost>
+		<SupplierId>8</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="21">
+		<CategoryId>3</CategoryId>
+		<Description>Mauris lacinia sapien quis libero. Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>10</ListPrice>
+		<MinimumReorderQuantity>5</MinimumReorderQuantity>
+		<Name>Sir Rodney's Scones</Name>
+		<QuantityPerUnit>24 pkgs. x 4 pieces</QuantityPerUnit>
+		<ReorderLevel>5</ReorderLevel>
+		<StandardCost>7.50 </StandardCost>
+		<SupplierId>8</SupplierId>
+		<TargetLevel>20</TargetLevel>
+	</record>
+	<record index="22">
+		<CategoryId>5</CategoryId>
+		<Description>Vestibulum rutrum rutrum neque. Aenean auctor gravida sem. Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>21</ListPrice>
+		<MinimumReorderQuantity>25</MinimumReorderQuantity>
+		<Name>Gustaf's Knäckebröd</Name>
+		<QuantityPerUnit>24 - 500 g pkgs.</QuantityPerUnit>
+		<ReorderLevel>25</ReorderLevel>
+		<StandardCost>15.75 </StandardCost>
+		<SupplierId>9</SupplierId>
+		<TargetLevel>100</TargetLevel>
+	</record>
+	<record index="23">
+		<CategoryId>5</CategoryId>
+		<Description>Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>9</ListPrice>
+		<MinimumReorderQuantity>25</MinimumReorderQuantity>
+		<Name>Tunnbröd</Name>
+		<QuantityPerUnit>12 - 250 g pkgs.</QuantityPerUnit>
+		<ReorderLevel>25</ReorderLevel>
+		<StandardCost>6.75 </StandardCost>
+		<SupplierId>9</SupplierId>
+		<TargetLevel>100</TargetLevel>
+	</record>
+	<record index="24">
+		<CategoryId>1</CategoryId>
+		<Description>Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero. Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.</Description>
+		<Discontinued>1</Discontinued>
+		<ListPrice>4.5</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Guaraná Fantástica</Name>
+		<QuantityPerUnit>12 - 355 ml cans</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>3.38 </StandardCost>
+		<SupplierId>10</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="25">
+		<CategoryId>3</CategoryId>
+		<Description>Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>14</ListPrice>
+		<MinimumReorderQuantity>30</MinimumReorderQuantity>
+		<Name>NuNuCa Nuß-Nougat-Creme</Name>
+		<QuantityPerUnit>20 - 450 g glasses</QuantityPerUnit>
+		<ReorderLevel>30</ReorderLevel>
+		<StandardCost>10.50 </StandardCost>
+		<SupplierId>11</SupplierId>
+		<TargetLevel>120</TargetLevel>
+	</record>
+	<record index="26">
+		<CategoryId>3</CategoryId>
+		<Description>In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem. Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer non velit. Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>31.23</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Gumbär Gummibärchen</Name>
+		<QuantityPerUnit>100 - 250 g bags</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>23.42 </StandardCost>
+		<SupplierId>11</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="27">
+		<CategoryId>3</CategoryId>
+		<Description>Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>43.9</ListPrice>
+		<MinimumReorderQuantity>30</MinimumReorderQuantity>
+		<Name>Schoggi Schokolade</Name>
+		<QuantityPerUnit>100 - 100 g pieces</QuantityPerUnit>
+		<ReorderLevel>30</ReorderLevel>
+		<StandardCost>32.92 </StandardCost>
+		<SupplierId>11</SupplierId>
+		<TargetLevel>120</TargetLevel>
+	</record>
+	<record index="28">
+		<CategoryId>7</CategoryId>
+		<Description>In quis justo. Maecenas rhoncus aliquam lacus.</Description>
+		<Discontinued>1</Discontinued>
+		<ListPrice>45.6</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Rössle Sauerkraut</Name>
+		<QuantityPerUnit>25 - 825 g cans</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>34.20 </StandardCost>
+		<SupplierId>12</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="29">
+		<CategoryId>6</CategoryId>
+		<Description>Nulla ut erat id mauris vulputate elementum. Nullam varius.</Description>
+		<Discontinued>1</Discontinued>
+		<ListPrice>123.79</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Thüringer Rostbratwurst</Name>
+		<QuantityPerUnit>50 bags x 30 sausgs.</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>92.84 </StandardCost>
+		<SupplierId>12</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="30">
+		<CategoryId>8</CategoryId>
+		<Description>Nunc nisl.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>25.89</ListPrice>
+		<MinimumReorderQuantity>15</MinimumReorderQuantity>
+		<Name>Nord-Ost Matjeshering</Name>
+		<QuantityPerUnit>10 - 200 g glasses</QuantityPerUnit>
+		<ReorderLevel>15</ReorderLevel>
+		<StandardCost>19.42 </StandardCost>
+		<SupplierId>13</SupplierId>
+		<TargetLevel>60</TargetLevel>
+	</record>
+	<record index="31">
+		<CategoryId>4</CategoryId>
+		<Description>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>12.5</ListPrice>
+		<MinimumReorderQuantity>20</MinimumReorderQuantity>
+		<Name>Gorgonzola Telino</Name>
+		<QuantityPerUnit>12 - 100 g pkgs</QuantityPerUnit>
+		<ReorderLevel>20</ReorderLevel>
+		<StandardCost>9.38 </StandardCost>
+		<SupplierId>14</SupplierId>
+		<TargetLevel>80</TargetLevel>
+	</record>
+	<record index="32">
+		<CategoryId>4</CategoryId>
+		<Description>Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet. Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo. Pellentesque viverra pede ac diam.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>32</ListPrice>
+		<MinimumReorderQuantity>25</MinimumReorderQuantity>
+		<Name>Mascarpone Fabioli</Name>
+		<QuantityPerUnit>24 - 200 g pkgs.</QuantityPerUnit>
+		<ReorderLevel>25</ReorderLevel>
+		<StandardCost>24.00 </StandardCost>
+		<SupplierId>14</SupplierId>
+		<TargetLevel>100</TargetLevel>
+	</record>
+	<record index="33">
+		<CategoryId>4</CategoryId>
+		<Description>Nulla tellus. In sagittis dui vel nisl.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>2.5</ListPrice>
+		<MinimumReorderQuantity>20</MinimumReorderQuantity>
+		<Name>Geitost</Name>
+		<QuantityPerUnit>500 g</QuantityPerUnit>
+		<ReorderLevel>20</ReorderLevel>
+		<StandardCost>1.88 </StandardCost>
+		<SupplierId>15</SupplierId>
+		<TargetLevel>80</TargetLevel>
+	</record>
+	<record index="34">
+		<CategoryId>1</CategoryId>
+		<Description>Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus. Pellentesque at nulla.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>14</ListPrice>
+		<MinimumReorderQuantity>15</MinimumReorderQuantity>
+		<Name>Sasquatch Ale</Name>
+		<QuantityPerUnit>24 - 12 oz bottles</QuantityPerUnit>
+		<ReorderLevel>15</ReorderLevel>
+		<StandardCost>10.50 </StandardCost>
+		<SupplierId>16</SupplierId>
+		<TargetLevel>60</TargetLevel>
+	</record>
+	<record index="35">
+		<CategoryId>1</CategoryId>
+		<Description>Pellentesque viverra pede ac diam.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>18</ListPrice>
+		<MinimumReorderQuantity>15</MinimumReorderQuantity>
+		<Name>Steeleye Stout</Name>
+		<QuantityPerUnit>24 - 12 oz bottles</QuantityPerUnit>
+		<ReorderLevel>15</ReorderLevel>
+		<StandardCost>13.50 </StandardCost>
+		<SupplierId>16</SupplierId>
+		<TargetLevel>60</TargetLevel>
+	</record>
+	<record index="36">
+		<CategoryId>8</CategoryId>
+		<Description>Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis. Sed ante.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>19</ListPrice>
+		<MinimumReorderQuantity>20</MinimumReorderQuantity>
+		<Name>Inlagd Sill</Name>
+		<QuantityPerUnit>24 - 250 g  jars</QuantityPerUnit>
+		<ReorderLevel>20</ReorderLevel>
+		<StandardCost>14.25 </StandardCost>
+		<SupplierId>17</SupplierId>
+		<TargetLevel>80</TargetLevel>
+	</record>
+	<record index="37">
+		<CategoryId>8</CategoryId>
+		<Description>In congue. Etiam justo. Etiam pretium iaculis justo. In hac habitasse platea dictumst.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>26</ListPrice>
+		<MinimumReorderQuantity>25</MinimumReorderQuantity>
+		<Name>Gravad lax</Name>
+		<QuantityPerUnit>12 - 500 g pkgs.</QuantityPerUnit>
+		<ReorderLevel>25</ReorderLevel>
+		<StandardCost>19.50 </StandardCost>
+		<SupplierId>17</SupplierId>
+		<TargetLevel>100</TargetLevel>
+	</record>
+	<record index="38">
+		<CategoryId>1</CategoryId>
+		<Description>Nullam porttitor lacus at turpis. Donec posuere metus vitae ipsum. Aliquam non mauris. Morbi non lectus.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>263.5</ListPrice>
+		<MinimumReorderQuantity>15</MinimumReorderQuantity>
+		<Name>Côte de Blaye</Name>
+		<QuantityPerUnit>12 - 75 cl bottles</QuantityPerUnit>
+		<ReorderLevel>15</ReorderLevel>
+		<StandardCost>197.62 </StandardCost>
+		<SupplierId>18</SupplierId>
+		<TargetLevel>60</TargetLevel>
+	</record>
+	<record index="39">
+		<CategoryId>1</CategoryId>
+		<Description>In congue. Etiam justo. Etiam pretium iaculis justo. In hac habitasse platea dictumst.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>18</ListPrice>
+		<MinimumReorderQuantity>5</MinimumReorderQuantity>
+		<Name>Chartreuse verte</Name>
+		<QuantityPerUnit>750 cc per bottle</QuantityPerUnit>
+		<ReorderLevel>5</ReorderLevel>
+		<StandardCost>13.50 </StandardCost>
+		<SupplierId>18</SupplierId>
+		<TargetLevel>20</TargetLevel>
+	</record>
+	<record index="40">
+		<CategoryId>8</CategoryId>
+		<Description>Integer a nibh. In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>18.4</ListPrice>
+		<MinimumReorderQuantity>30</MinimumReorderQuantity>
+		<Name>Boston Crab Meat</Name>
+		<QuantityPerUnit>24 - 4 oz tins</QuantityPerUnit>
+		<ReorderLevel>30</ReorderLevel>
+		<StandardCost>13.80 </StandardCost>
+		<SupplierId>19</SupplierId>
+		<TargetLevel>120</TargetLevel>
+	</record>
+	<record index="41">
+		<CategoryId>8</CategoryId>
+		<Description>Vestibulum ac est lacinia nisi venenatis tristique.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>9.65</ListPrice>
+		<MinimumReorderQuantity>10</MinimumReorderQuantity>
+		<Name>Jack's New England Clam Chowder</Name>
+		<QuantityPerUnit>12 - 12 oz cans</QuantityPerUnit>
+		<ReorderLevel>10</ReorderLevel>
+		<StandardCost>7.24 </StandardCost>
+		<SupplierId>19</SupplierId>
+		<TargetLevel>40</TargetLevel>
+	</record>
+	<record index="42">
+		<CategoryId>5</CategoryId>
+		<Description>Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo. Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.</Description>
+		<Discontinued>1</Discontinued>
+		<ListPrice>14</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Singaporean Hokkien Fried Mee</Name>
+		<QuantityPerUnit>32 - 1 kg pkgs.</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>10.50 </StandardCost>
+		<SupplierId>20</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="43">
+		<CategoryId>1</CategoryId>
+		<Description>Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>46</ListPrice>
+		<MinimumReorderQuantity>25</MinimumReorderQuantity>
+		<Name>Ipoh Coffee</Name>
+		<QuantityPerUnit>16 - 500 g tins</QuantityPerUnit>
+		<ReorderLevel>25</ReorderLevel>
+		<StandardCost>34.50 </StandardCost>
+		<SupplierId>20</SupplierId>
+		<TargetLevel>100</TargetLevel>
+	</record>
+	<record index="44">
+		<CategoryId>2</CategoryId>
+		<Description>Vivamus tortor. Duis mattis egestas metus. Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>19.45</ListPrice>
+		<MinimumReorderQuantity>15</MinimumReorderQuantity>
+		<Name>Gula Malacca</Name>
+		<QuantityPerUnit>20 - 2 kg bags</QuantityPerUnit>
+		<ReorderLevel>15</ReorderLevel>
+		<StandardCost>14.59 </StandardCost>
+		<SupplierId>20</SupplierId>
+		<TargetLevel>60</TargetLevel>
+	</record>
+	<record index="45">
+		<CategoryId>8</CategoryId>
+		<Description>Aliquam non mauris. Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>9.5</ListPrice>
+		<MinimumReorderQuantity>15</MinimumReorderQuantity>
+		<Name>Rogede sild</Name>
+		<QuantityPerUnit>1k pkg.</QuantityPerUnit>
+		<ReorderLevel>15</ReorderLevel>
+		<StandardCost>7.12 </StandardCost>
+		<SupplierId>21</SupplierId>
+		<TargetLevel>60</TargetLevel>
+	</record>
+	<record index="46">
+		<CategoryId>8</CategoryId>
+		<Description>Aenean fermentum.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>12</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Spegesild</Name>
+		<QuantityPerUnit>4 - 450 g glasses</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>9.00 </StandardCost>
+		<SupplierId>21</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="47">
+		<CategoryId>3</CategoryId>
+		<Description>Quisque porta volutpat erat. Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla. Nunc purus. Phasellus in felis.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>9.5</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Zaanse koeken</Name>
+		<QuantityPerUnit>10 - 4 oz boxes</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>7.12 </StandardCost>
+		<SupplierId>22</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="48">
+		<CategoryId>3</CategoryId>
+		<Description>Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>12.75</ListPrice>
+		<MinimumReorderQuantity>25</MinimumReorderQuantity>
+		<Name>Chocolade</Name>
+		<QuantityPerUnit>10 pkgs.</QuantityPerUnit>
+		<ReorderLevel>25</ReorderLevel>
+		<StandardCost>9.56 </StandardCost>
+		<SupplierId>22</SupplierId>
+		<TargetLevel>100</TargetLevel>
+	</record>
+	<record index="49">
+		<CategoryId>3</CategoryId>
+		<Description>Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>20</ListPrice>
+		<MinimumReorderQuantity>15</MinimumReorderQuantity>
+		<Name>Maxilaku</Name>
+		<QuantityPerUnit>24 - 50 g pkgs.</QuantityPerUnit>
+		<ReorderLevel>15</ReorderLevel>
+		<StandardCost>15.00 </StandardCost>
+		<SupplierId>23</SupplierId>
+		<TargetLevel>60</TargetLevel>
+	</record>
+	<record index="50">
+		<CategoryId>3</CategoryId>
+		<Description>Integer a nibh. In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet. Maecenas leo odio, condimentum id, luctus nec, molestie sed, justo.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>16.25</ListPrice>
+		<MinimumReorderQuantity>30</MinimumReorderQuantity>
+		<Name>Valkoinen suklaa</Name>
+		<QuantityPerUnit>12 - 100 g bars</QuantityPerUnit>
+		<ReorderLevel>30</ReorderLevel>
+		<StandardCost>12.19 </StandardCost>
+		<SupplierId>23</SupplierId>
+		<TargetLevel>120</TargetLevel>
+	</record>
+	<record index="51">
+		<CategoryId>7</CategoryId>
+		<Description>Nullam molestie nibh in lectus. Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>53</ListPrice>
+		<MinimumReorderQuantity>10</MinimumReorderQuantity>
+		<Name>Manjimup Dried Apples</Name>
+		<QuantityPerUnit>50 - 300 g pkgs.</QuantityPerUnit>
+		<ReorderLevel>10</ReorderLevel>
+		<StandardCost>39.75 </StandardCost>
+		<SupplierId>24</SupplierId>
+		<TargetLevel>40</TargetLevel>
+	</record>
+	<record index="52">
+		<CategoryId>5</CategoryId>
+		<Description>Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh. Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>7</ListPrice>
+		<MinimumReorderQuantity>25</MinimumReorderQuantity>
+		<Name>Filo Mix</Name>
+		<QuantityPerUnit>16 - 2 kg boxes</QuantityPerUnit>
+		<ReorderLevel>25</ReorderLevel>
+		<StandardCost>5.25 </StandardCost>
+		<SupplierId>24</SupplierId>
+		<TargetLevel>100</TargetLevel>
+	</record>
+	<record index="53">
+		<CategoryId>6</CategoryId>
+		<Description>Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo. Aliquam quis turpis eget elit sodales scelerisque.</Description>
+		<Discontinued>1</Discontinued>
+		<ListPrice>32.8</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Perth Pasties</Name>
+		<QuantityPerUnit>48 pieces</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>24.60 </StandardCost>
+		<SupplierId>24</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="54">
+		<CategoryId>6</CategoryId>
+		<Description>Cras non velit nec nisi vulputate nonummy.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>7.45</ListPrice>
+		<MinimumReorderQuantity>10</MinimumReorderQuantity>
+		<Name>Tourtière</Name>
+		<QuantityPerUnit>16 pies</QuantityPerUnit>
+		<ReorderLevel>10</ReorderLevel>
+		<StandardCost>5.59 </StandardCost>
+		<SupplierId>25</SupplierId>
+		<TargetLevel>40</TargetLevel>
+	</record>
+	<record index="55">
+		<CategoryId>6</CategoryId>
+		<Description>Nunc nisl. Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>24</ListPrice>
+		<MinimumReorderQuantity>20</MinimumReorderQuantity>
+		<Name>Pâté chinois</Name>
+		<QuantityPerUnit>24 boxes x 2 pies</QuantityPerUnit>
+		<ReorderLevel>20</ReorderLevel>
+		<StandardCost>18.00 </StandardCost>
+		<SupplierId>25</SupplierId>
+		<TargetLevel>80</TargetLevel>
+	</record>
+	<record index="56">
+		<CategoryId>5</CategoryId>
+		<Description>Suspendisse accumsan tortor quis turpis. Sed ante. Vivamus tortor.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>38</ListPrice>
+		<MinimumReorderQuantity>30</MinimumReorderQuantity>
+		<Name>Gnocchi di nonna Alice</Name>
+		<QuantityPerUnit>24 - 250 g pkgs.</QuantityPerUnit>
+		<ReorderLevel>30</ReorderLevel>
+		<StandardCost>28.50 </StandardCost>
+		<SupplierId>26</SupplierId>
+		<TargetLevel>120</TargetLevel>
+	</record>
+	<record index="57">
+		<CategoryId>5</CategoryId>
+		<Description>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>19.5</ListPrice>
+		<MinimumReorderQuantity>20</MinimumReorderQuantity>
+		<Name>Ravioli Angelo</Name>
+		<QuantityPerUnit>24 - 250 g pkgs.</QuantityPerUnit>
+		<ReorderLevel>20</ReorderLevel>
+		<StandardCost>14.62 </StandardCost>
+		<SupplierId>26</SupplierId>
+		<TargetLevel>80</TargetLevel>
+	</record>
+	<record index="58">
+		<CategoryId>8</CategoryId>
+		<Description>Pellentesque ultrices mattis odio. Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>13.25</ListPrice>
+		<MinimumReorderQuantity>20</MinimumReorderQuantity>
+		<Name>Escargots de Bourgogne</Name>
+		<QuantityPerUnit>24 pieces</QuantityPerUnit>
+		<ReorderLevel>20</ReorderLevel>
+		<StandardCost>9.94 </StandardCost>
+		<SupplierId>27</SupplierId>
+		<TargetLevel>80</TargetLevel>
+	</record>
+	<record index="59">
+		<CategoryId>4</CategoryId>
+		<Description>Mauris lacinia sapien quis libero.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>55</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Raclette Courdavault</Name>
+		<QuantityPerUnit>5 kg pkg.</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>41.25 </StandardCost>
+		<SupplierId>28</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="60">
+		<CategoryId>4</CategoryId>
+		<Description>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>34</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Camembert Pierrot</Name>
+		<QuantityPerUnit>15 - 300 g rounds</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>25.50 </StandardCost>
+		<SupplierId>28</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="61">
+		<CategoryId>2</CategoryId>
+		<Description>Aenean sit amet justo. Morbi ut odio. Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>28.5</ListPrice>
+		<MinimumReorderQuantity>25</MinimumReorderQuantity>
+		<Name>Sirop d'érable</Name>
+		<QuantityPerUnit>24 - 500 ml bottles</QuantityPerUnit>
+		<ReorderLevel>25</ReorderLevel>
+		<StandardCost>21.38 </StandardCost>
+		<SupplierId>29</SupplierId>
+		<TargetLevel>100</TargetLevel>
+	</record>
+	<record index="62">
+		<CategoryId>3</CategoryId>
+		<Description>Nunc nisl. Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum. In hac habitasse platea dictumst.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>49.3</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Tarte au sucre</Name>
+		<QuantityPerUnit>48 pies</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>36.97 </StandardCost>
+		<SupplierId>29</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="63">
+		<CategoryId>2</CategoryId>
+		<Description>Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>43.9</ListPrice>
+		<MinimumReorderQuantity>5</MinimumReorderQuantity>
+		<Name>Vegie-spread</Name>
+		<QuantityPerUnit>15 - 625 g jars</QuantityPerUnit>
+		<ReorderLevel>5</ReorderLevel>
+		<StandardCost>32.92 </StandardCost>
+		<SupplierId>7</SupplierId>
+		<TargetLevel>20</TargetLevel>
+	</record>
+	<record index="64">
+		<CategoryId>5</CategoryId>
+		<Description>Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam vel augue. Vestibulum rutrum rutrum neque.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>33.25</ListPrice>
+		<MinimumReorderQuantity>30</MinimumReorderQuantity>
+		<Name>Wimmers gute Semmelknödel</Name>
+		<QuantityPerUnit>20 bags x 4 pieces</QuantityPerUnit>
+		<ReorderLevel>30</ReorderLevel>
+		<StandardCost>24.94 </StandardCost>
+		<SupplierId>12</SupplierId>
+		<TargetLevel>120</TargetLevel>
+	</record>
+	<record index="65">
+		<CategoryId>2</CategoryId>
+		<Description>Pellentesque ultrices mattis odio. Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>21.05</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Louisiana Fiery Hot Pepper Sauce</Name>
+		<QuantityPerUnit>32 - 8 oz bottles</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>15.79 </StandardCost>
+		<SupplierId>2</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="66">
+		<CategoryId>2</CategoryId>
+		<Description>Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>17</ListPrice>
+		<MinimumReorderQuantity>20</MinimumReorderQuantity>
+		<Name>Louisiana Hot Spiced Okra</Name>
+		<QuantityPerUnit>24 - 8 oz jars</QuantityPerUnit>
+		<ReorderLevel>20</ReorderLevel>
+		<StandardCost>12.75 </StandardCost>
+		<SupplierId>2</SupplierId>
+		<TargetLevel>80</TargetLevel>
+	</record>
+	<record index="67">
+		<CategoryId>1</CategoryId>
+		<Description>Duis bibendum.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>14</ListPrice>
+		<MinimumReorderQuantity>10</MinimumReorderQuantity>
+		<Name>Laughing Lumberjack Lager</Name>
+		<QuantityPerUnit>24 - 12 oz bottles</QuantityPerUnit>
+		<ReorderLevel>10</ReorderLevel>
+		<StandardCost>10.50 </StandardCost>
+		<SupplierId>16</SupplierId>
+		<TargetLevel>40</TargetLevel>
+	</record>
+	<record index="68">
+		<CategoryId>3</CategoryId>
+		<Description>Maecenas rhoncus aliquam lacus.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>12.5</ListPrice>
+		<MinimumReorderQuantity>15</MinimumReorderQuantity>
+		<Name>Scottish Longbreads</Name>
+		<QuantityPerUnit>10 boxes x 8 pieces</QuantityPerUnit>
+		<ReorderLevel>15</ReorderLevel>
+		<StandardCost>9.38 </StandardCost>
+		<SupplierId>8</SupplierId>
+		<TargetLevel>60</TargetLevel>
+	</record>
+	<record index="69">
+		<CategoryId>4</CategoryId>
+		<Description>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus. Vestibulum quam sapien, varius ut, blandit non, interdum in, ante.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>36</ListPrice>
+		<MinimumReorderQuantity>15</MinimumReorderQuantity>
+		<Name>Gudbrandsdalsost</Name>
+		<QuantityPerUnit>10 kg pkg.</QuantityPerUnit>
+		<ReorderLevel>15</ReorderLevel>
+		<StandardCost>27.00 </StandardCost>
+		<SupplierId>15</SupplierId>
+		<TargetLevel>60</TargetLevel>
+	</record>
+	<record index="70">
+		<CategoryId>1</CategoryId>
+		<Description>Donec vitae nisi. Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>15</ListPrice>
+		<MinimumReorderQuantity>30</MinimumReorderQuantity>
+		<Name>Outback Lager</Name>
+		<QuantityPerUnit>24 - 355 ml bottles</QuantityPerUnit>
+		<ReorderLevel>30</ReorderLevel>
+		<StandardCost>11.25 </StandardCost>
+		<SupplierId>7</SupplierId>
+		<TargetLevel>120</TargetLevel>
+	</record>
+	<record index="71">
+		<CategoryId>4</CategoryId>
+		<Description>Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros. Vestibulum ac est lacinia nisi venenatis tristique.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>21.5</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Flotemysost</Name>
+		<QuantityPerUnit>10 - 500 g pkgs.</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>16.12 </StandardCost>
+		<SupplierId>15</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="72">
+		<CategoryId>4</CategoryId>
+		<Description>Etiam justo. Etiam pretium iaculis justo.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>34.8</ListPrice>
+		<MinimumReorderQuantity>0</MinimumReorderQuantity>
+		<Name>Mozzarella di Giovanni</Name>
+		<QuantityPerUnit>24 - 200 g pkgs.</QuantityPerUnit>
+		<ReorderLevel>0</ReorderLevel>
+		<StandardCost>26.10 </StandardCost>
+		<SupplierId>14</SupplierId>
+		<TargetLevel>0</TargetLevel>
+	</record>
+	<record index="73">
+		<CategoryId>8</CategoryId>
+		<Description>Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>15</ListPrice>
+		<MinimumReorderQuantity>5</MinimumReorderQuantity>
+		<Name>Röd Kaviar</Name>
+		<QuantityPerUnit>24 - 150 g jars</QuantityPerUnit>
+		<ReorderLevel>5</ReorderLevel>
+		<StandardCost>11.25 </StandardCost>
+		<SupplierId>17</SupplierId>
+		<TargetLevel>20</TargetLevel>
+	</record>
+	<record index="74">
+		<CategoryId>7</CategoryId>
+		<Description>Aenean auctor gravida sem.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>10</ListPrice>
+		<MinimumReorderQuantity>5</MinimumReorderQuantity>
+		<Name>Longlife Tofu</Name>
+		<QuantityPerUnit>5 kg pkg.</QuantityPerUnit>
+		<ReorderLevel>5</ReorderLevel>
+		<StandardCost>7.50 </StandardCost>
+		<SupplierId>4</SupplierId>
+		<TargetLevel>20</TargetLevel>
+	</record>
+	<record index="75">
+		<CategoryId>1</CategoryId>
+		<Description>Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis. Fusce posuere felis sed lacus.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>7.75</ListPrice>
+		<MinimumReorderQuantity>25</MinimumReorderQuantity>
+		<Name>Rhönbräu Klosterbier</Name>
+		<QuantityPerUnit>24 - 0.5 l bottles</QuantityPerUnit>
+		<ReorderLevel>25</ReorderLevel>
+		<StandardCost>5.81 </StandardCost>
+		<SupplierId>12</SupplierId>
+		<TargetLevel>100</TargetLevel>
+	</record>
+	<record index="76">
+		<CategoryId>1</CategoryId>
+		<Description>Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>18</ListPrice>
+		<MinimumReorderQuantity>20</MinimumReorderQuantity>
+		<Name>Lakkalikööri</Name>
+		<QuantityPerUnit>500 ml</QuantityPerUnit>
+		<ReorderLevel>20</ReorderLevel>
+		<StandardCost>13.50 </StandardCost>
+		<SupplierId>23</SupplierId>
+		<TargetLevel>80</TargetLevel>
+	</record>
+	<record index="77">
+		<CategoryId>2</CategoryId>
+		<Description>Phasellus in felis.</Description>
+		<Discontinued>0</Discontinued>
+		<ListPrice>13</ListPrice>
+		<MinimumReorderQuantity>15</MinimumReorderQuantity>
+		<Name>Original Frankfurter grüne Soße</Name>
+		<QuantityPerUnit>12 boxes</QuantityPerUnit>
+		<ReorderLevel>15</ReorderLevel>
+		<StandardCost>9.75 </StandardCost>
+		<SupplierId>12</SupplierId>
+		<TargetLevel>60</TargetLevel>
+	</record>
+</dataset>
