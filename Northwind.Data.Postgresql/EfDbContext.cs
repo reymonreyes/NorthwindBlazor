@@ -44,6 +44,7 @@ namespace Northwind.Data.Postgresql
             modelBuilder.Entity<Product>().Property(x => x.Discontinued).HasColumnType("boolean");
             modelBuilder.Entity<Product>().Property(x => x.MinimumReorderQuantity).HasColumnType("smallint");
             modelBuilder.Entity<Product>().Property(x => x.CategoryId).HasColumnType("smallint");
+            modelBuilder.Entity<Product>().Property(x => x.SupplierId).HasColumnType("int");
         }
 
         private void ConfigureCategoryEntity(ModelBuilder modelBuilder)

@@ -20,5 +20,6 @@ namespace Northwind.Core.Entities
         public bool Discontinued { get; set; }
         public int MinimumReorderQuantity { get; set; }
         public int CategoryId { get; set; }
+        public int SupplierId { get; set; }
     }
 }
