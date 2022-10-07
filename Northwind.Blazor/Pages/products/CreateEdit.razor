@@ -28,9 +28,7 @@ else{
                 <MudTextField Label="Name" @bind-Value="_product.Name" For="@(() => _product.Name)"/>
                 <MudTextField Label="Code" @bind-Value="_product.Code" For="@(() => _product.Code)"/>
                 <MudTextField Label="Quantity Per Unit" @bind-Value="_product.QuantityPerUnit" For="@(() => _product.QuantityPerUnit)"/>
-                <MudNumericField Label="Unit Price" @bind-Value="_product.UnitPrice" For="@(() => _product.UnitPrice)" />
-                <MudNumericField Label="Units In Stock" @bind-Value="_product.UnitsInStock" For="@(() => _product.UnitsInStock)" />
-                <MudNumericField Label="Units On Order" @bind-Value="_product.UnitsOnOrder" For="@(() => _product.UnitsOnOrder)" />
+                <MudNumericField Label="Unit Price" @bind-Value="_product.ListPrice" For="@(() => _product.ListPrice)" />                
                 <MudNumericField Label="Reorder Level" @bind-Value="_product.ReorderLevel" For="@(() => _product.ReorderLevel)" />
                 <MudTextField T="string" Label="Description"  Text="@_product.Description" Lines="3" Variant="Variant.Outlined"/>
             <div class="d-flex justify-end mt-2">

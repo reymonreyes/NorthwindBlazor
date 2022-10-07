@@ -29,7 +29,7 @@ else
 <MudSimpleTable Style="overflow-x: auto;" Dense="true" Hover="true" Bordered="true">
     <thead>
         <tr class="text-center">
-            <th>Name</th><th>Unit Price</th><th>Description</th><th></th>
+            <th>Name</th><th>List Price</th><th>Description</th><th></th>
         </tr>
     </thead>
     <tbody>
@@ -37,7 +37,7 @@ else
         {
             <tr>
                 <td><MudLink href="@string.Format("products/{0}", product.Id)" Class="d-flex flex-grow-1">@product.Name</MudLink></td>
-                <td class="text-end">@product.UnitPrice.ToString("C")</td>
+                <td class="text-end">@product.ListPrice.ToString("C")</td>
                 <td>@product.Description</td>
                 <td>
                     <MudButton Variant="Variant.Filled" Size="Size.Small" Color="Color.Primary" OnClick="() => Delete(product)">Delete</MudButton>
