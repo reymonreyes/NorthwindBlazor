@@ -46,7 +46,7 @@ namespace Northwind.Common.UnitTests.Validators
                 Fax = new string('a', 25),
                 Email = new string('a', 255)
             });
-            var maxLengthFields = new string[] { "Name", "ContactName", "ContactTitle", "Address", "City", "Region", "PostalCode", "Country", "Phone", "Fax", "Email" };
+            var maxLengthFields = new string[] { "Name", "ContactName", "ContactTitle", "Address", "City", "State", "PostalCode", "Country", "Phone", "Fax", "Email" };
 
             Assert.All(maxLengthFields, x => Assert.NotNull(result.FirstOrDefault(y => y.Message.Key == x)));
         }
