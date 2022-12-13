@@ -60,39 +60,39 @@ namespace Northwind.Data.Postgresql
         {
             modelBuilder.Entity<Supplier>().ToTable("suppliers");
             modelBuilder.Entity<Supplier>().HasKey(x => x.Id);
-            modelBuilder.Entity<Customer>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
-            modelBuilder.Entity<Customer>().Property(x => x.Name).HasColumnType("varchar").HasMaxLength(64).IsRequired(true);
-            modelBuilder.Entity<Customer>().Property(x => x.Email).HasColumnType("varchar").HasMaxLength(128);
-            modelBuilder.Entity<Customer>().Property(x => x.ContactName).HasColumnType("varchar").HasMaxLength(64);
-            modelBuilder.Entity<Customer>().Property(x => x.ContactTitle).HasColumnType("varchar").HasMaxLength(64);
-            modelBuilder.Entity<Customer>().Property(x => x.Address).HasColumnType("varchar").HasMaxLength(128);
-            modelBuilder.Entity<Customer>().Property(x => x.City).HasColumnType("varchar").HasMaxLength(64);
-            modelBuilder.Entity<Customer>().Property(x => x.State).HasColumnType("varchar").HasMaxLength(64);
-            modelBuilder.Entity<Customer>().Property(x => x.PostalCode).HasColumnType("varchar").HasMaxLength(32);
-            modelBuilder.Entity<Customer>().Property(x => x.Country).HasColumnType("varchar").HasMaxLength(64);
-            modelBuilder.Entity<Customer>().Property(x => x.Phone).HasColumnType("varchar").HasMaxLength(32);
-            modelBuilder.Entity<Customer>().Property(x => x.Fax).HasColumnType("varchar").HasMaxLength(32);
-            modelBuilder.Entity<Customer>().Property(x => x.Website).HasColumnType("varchar").HasMaxLength(128);
-            modelBuilder.Entity<Customer>().Property(x => x.Notes).HasColumnType("text");
+            modelBuilder.Entity<Supplier>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
+            modelBuilder.Entity<Supplier>().Property(x => x.Name).HasColumnType("varchar").HasMaxLength(64).IsRequired(true);
+            modelBuilder.Entity<Supplier>().Property(x => x.Email).HasColumnType("varchar").HasMaxLength(128);
+            modelBuilder.Entity<Supplier>().Property(x => x.ContactName).HasColumnType("varchar").HasMaxLength(64);
+            modelBuilder.Entity<Supplier>().Property(x => x.ContactTitle).HasColumnType("varchar").HasMaxLength(64);
+            modelBuilder.Entity<Supplier>().Property(x => x.Address).HasColumnType("varchar").HasMaxLength(128);
+            modelBuilder.Entity<Supplier>().Property(x => x.City).HasColumnType("varchar").HasMaxLength(64);
+            modelBuilder.Entity<Supplier>().Property(x => x.State).HasColumnType("varchar").HasMaxLength(64);
+            modelBuilder.Entity<Supplier>().Property(x => x.PostalCode).HasColumnType("varchar").HasMaxLength(32);
+            modelBuilder.Entity<Supplier>().Property(x => x.Country).HasColumnType("varchar").HasMaxLength(64);
+            modelBuilder.Entity<Supplier>().Property(x => x.Phone).HasColumnType("varchar").HasMaxLength(32);
+            modelBuilder.Entity<Supplier>().Property(x => x.Fax).HasColumnType("varchar").HasMaxLength(32);
+            modelBuilder.Entity<Supplier>().Property(x => x.Website).HasColumnType("varchar").HasMaxLength(128);
+            modelBuilder.Entity<Supplier>().Property(x => x.Notes).HasColumnType("text");
         }
 
         private void ConfigureShipperEntity(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Shipper>().ToTable("shippers");
-            modelBuilder.Entity<Customer>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
-            modelBuilder.Entity<Customer>().Property(x => x.Name).HasColumnType("varchar").HasMaxLength(64).IsRequired(true);
-            modelBuilder.Entity<Customer>().Property(x => x.Email).HasColumnType("varchar").HasMaxLength(128);
-            modelBuilder.Entity<Customer>().Property(x => x.ContactName).HasColumnType("varchar").HasMaxLength(64);
-            modelBuilder.Entity<Customer>().Property(x => x.ContactTitle).HasColumnType("varchar").HasMaxLength(64);
-            modelBuilder.Entity<Customer>().Property(x => x.Address).HasColumnType("varchar").HasMaxLength(128);
-            modelBuilder.Entity<Customer>().Property(x => x.City).HasColumnType("varchar").HasMaxLength(64);
-            modelBuilder.Entity<Customer>().Property(x => x.State).HasColumnType("varchar").HasMaxLength(64);
-            modelBuilder.Entity<Customer>().Property(x => x.PostalCode).HasColumnType("varchar").HasMaxLength(32);
-            modelBuilder.Entity<Customer>().Property(x => x.Country).HasColumnType("varchar").HasMaxLength(64);
-            modelBuilder.Entity<Customer>().Property(x => x.Phone).HasColumnType("varchar").HasMaxLength(32);
-            modelBuilder.Entity<Customer>().Property(x => x.Fax).HasColumnType("varchar").HasMaxLength(32);
-            modelBuilder.Entity<Customer>().Property(x => x.Website).HasColumnType("varchar").HasMaxLength(128);
-            modelBuilder.Entity<Customer>().Property(x => x.Notes).HasColumnType("text");
+            modelBuilder.Entity<Shipper>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
+            modelBuilder.Entity<Shipper>().Property(x => x.Name).HasColumnType("varchar").HasMaxLength(64).IsRequired(true);
+            modelBuilder.Entity<Shipper>().Property(x => x.Email).HasColumnType("varchar").HasMaxLength(128);
+            modelBuilder.Entity<Shipper>().Property(x => x.ContactName).HasColumnType("varchar").HasMaxLength(64);
+            modelBuilder.Entity<Shipper>().Property(x => x.ContactTitle).HasColumnType("varchar").HasMaxLength(64);
+            modelBuilder.Entity<Shipper>().Property(x => x.Address).HasColumnType("varchar").HasMaxLength(128);
+            modelBuilder.Entity<Shipper>().Property(x => x.City).HasColumnType("varchar").HasMaxLength(64);
+            modelBuilder.Entity<Shipper>().Property(x => x.State).HasColumnType("varchar").HasMaxLength(64);
+            modelBuilder.Entity<Shipper>().Property(x => x.PostalCode).HasColumnType("varchar").HasMaxLength(32);
+            modelBuilder.Entity<Shipper>().Property(x => x.Country).HasColumnType("varchar").HasMaxLength(64);
+            modelBuilder.Entity<Shipper>().Property(x => x.Phone).HasColumnType("varchar").HasMaxLength(32);
+            modelBuilder.Entity<Shipper>().Property(x => x.Fax).HasColumnType("varchar").HasMaxLength(32);
+            modelBuilder.Entity<Shipper>().Property(x => x.Website).HasColumnType("varchar").HasMaxLength(128);
+            modelBuilder.Entity<Shipper>().Property(x => x.Notes).HasColumnType("text");
         }
 
         private void ConfigureCustomerEntity(ModelBuilder modelBuilder)
