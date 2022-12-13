@@ -19,7 +19,8 @@ namespace Northwind.Core.Extensions
             {
                 Id = shipper.Id,
                 Name = shipper.Name,
-                Phone = shipper.Phone
+                Phone = shipper.Phone,
+                ContactName = shipper.ContactName
             };
         }
     }

@@ -26,6 +26,7 @@
     <MudGrid>
         <MudItem lg="6" sm="12" xs="12">            
             <MudTextField Label="Name" @bind-Value="_shipper.Name" For="@(() => _shipper.Name)"/>
+            <MudTextField Label="Contact Name" @bind-Value="_shipper.ContactName" For="@(() => _shipper.ContactName)" />
             <MudTextField Label="Phone" @bind-Value="_shipper.Phone" For="@(() => _shipper.Phone)"/>
             <div class="d-flex justify-end mt-2">
                 <MudButton Link="shippers" Variant="Variant.Filled" Color="Color.Secondary" Size="Size.Small" Class="mr-1">Cancel</MudButton>

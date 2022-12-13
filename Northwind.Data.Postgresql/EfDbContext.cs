@@ -63,7 +63,7 @@ namespace Northwind.Data.Postgresql
             modelBuilder.Entity<Supplier>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
             modelBuilder.Entity<Supplier>().Property(x => x.Name).HasColumnType("varchar").HasMaxLength(64).IsRequired(true);
             modelBuilder.Entity<Supplier>().Property(x => x.Email).HasColumnType("varchar").HasMaxLength(128);
-            modelBuilder.Entity<Supplier>().Property(x => x.ContactName).HasColumnType("varchar").HasMaxLength(64);
+            modelBuilder.Entity<Supplier>().Property(x => x.ContactName).HasColumnType("varchar").HasMaxLength(64).IsRequired(true);
             modelBuilder.Entity<Supplier>().Property(x => x.ContactTitle).HasColumnType("varchar").HasMaxLength(64);
             modelBuilder.Entity<Supplier>().Property(x => x.Address).HasColumnType("varchar").HasMaxLength(128);
             modelBuilder.Entity<Supplier>().Property(x => x.City).HasColumnType("varchar").HasMaxLength(64);
@@ -82,7 +82,7 @@ namespace Northwind.Data.Postgresql
             modelBuilder.Entity<Shipper>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
             modelBuilder.Entity<Shipper>().Property(x => x.Name).HasColumnType("varchar").HasMaxLength(64).IsRequired(true);
             modelBuilder.Entity<Shipper>().Property(x => x.Email).HasColumnType("varchar").HasMaxLength(128);
-            modelBuilder.Entity<Shipper>().Property(x => x.ContactName).HasColumnType("varchar").HasMaxLength(64);
+            modelBuilder.Entity<Shipper>().Property(x => x.ContactName).HasColumnType("varchar").HasMaxLength(64).IsRequired(true);
             modelBuilder.Entity<Shipper>().Property(x => x.ContactTitle).HasColumnType("varchar").HasMaxLength(64);
             modelBuilder.Entity<Shipper>().Property(x => x.Address).HasColumnType("varchar").HasMaxLength(128);
             modelBuilder.Entity<Shipper>().Property(x => x.City).HasColumnType("varchar").HasMaxLength(64);
