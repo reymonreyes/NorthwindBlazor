@@ -16,13 +16,14 @@ namespace Northwind.Core.Services
     {
         private readonly IPurchaseOrderValidator _poValidator;
         private readonly IPurchaseOrdersRepository _purchaseOrdersRepository;
-        
-        public PurchaseOrdersService(IPurchaseOrderValidator poValidator, IPurchaseOrdersRepository purchaseOrdersRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public PurchaseOrdersService(IPurchaseOrderValidator poValidator, IPurchaseOrdersRepository purchaseOrdersRepository, IUnitOfWork unitOfWork)
         {
             _poValidator = poValidator;
             _purchaseOrdersRepository = purchaseOrdersRepository;
+            _unitOfWork = unitOfWork;
         }
-        public async Task<int> Create(PurchaseOrderDto purchaseOrder)
+        public async Task<ServiceResult> Create(PurchaseOrderDto purchaseOrder)
         {
             if (purchaseOrder is null)
                 throw new ArgumentNullException("purchaseOrder");
@@ -44,14 +45,19 @@ namespace Northwind.Core.Services
             if (validationExceptions.Any())
                 throw new ValidationFailedException(validationExceptions);
 
-            //add repo logic
             var newPurchaseOrder = new PurchaseOrder();
             newPurchaseOrder.Status = Enums.OrderStatus.New;
             newPurchaseOrder.SupplierId = purchaseOrder.SupplierId;
 
-            var createResult = await _purchaseOrdersRepository.Create(newPurchaseOrder);
+            await _unitOfWork.Start();
+            await _unitOfWork.PurchaseOrdersRepository.CreateAsync(newPurchaseOrder);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
 
-            return createResult;
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
+            result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", newPurchaseOrder.Id.ToString()) });
+
+            return result;
         }
     }
 }
