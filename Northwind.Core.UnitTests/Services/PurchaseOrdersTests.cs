@@ -96,20 +96,21 @@ namespace Northwind.Core.UnitTests.Services
         }
 
         [Fact]
-        public async Task Create_PurchaseOrderMustReturnId()
+        public async Task Create_ShouldReturnIsSuccessfulOnValidData()
         {
             var purchaseOrderDto = new PurchaseOrderDto { SupplierId = 1, OrderItems = new List<OrderItemDto> { new OrderItemDto { ProductId = 1, Quantity = 1, UnitCost = 1 } } };
             var mock = AutoMock.GetLoose();
             var validator = mock.Mock<IPurchaseOrderValidator>();
             validator.Setup(x => x.Validate(purchaseOrderDto)).Returns(new List<ServiceMessageResult>());
             var repo = mock.Mock<IPurchaseOrdersRepository>();
-            repo.Setup(x => x.Create(It.IsAny<PurchaseOrder>())).ReturnsAsync(1);
+            var unitOfWork = mock.Mock<IUnitOfWork>();
+            unitOfWork.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
 
             var service = mock.Create<PurchaseOrdersService>();
 
-            int result = await service.Create(purchaseOrderDto);
+            var serviceResult = await service.Create(purchaseOrderDto);
 
-            Assert.True(result > 0);
+            Assert.True(serviceResult.IsSuccessful);
         }
     }
 }
