@@ -46,6 +46,8 @@ namespace Northwind.Core.Services
 
             //add repo logic
             var newPurchaseOrder = new PurchaseOrder();
+            newPurchaseOrder.Status = Enums.OrderStatus.New;
+            newPurchaseOrder.SupplierId = purchaseOrder.SupplierId;
 
             var createResult = await _purchaseOrdersRepository.Create(newPurchaseOrder);
 
