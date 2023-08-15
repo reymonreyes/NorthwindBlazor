@@ -9,5 +9,7 @@ namespace Northwind.Blazor.Models
         public string? Name { get; set; }
         [MaxLength(24)]
         public string? Phone { get; set; }
+        [Required]
+        public string ContactName { get; set; }
     }
 }

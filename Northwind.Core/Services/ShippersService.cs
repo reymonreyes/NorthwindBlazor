@@ -34,6 +34,7 @@ namespace Northwind.Core.Services
             {
                 Name = shipperDto.Name,
                 Phone = shipperDto.Phone,
+                ContactName = shipperDto.ContactName
             };
 
             await _unitOfWork.Start();
@@ -70,6 +71,7 @@ namespace Northwind.Core.Services
 
             shipper.Name = shipperDto.Name;
             shipper.Phone = shipperDto.Phone;
+            shipper.ContactName = shipperDto.ContactName;
             await _unitOfWork.ShippersRepository.Update(shipper);
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();

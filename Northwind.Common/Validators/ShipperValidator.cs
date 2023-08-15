@@ -16,6 +16,7 @@ namespace Northwind.Common.Validators
         {
             RuleFor(x => x.Name).NotEmpty().MaximumLength(40);
             RuleFor(x => x.Phone).MaximumLength(24);
+            RuleFor(x => x.ContactName).NotNull();
         }
         List<ServiceMessageResult>? Core.Interfaces.Validators.IValidator<ShipperDto>.Validate(ShipperDto value)
         {
