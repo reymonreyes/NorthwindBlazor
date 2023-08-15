@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Northwind.Data
 {
-    public class EfUnitOfWork : IUnitOfWork
+    public class EfUnitOfWork// : IUnitOfWork todo: remove soon
     {        
         private EfDbContext _dbContext;
         public EfUnitOfWork()
