@@ -9,6 +9,6 @@ namespace Northwind.Core.Interfaces.Services
 {
     public interface IPurchaseOrdersService
     {
-        public void Create(PurchaseOrderDto purchaseOrder);
+        public Task<int> Create(PurchaseOrderDto purchaseOrder);
     }
 }
