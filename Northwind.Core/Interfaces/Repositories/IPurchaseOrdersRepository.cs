@@ -10,6 +10,6 @@ namespace Northwind.Core.Interfaces.Repositories
 {
     public interface IPurchaseOrdersRepository
     {
-        Task<int> Create(PurchaseOrder purchaseOrder);
+        Task CreateAsync(PurchaseOrder purchaseOrder);
     }
 }
