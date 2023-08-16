@@ -15,12 +15,10 @@ namespace Northwind.Core.Services
     public class PurchaseOrdersService : IPurchaseOrdersService
     {
         private readonly IPurchaseOrderValidator _poValidator;
-        private readonly IPurchaseOrdersRepository _purchaseOrdersRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public PurchaseOrdersService(IPurchaseOrderValidator poValidator, IPurchaseOrdersRepository purchaseOrdersRepository, IUnitOfWork unitOfWork)
+        public PurchaseOrdersService(IPurchaseOrderValidator poValidator, IUnitOfWork unitOfWork)
         {
-            _poValidator = poValidator;
-            _purchaseOrdersRepository = purchaseOrdersRepository;
+            _poValidator = poValidator;            
             _unitOfWork = unitOfWork;
         }
         public async Task<ServiceResult> Create(PurchaseOrderDto purchaseOrder)
@@ -57,6 +55,39 @@ namespace Northwind.Core.Services
             var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", newPurchaseOrder.Id.ToString()) });
 
+            return result;
+        }
+
+        public async Task<ServiceResult> UpdateAsync(int id, PurchaseOrderDto purchaseOrderDto)
+        {
+            if(purchaseOrderDto == null)
+                throw new ArgumentNullException("product");
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException("id");
+
+            await _unitOfWork.Start();
+            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
+            if (purchaseOrder == null)
+            {
+                await _unitOfWork.Stop();
+                throw new DataNotFoundException("Purchase Order not found");
+            }
+
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
+            if(purchaseOrder.Status == Enums.OrderStatus.Approved || purchaseOrder.Status == Enums.OrderStatus.Closed || purchaseOrder.Status == Enums.OrderStatus.Cancelled)
+            {
+                await _unitOfWork.Stop();
+                result.IsSuccessful = false;
+                result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Error, Message = new KeyValuePair<string, string>("PurchaseOrder", $"Purchase Order already {purchaseOrder.Status}") });
+                return result;
+            }
+
+            purchaseOrder.SupplierId = purchaseOrderDto.SupplierId;
+            _unitOfWork.PurchaseOrdersRepository.Update(purchaseOrder);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+
+            result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", purchaseOrder.Id.ToString()) });
             return result;
         }
     }

@@ -1,4 +1,5 @@
-﻿using Northwind.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,16 @@ namespace Northwind.Data.Postgresql.Repositories
         public async Task CreateAsync(PurchaseOrder purchaseOrder)
         {
             await _efDbContext.AddAsync(purchaseOrder);
+        }
+
+        public async Task<PurchaseOrder?> GetAsync(int id)
+        {
+            return await _efDbContext.PurchaseOrders.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public void Update(PurchaseOrder purchaseOrder)
+        {
+            _efDbContext.Update(purchaseOrder);
         }
     }
 }

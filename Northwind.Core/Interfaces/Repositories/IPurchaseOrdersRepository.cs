@@ -11,5 +11,7 @@ namespace Northwind.Core.Interfaces.Repositories
     public interface IPurchaseOrdersRepository
     {
         Task CreateAsync(PurchaseOrder purchaseOrder);
+        Task<PurchaseOrder?> GetAsync(int id);
+        void Update(PurchaseOrder purchaseOrder);
     }
 }
