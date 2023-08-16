@@ -3,6 +3,7 @@ using Moq;
 using Northwind.Common.Validators;
 using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Enums;
 using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
@@ -110,6 +111,83 @@ namespace Northwind.Core.UnitTests.Services
 
             var serviceResult = await service.Create(purchaseOrderDto);
 
+            Assert.True(serviceResult.IsSuccessful);
+        }
+
+        [Fact]
+        public async Task Update_ShouldThrowExceptionIfPurchaseOrderDtoIsNull()
+        {
+            PurchaseOrder? purchaseOrder = null;
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(purchaseOrder);
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            var service = mock.Create<PurchaseOrdersService>();
+
+            var serviceResult = await Assert.ThrowsAsync<ArgumentNullException>(async () => { await service.UpdateAsync(1, null); });
+        }
+
+        [Fact]
+        public async Task Update_ShouldThrowExceptionIfPurchaseOrderIdIsInvalid()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder());
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            var service = mock.Create<PurchaseOrdersService>();
+
+            var serviceResult = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => { await service.UpdateAsync(0, new PurchaseOrderDto()); });
+        }
+
+        [Fact]
+        public async Task Update_ShouldThrowExceptionIfPurchaseOrderDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((PurchaseOrder)null);
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            var service = mock.Create<PurchaseOrdersService>();
+
+            var serviceResult = await Assert.ThrowsAsync<DataNotFoundException>(async () => { await service.UpdateAsync(1, new PurchaseOrderDto()); });
+        }
+        
+        [Theory]
+        [InlineData(Enums.OrderStatus.Approved)]
+        [InlineData(Enums.OrderStatus.Closed)]
+        [InlineData(Enums.OrderStatus.Cancelled)]
+        public async Task Update_ShouldFailStatusIsApprovedOrClosedOrCancelled(Enums.OrderStatus orderStatus)
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, SupplierId = 1, Status = orderStatus });
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            var service = mock.Create<PurchaseOrdersService>();
+
+            var serviceResult = await service.UpdateAsync(1, new PurchaseOrderDto());
+
+            Assert.False(serviceResult.IsSuccessful);
+            Assert.Collection(serviceResult.Messages!, x =>
+            {
+                Assert.True(x.MessageType == Enums.ServiceMessageType.Error);
+                Assert.Contains($"Purchase Order already {orderStatus}", x.Message.Value);
+            });
+        }
+
+        [Fact]
+        public async Task Update_ShouldSucceedWhenNoErrors()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, SupplierId = 1, Status = OrderStatus.New });
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            var service = mock.Create<PurchaseOrdersService>();
+
+            var serviceResult = await service.UpdateAsync(1, new PurchaseOrderDto { SupplierId = 1, OrderItems = new List<OrderItemDto> { new OrderItemDto { ProductId = 1, Quantity = 1, UnitCost = 1 } } });
             Assert.True(serviceResult.IsSuccessful);
         }
     }
