@@ -73,15 +73,10 @@ namespace Northwind.Core.Services
                 throw new DataNotFoundException("Purchase Order not found");
             }
 
-            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             if(purchaseOrder.Status == Enums.OrderStatus.Approved || purchaseOrder.Status == Enums.OrderStatus.Closed || purchaseOrder.Status == Enums.OrderStatus.Cancelled)
-            {
-                await _unitOfWork.Stop();
-                result.IsSuccessful = false;
-                result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Error, Message = new KeyValuePair<string, string>("PurchaseOrder", $"Purchase Order already {purchaseOrder.Status}") });
-                return result;
-            }
-
+                throw new ValidationFailedException($"Purchase Order already {purchaseOrder.Status}");                
+            
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             purchaseOrder.SupplierId = purchaseOrderDto.SupplierId;
             _unitOfWork.PurchaseOrdersRepository.Update(purchaseOrder);
             await _unitOfWork.Commit();
@@ -89,6 +84,17 @@ namespace Northwind.Core.Services
 
             result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", purchaseOrder.Id.ToString()) });
             return result;
+        }
+
+        public Task SubmitAsync(int id, PurchaseOrderDto purchaseOrderDto)
+        {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException("id");
+
+            if (purchaseOrderDto == null)
+                throw new ArgumentNullException("purchaseOrderDto");
+
+            throw new NotImplementedException();
         }
     }
 }
