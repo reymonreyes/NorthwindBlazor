@@ -86,15 +86,25 @@ namespace Northwind.Core.Services
             return result;
         }
 
-        public Task SubmitAsync(int id, PurchaseOrderDto purchaseOrderDto)
+        public async Task<ServiceMessageResult> SubmitAsync(int id)
         {
             if (id <= 0)
                 throw new ArgumentOutOfRangeException("id");
+            
+            await _unitOfWork.Start();
+            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
+            if (purchaseOrder == null)
+            {
+                await _unitOfWork.Stop();
+                throw new DataNotFoundException("Purchase Order not found.");
+            }
 
-            if (purchaseOrderDto == null)
-                throw new ArgumentNullException("purchaseOrderDto");
+            purchaseOrder.Status = Enums.OrderStatus.Submitted;
+            _unitOfWork.PurchaseOrdersRepository.Update(purchaseOrder);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
 
-            throw new NotImplementedException();
+            return new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("PurchaseOrder", purchaseOrder.Status.ToString()) };
         }
     }
 }
