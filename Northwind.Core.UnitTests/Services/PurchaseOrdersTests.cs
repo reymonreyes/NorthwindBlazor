@@ -190,36 +190,34 @@ namespace Northwind.Core.UnitTests.Services
         {
             var mock = AutoMock.GetLoose();
             var service = mock.Create<PurchaseOrdersService>();
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await service.SubmitAsync(0, new PurchaseOrderDto { }));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await service.SubmitAsync(0));
+        }        
+
+        [Fact]
+        public async Task Submit_ShouldThrowExceptionIfItDoesNotExist()
+        {            
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var poRepo = mock.Mock<IPurchaseOrdersRepository>();
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((PurchaseOrder?)null);
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
+            var service = mock.Create<PurchaseOrdersService>();
+            
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.SubmitAsync(1));
         }
 
         [Fact]
-        public async Task Submit_ShouldThrowExceptionIfDtoParameterIsNull()
+        public async Task Submit_ShouldReturnSubmittedStatus()
         {
             var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var poRepo = mock.Mock<IPurchaseOrdersRepository>();
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, Status = OrderStatus.New, SupplierId = 1});
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
             var service = mock.Create<PurchaseOrdersService>();
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.SubmitAsync(1, null));
+
+            var result = await service.SubmitAsync(1);
+            Assert.Contains(OrderStatus.Submitted.ToString(), result.Message.Value);
         }
-
-        //public void Submit_ShouldFailIfNoItems()
-        //{
-        //    var mock = AutoMock.GetLoose();
-        //    var uow = mock.Mock<IUnitOfWork>();
-        //    var repo = mock.Mock<IPurchaseOrdersRepository>();
-        //    repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, SupplierId = 1, Status = OrderStatus.New });
-        //    uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
-
-        //    var poDto = new PurchaseOrderDto
-        //    {
-        //        SupplierId = 1,
-        //        OrderItems = new List<OrderItemDto> {
-        //            new OrderItemDto { Id = 1, UnitCost = 1, ProductId = 1, Quantity = 1 },
-        //            new OrderItemDto { Id = 2, UnitCost = 1, ProductId = 2, Quantity = 1 }
-        //        }
-        //    };
-
-        //    var service = mock.Create<PurchaseOrdersService>();
-        //    //service.Submit(1, poDto);
-        //}
     }
 }
