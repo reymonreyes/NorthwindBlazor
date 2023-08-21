@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Northwind.Data.Repositories
 {
-    public class PurchaseOrdersRepository : IPurchaseOrdersRepository
+    public class PurchaseOrdersRepository //IPurchaseOrdersRepository todo: remove
     {
         private readonly EfDbContext _efDbContext;
 

@@ -73,15 +73,10 @@ namespace Northwind.Core.Services
                 throw new DataNotFoundException("Purchase Order not found");
             }
 
-            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             if(purchaseOrder.Status == Enums.OrderStatus.Approved || purchaseOrder.Status == Enums.OrderStatus.Closed || purchaseOrder.Status == Enums.OrderStatus.Cancelled)
-            {
-                await _unitOfWork.Stop();
-                result.IsSuccessful = false;
-                result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Error, Message = new KeyValuePair<string, string>("PurchaseOrder", $"Purchase Order already {purchaseOrder.Status}") });
-                return result;
-            }
-
+                throw new ValidationFailedException($"Purchase Order already {purchaseOrder.Status}");                
+            
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             purchaseOrder.SupplierId = purchaseOrderDto.SupplierId;
             _unitOfWork.PurchaseOrdersRepository.Update(purchaseOrder);
             await _unitOfWork.Commit();
@@ -89,6 +84,33 @@ namespace Northwind.Core.Services
 
             result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", purchaseOrder.Id.ToString()) });
             return result;
+        }
+
+        public async Task<ServiceMessageResult> SubmitAsync(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException("id");
+            
+            await _unitOfWork.Start();
+            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
+            if (purchaseOrder == null)
+            {
+                await _unitOfWork.Stop();
+                throw new DataNotFoundException("Purchase Order not found.");
+            }
+
+            if(purchaseOrder.OrderItems == null || !purchaseOrder.OrderItems.Any())
+            {
+                await _unitOfWork.Stop();
+                throw new DataNotFoundException("Order Items not found.");
+            }
+
+            purchaseOrder.Status = Enums.OrderStatus.Submitted;
+            _unitOfWork.PurchaseOrdersRepository.Update(purchaseOrder);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+
+            return new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("PurchaseOrder", purchaseOrder.Status.ToString()) };
         }
     }
 }

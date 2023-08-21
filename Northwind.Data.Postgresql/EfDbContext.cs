@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Northwind.Core;
 using Northwind.Core.Entities;
+using Northwind.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,19 @@ namespace Northwind.Data.Postgresql
             ConfigureSupplierEntity(modelBuilder);
             ConfigureShipperEntity(modelBuilder);
             ConfigureProductEntity(modelBuilder);
+
+            modelBuilder.Entity<PurchaseOrder>().ToTable("purchaseorders").HasKey(x => x.Id);
+            modelBuilder.Entity<PurchaseOrder>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
+            modelBuilder.Entity<PurchaseOrder>().Property(x => x.SupplierId).HasColumnType("int").IsRequired(true);
+            modelBuilder.Entity<PurchaseOrder>().Property(x => x.Status).HasColumnType("smallint").HasDefaultValue(OrderStatus.New);
+            modelBuilder.Entity<PurchaseOrder>().HasMany(x => x.OrderItems).WithOne().HasForeignKey(x => x.PurchaseOrderId).IsRequired();
+            modelBuilder.Entity<PurchaseOrder>().OwnsOne(x => x.Payment);
+
+            modelBuilder.Entity<OrderItem>().ToTable("orderitems").HasKey(x => x.Id);
+            modelBuilder.Entity<OrderItem>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
+            modelBuilder.Entity<OrderItem>().Property(x => x.ProductId).HasColumnType("int").IsRequired(true);
+            modelBuilder.Entity<OrderItem>().Property(x => x.Quantity).HasColumnType("int").IsRequired(true);
+            modelBuilder.Entity<OrderItem>().Property(x => x.UnitCost).HasColumnType("decimal").IsRequired(true);
         }
 
         private void ConfigureProductEntity(ModelBuilder modelBuilder)

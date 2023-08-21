@@ -64,7 +64,7 @@ namespace Northwind.Core.UnitTests.Services
             var mock = AutoMock.GetLoose();
             var validator = mock.Mock<IPurchaseOrderValidator>();
             validator.Setup(x => x.Validate(purchaseOrder)).Returns(new List<ServiceMessageResult>());
-            var service = mock.Create<PurchaseOrdersService>();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
             var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.Create(purchaseOrder));
             Assert.Contains(exception.ValidationErrors, x => x.Message.Value.Contains("Order Items are required"));
@@ -77,7 +77,7 @@ namespace Northwind.Core.UnitTests.Services
             var mock = AutoMock.GetLoose();
             var validator = mock.Mock<IPurchaseOrderValidator>();
             validator.Setup(x => x.Validate(purchaseOrder)).Returns(new List<ServiceMessageResult>());
-            var service = mock.Create<PurchaseOrdersService>();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
             var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.Create(purchaseOrder));
             Assert.Contains(exception.ValidationErrors, x => x.Message.Value.Contains("Order Item quantity must be greater than 0"));            
@@ -90,7 +90,7 @@ namespace Northwind.Core.UnitTests.Services
             var mock = AutoMock.GetLoose();
             var validator = mock.Mock<IPurchaseOrderValidator>();
             validator.Setup(x => x.Validate(purchaseOrder)).Returns(new List<ServiceMessageResult>());
-            var service = mock.Create<PurchaseOrdersService>();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
             var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => { await service.Create(purchaseOrder); });
             Assert.Contains(exception.ValidationErrors, x => x.Message.Value.Contains("Order Item unit cost must be greater than 0"));
@@ -106,8 +106,7 @@ namespace Northwind.Core.UnitTests.Services
             var repo = mock.Mock<IPurchaseOrdersRepository>();
             var unitOfWork = mock.Mock<IUnitOfWork>();
             unitOfWork.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
-
-            var service = mock.Create<PurchaseOrdersService>();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
             var serviceResult = await service.Create(purchaseOrderDto);
 
@@ -123,7 +122,7 @@ namespace Northwind.Core.UnitTests.Services
             var repo = mock.Mock<IPurchaseOrdersRepository>();
             repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(purchaseOrder);
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
-            var service = mock.Create<PurchaseOrdersService>();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
             var serviceResult = await Assert.ThrowsAsync<ArgumentNullException>(async () => { await service.UpdateAsync(1, null); });
         }
@@ -136,7 +135,7 @@ namespace Northwind.Core.UnitTests.Services
             var repo = mock.Mock<IPurchaseOrdersRepository>();
             repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder());
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
-            var service = mock.Create<PurchaseOrdersService>();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
             var serviceResult = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => { await service.UpdateAsync(0, new PurchaseOrderDto()); });
         }
@@ -149,7 +148,7 @@ namespace Northwind.Core.UnitTests.Services
             var repo = mock.Mock<IPurchaseOrdersRepository>();
             repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((PurchaseOrder)null);
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
-            var service = mock.Create<PurchaseOrdersService>();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
             var serviceResult = await Assert.ThrowsAsync<DataNotFoundException>(async () => { await service.UpdateAsync(1, new PurchaseOrderDto()); });
         }
@@ -165,16 +164,10 @@ namespace Northwind.Core.UnitTests.Services
             var repo = mock.Mock<IPurchaseOrdersRepository>();
             repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, SupplierId = 1, Status = orderStatus });
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
-            var service = mock.Create<PurchaseOrdersService>();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
-            var serviceResult = await service.UpdateAsync(1, new PurchaseOrderDto());
-
-            Assert.False(serviceResult.IsSuccessful);
-            Assert.Collection(serviceResult.Messages!, x =>
-            {
-                Assert.True(x.MessageType == Enums.ServiceMessageType.Error);
-                Assert.Contains($"Purchase Order already {orderStatus}", x.Message.Value);
-            });
+            var result = await Assert.ThrowsAsync<ValidationFailedException>(async () => { await service.UpdateAsync(1, new PurchaseOrderDto()); });
+            Assert.Contains($"Purchase Order already {orderStatus}", result.Message);            
         }
 
         [Fact]
@@ -185,10 +178,58 @@ namespace Northwind.Core.UnitTests.Services
             var repo = mock.Mock<IPurchaseOrdersRepository>();
             repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, SupplierId = 1, Status = OrderStatus.New });
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
-            var service = mock.Create<PurchaseOrdersService>();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
             var serviceResult = await service.UpdateAsync(1, new PurchaseOrderDto { SupplierId = 1, OrderItems = new List<OrderItemDto> { new OrderItemDto { ProductId = 1, Quantity = 1, UnitCost = 1 } } });
             Assert.True(serviceResult.IsSuccessful);
+        }
+
+        [Fact]
+        public async Task Submit_ShouldThrowExceptionOnInvalidIdParameter()
+        {
+            var mock = AutoMock.GetLoose();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await service.SubmitAsync(0));
+        }        
+
+        [Fact]
+        public async Task Submit_ShouldThrowExceptionIfItDoesNotExist()
+        {            
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var poRepo = mock.Mock<IPurchaseOrdersRepository>();
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((PurchaseOrder?)null);
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+            
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.SubmitAsync(1));
+        }
+
+        [Fact]
+        public async Task Submit_ShouldReturnSubmittedStatus()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var poRepo = mock.Mock<IPurchaseOrdersRepository>();
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, Status = OrderStatus.New, SupplierId = 1});
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            var result = await service.SubmitAsync(1);
+            Assert.Contains(OrderStatus.Submitted.ToString(), result.Message.Value);
+        }
+
+        [Fact]
+        public async Task Submit_ShouldThrowExceptionIfItemsAreNullOrEmpty()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1 });
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(() => repo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.SubmitAsync(1));
         }
     }
 }

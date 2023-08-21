@@ -10,5 +10,7 @@ namespace Northwind.Core.Interfaces.Services
     public interface IPurchaseOrdersService
     {
         Task<ServiceResult> Create(PurchaseOrderDto purchaseOrder);
+        Task<ServiceMessageResult> SubmitAsync(int id);
+        Task<ServiceResult> UpdateAsync(int id, PurchaseOrderDto purchaseOrderDto);
     }
 }
