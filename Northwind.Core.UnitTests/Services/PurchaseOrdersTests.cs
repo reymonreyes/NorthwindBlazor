@@ -218,5 +218,18 @@ namespace Northwind.Core.UnitTests.Services
             var result = await service.SubmitAsync(1);
             Assert.Contains(OrderStatus.Submitted.ToString(), result.Message.Value);
         }
+
+        [Fact]
+        public async Task Submit_ShouldThrowExceptionIfItemsAreNullOrEmpty()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1 });
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(() => repo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.SubmitAsync(1));
+        }
     }
 }
