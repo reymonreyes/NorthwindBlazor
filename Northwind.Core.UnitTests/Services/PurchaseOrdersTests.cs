@@ -280,5 +280,61 @@ namespace Northwind.Core.UnitTests.Services
             var result = await service.ApproveAsync(1);
             Assert.Contains(OrderStatus.Approved.ToString(), result.Message.Value);
         }
+
+        [Fact]
+        public async Task Cancel_ShouldThrowExceptionIfInvalidId()
+        {
+            var mock = AutoMock.GetLoose();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await service.CancelAsync(0));
+        }
+
+        [Fact]
+        public async Task Cancel_ShouldThrowExceptionIfPurchaseOrderDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((PurchaseOrder)null);
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.CancelAsync(1));
+        }
+
+        [Theory]
+        [InlineData(OrderStatus.Approved)]
+        [InlineData(OrderStatus.Invoiced)]
+        [InlineData(OrderStatus.Shipped)]
+        [InlineData(OrderStatus.Paid)]
+        [InlineData(OrderStatus.Closed)]
+        [InlineData(OrderStatus.Cancelled)]
+        public async Task Cancel_ShouldThrowExceptionIfPurchaseOrderIsNotNewOrSubmitted(OrderStatus orderStatus)
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, SupplierId = 1, Status = orderStatus});
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            var exceptionResult = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.CancelAsync(1));
+            Assert.Equal($"Purchase Order is already {orderStatus}", exceptionResult.Message);
+        }
+
+        [Fact]
+        public async Task Cancel_ShouldReturnCancelledStatus()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, SupplierId = 1, Status = OrderStatus.New });
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            var result = await service.CancelAsync(1);
+
+            Assert.Contains(OrderStatus.Cancelled.ToString(), result.Message.Value);
+        }
+
     }
 }
