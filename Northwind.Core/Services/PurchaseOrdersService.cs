@@ -99,6 +99,12 @@ namespace Northwind.Core.Services
                 throw new DataNotFoundException("Purchase Order not found.");
             }
 
+            if(purchaseOrder.OrderItems == null || !purchaseOrder.OrderItems.Any())
+            {
+                await _unitOfWork.Stop();
+                throw new DataNotFoundException("Order Items not found.");
+            }
+
             purchaseOrder.Status = Enums.OrderStatus.Submitted;
             _unitOfWork.PurchaseOrdersRepository.Update(purchaseOrder);
             await _unitOfWork.Commit();
