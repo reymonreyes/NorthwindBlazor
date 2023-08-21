@@ -41,7 +41,10 @@ namespace Northwind.Core.Services
             }
 
             if (validationExceptions.Any())
+            {
+                await _unitOfWork.Stop();
                 throw new ValidationFailedException(validationExceptions);
+            }
 
             var newPurchaseOrder = new PurchaseOrder();
             newPurchaseOrder.Status = Enums.OrderStatus.New;
@@ -74,7 +77,10 @@ namespace Northwind.Core.Services
             }
 
             if(purchaseOrder.Status == Enums.OrderStatus.Approved || purchaseOrder.Status == Enums.OrderStatus.Closed || purchaseOrder.Status == Enums.OrderStatus.Cancelled)
+            {
+                await _unitOfWork.Stop();
                 throw new ValidationFailedException($"Purchase Order already {purchaseOrder.Status}");                
+            }
             
             var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             purchaseOrder.SupplierId = purchaseOrderDto.SupplierId;
@@ -121,11 +127,44 @@ namespace Northwind.Core.Services
             await _unitOfWork.Start();
             var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
             if (purchaseOrder == null)
+            {
+                await _unitOfWork.Stop();
                 throw new DataNotFoundException("Purchase Order not found.");
+            }
             if(purchaseOrder.OrderItems == null || !purchaseOrder.OrderItems.Any())
+            {
+                await _unitOfWork.Stop();
                 throw new DataNotFoundException("Order Items not found.");
+            }
 
             purchaseOrder.Status = Enums.OrderStatus.Approved;
+            _unitOfWork.PurchaseOrdersRepository.Update(purchaseOrder);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+
+            return new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("PurchaseOrder", purchaseOrder.Status.ToString()) };
+        }
+
+        public async Task<ServiceMessageResult> CancelAsync(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException("id");
+
+            await _unitOfWork.Start();
+            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
+            if (purchaseOrder == null)
+            {
+                await _unitOfWork.Stop();
+                throw new DataNotFoundException("Purchase Order not found.");
+            }
+
+            if(!(purchaseOrder.Status == Enums.OrderStatus.New || purchaseOrder.Status == Enums.OrderStatus.Submitted))
+            {
+                await _unitOfWork.Stop();
+                throw new ValidationFailedException($"Purchase Order is already {purchaseOrder.Status}");
+            }
+
+            purchaseOrder.Status = Enums.OrderStatus.Cancelled;
             _unitOfWork.PurchaseOrdersRepository.Update(purchaseOrder);
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
