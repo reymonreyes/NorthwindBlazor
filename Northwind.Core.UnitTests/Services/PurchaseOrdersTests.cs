@@ -211,7 +211,7 @@ namespace Northwind.Core.UnitTests.Services
             var mock = AutoMock.GetLoose();
             var uow = mock.Mock<IUnitOfWork>();
             var poRepo = mock.Mock<IPurchaseOrdersRepository>();
-            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, Status = OrderStatus.New, SupplierId = 1});
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, Status = OrderStatus.New, SupplierId = 1, OrderItems = new List<OrderItem> { new OrderItem { ProductId = 1, Quantity = 1, UnitCost = 1 } } });
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
             IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
@@ -230,6 +230,55 @@ namespace Northwind.Core.UnitTests.Services
             IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
             await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.SubmitAsync(1));
+        }
+
+        [Fact]
+        public async Task Approve_ShouldThrowExceptionIfInvalidId()
+        {
+            var mock = AutoMock.GetLoose();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await service.ApproveAsync(0));
+        }
+
+        [Fact]
+        public async Task Approve_ShouldThrowExceptionIfPurchaseOrderDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((PurchaseOrder?)null);
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.ApproveAsync(1));
+        }
+
+        [Fact]
+        public async Task Approve_ShouldThrowExceptionIfOrderItemsDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1 });
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.ApproveAsync(1));
+        }
+
+        [Fact]
+        public async Task Approve_ShouldReturnApprovedStatus()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var poRepo = mock.Mock<IPurchaseOrdersRepository>();
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, Status = OrderStatus.New, SupplierId = 1, OrderItems = new List<OrderItem> { new OrderItem { ProductId = 1, Quantity = 1, UnitCost = 1 } } });
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            var result = await service.ApproveAsync(1);
+            Assert.Contains(OrderStatus.Approved.ToString(), result.Message.Value);
         }
     }
 }
