@@ -13,6 +13,16 @@ namespace Northwind.Core.Entities
         public int Id { get; set; }
         public int SupplierId { get; set; }
         public OrderStatus Status { get; set; }
-        public Payment Payment { get; set; }
-    }    
+        public Payment? Payment { get; set; }
+        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+    }
+    
+    public class OrderItem
+    {
+        public int Id { get; set; }
+        public int PurchaseOrderId { get; set; }
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
+        public decimal UnitCost { get; set; }
+    }
 }
