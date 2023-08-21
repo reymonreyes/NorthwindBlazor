@@ -112,5 +112,25 @@ namespace Northwind.Core.Services
 
             return new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("PurchaseOrder", purchaseOrder.Status.ToString()) };
         }
+
+        public async Task<ServiceMessageResult> ApproveAsync(int id)
+        {
+            if(id <= 0)
+                throw new ArgumentOutOfRangeException("id");
+
+            await _unitOfWork.Start();
+            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
+            if (purchaseOrder == null)
+                throw new DataNotFoundException("Purchase Order not found.");
+            if(purchaseOrder.OrderItems == null || !purchaseOrder.OrderItems.Any())
+                throw new DataNotFoundException("Order Items not found.");
+
+            purchaseOrder.Status = Enums.OrderStatus.Approved;
+            _unitOfWork.PurchaseOrdersRepository.Update(purchaseOrder);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+
+            return new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("PurchaseOrder", purchaseOrder.Status.ToString()) };
+        }
     }
 }
