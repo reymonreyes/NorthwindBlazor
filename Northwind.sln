@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Core.UnitTests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Common.UnitTests", "Northwind.Common.UnitTests\Northwind.Common.UnitTests.csproj", "{C77C4CE9-8BE2-4838-AF3C-B3B4B6273E3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.Data.Postgresql", "Northwind.Data.Postgresql\Northwind.Data.Postgresql.csproj", "{753CB8C4-D9C0-4EA2-97A1-56A2BDC25C75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Data.Postgresql", "Northwind.Data.Postgresql\Northwind.Data.Postgresql.csproj", "{753CB8C4-D9C0-4EA2-97A1-56A2BDC25C75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nortwind.Core.IntegrationTests", "Nortwind.Core.IntegrationTests\Nortwind.Core.IntegrationTests.csproj", "{079A6643-02D4-476A-99D4-36FE978399A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{753CB8C4-D9C0-4EA2-97A1-56A2BDC25C75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{753CB8C4-D9C0-4EA2-97A1-56A2BDC25C75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{753CB8C4-D9C0-4EA2-97A1-56A2BDC25C75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{079A6643-02D4-476A-99D4-36FE978399A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{079A6643-02D4-476A-99D4-36FE978399A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{079A6643-02D4-476A-99D4-36FE978399A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{079A6643-02D4-476A-99D4-36FE978399A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
