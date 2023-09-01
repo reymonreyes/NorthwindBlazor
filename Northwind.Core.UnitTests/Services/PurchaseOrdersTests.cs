@@ -336,5 +336,42 @@ namespace Northwind.Core.UnitTests.Services
             Assert.Contains(OrderStatus.Cancelled.ToString(), result.Message.Value);
         }
 
+        [Fact]
+        public async Task GeneratePdfDocument_ShouldThrowExceptionOnInvalidId()
+        {
+            var mock = AutoMock.GetLoose();            
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await service.GeneratePdfDocument(0));
+        }
+
+        [Fact]
+        public async Task GeneratePdfDocument_ShouldThrowExceptionIfPurchaseOrderDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((PurchaseOrder)null!);
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.GeneratePdfDocument(1));
+        }
+
+        [Fact]
+        [Trait("TODO", "Return to this after actual implementation.")]
+        public async Task GeneratePdfDocument_ShouldReturnFilename()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, SupplierId = 1, Status = OrderStatus.New });
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            var filename = await service.GeneratePdfDocument(1);
+            
+            Assert.Contains("purchase-order-1.pdf", filename);
+        }
     }
 }
