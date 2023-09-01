@@ -171,5 +171,17 @@ namespace Northwind.Core.Services
 
             return new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("PurchaseOrder", purchaseOrder.Status.ToString()) };
         }
+
+        public async Task<string> GeneratePdfDocument(int id)
+        {
+            if(id <= 0)
+                throw new ArgumentOutOfRangeException("id");
+
+            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
+            if (purchaseOrder == null)
+                throw new DataNotFoundException("Purchase Order not found.");
+
+            return $"purchase-order-{purchaseOrder.Id}.pdf";
+        }
     }
 }
