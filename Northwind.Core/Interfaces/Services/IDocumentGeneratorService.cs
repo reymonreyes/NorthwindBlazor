@@ -1,6 +1,9 @@
-﻿namespace Northwind.Core.Interfaces.Services
+﻿using Northwind.Core.Dtos.Document;
+
+namespace Northwind.Core.Interfaces.Services
 {
-    public class IDocumentGeneratorService
+    public interface IDocumentGeneratorService
     {
+        string CreatePurchaseOrderPdf(PurchaseOrderDto model);
     }
 }
