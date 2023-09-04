@@ -1,4 +1,5 @@
 ﻿using Northwind.Core.Dtos;
+using DocumentDtos = Northwind.Core.Dtos.Document;
 using Northwind.Core.Entities;
 using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
@@ -16,10 +17,12 @@ namespace Northwind.Core.Services
     {
         private readonly IPurchaseOrderValidator _poValidator;
         private readonly IUnitOfWork _unitOfWork;
-        public PurchaseOrdersService(IPurchaseOrderValidator poValidator, IUnitOfWork unitOfWork)
+        private readonly IDocumentGeneratorService _documentGeneratorService;
+        public PurchaseOrdersService(IPurchaseOrderValidator poValidator, IUnitOfWork unitOfWork, IDocumentGeneratorService documentGeneratorService)
         {
-            _poValidator = poValidator;            
+            _poValidator = poValidator;
             _unitOfWork = unitOfWork;
+            _documentGeneratorService = documentGeneratorService;
         }
         public async Task<ServiceResult> Create(PurchaseOrderDto purchaseOrder)
         {
@@ -181,7 +184,17 @@ namespace Northwind.Core.Services
             if (purchaseOrder == null)
                 throw new DataNotFoundException("Purchase Order not found.");
 
-            return $"purchase-order-{purchaseOrder.Id}.pdf";
+            var supplier = await _unitOfWork.SuppliersRepository.Get(purchaseOrder.SupplierId);
+            if (supplier == null)
+                throw new DataNotFoundException("Supplier not found.");
+
+            if (purchaseOrder.OrderItems == null || purchaseOrder.OrderItems.Count == 0)
+                throw new DataNotFoundException("Line Items not found.");
+
+            var poModel = new DocumentDtos.PurchaseOrderDto();
+            var filename = _documentGeneratorService.CreatePurchaseOrderPdf(poModel);
+
+            return filename;
         }
     }
 }
