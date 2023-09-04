@@ -1,4 +1,5 @@
 ﻿using Northwind.Core.Dtos.Document;
+using Northwind.Core.Interfaces.Services;
 using Northwind.Infrastructure.Documents;
 using QuestPDF.Fluent;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Northwind.Infrastructure.Services
 {
-    public class DocumentGeneratorService
+    public class DocumentGeneratorService : IDocumentGeneratorService
     {
         public string CreatePurchaseOrderPdf(PurchaseOrderDto model)
         {
