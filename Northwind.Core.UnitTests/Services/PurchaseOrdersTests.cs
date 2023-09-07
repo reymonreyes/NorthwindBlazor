@@ -6,12 +6,14 @@ using Northwind.Core.Dtos.Document;
 using Northwind.Core.Entities;
 using Northwind.Core.Enums;
 using Northwind.Core.Exceptions;
+using Northwind.Core.Interfaces.Infrastructure;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
 using Northwind.Core.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -423,6 +425,66 @@ namespace Northwind.Core.UnitTests.Services
             IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
             await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.GeneratePdfDocument(1));
+        }
+
+        //email pdf to supplier
+        //purchase order is required
+        //supplier is required for email destination
+        [Fact]
+        public async Task EmailPdfToSupplier_ShouldThrowExceptionInvalidPurchaseOrderId()
+        {
+            var mock = AutoMock.GetLoose();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => service.EmailPdfToSupplier(0));
+        }
+
+        [Fact]
+        public async Task EmailPdfToSupplier_ShouldThrowExceptionPurchaseOrderNotFound()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((PurchaseOrder)null);
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(() => service.EmailPdfToSupplier(1));
+        }
+
+        [Fact]
+        public async Task EmailPdfToSupplier_ShouldThrowExceptionSupplierNotFound()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, SupplierId = 1, Status = OrderStatus.New });
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            var supplierRepo = mock.Mock<ISuppliersRepository>();
+            supplierRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Entities.Supplier)null);
+            uow.Setup(x => x.SuppliersRepository).Returns(supplierRepo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(() => service.EmailPdfToSupplier(1));
+        }
+
+        [Fact]
+        public async Task EmailPdfToSupplier_ShouldThrowExceptionIfPdfDocumentIsNotFound()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, SupplierId = 1, Status = OrderStatus.New });
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            var supplierRepo = mock.Mock<ISuppliersRepository>();
+            supplierRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync(new Entities.Supplier { Id = 1, Name = "Supplier One" });
+            uow.Setup(x => x.SuppliersRepository).Returns(supplierRepo.Object);
+            var emailService = mock.Mock<IEmailService>();
+            emailService.Setup(x => x.Send(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<string>>())).Throws<FileNotFoundException>();
+
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<FileNotFoundException>(() => service.EmailPdfToSupplier(1));
         }
     }
 }

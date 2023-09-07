@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Northwind.Core.Interfaces.Infrastructure;
 
 namespace Northwind.Core.Services
 {
@@ -18,11 +19,13 @@ namespace Northwind.Core.Services
         private readonly IPurchaseOrderValidator _poValidator;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDocumentGeneratorService _documentGeneratorService;
-        public PurchaseOrdersService(IPurchaseOrderValidator poValidator, IUnitOfWork unitOfWork, IDocumentGeneratorService documentGeneratorService)
+        private readonly IEmailService _emailService;
+        public PurchaseOrdersService(IPurchaseOrderValidator poValidator, IUnitOfWork unitOfWork, IDocumentGeneratorService documentGeneratorService, IEmailService emailService)
         {
             _poValidator = poValidator;
             _unitOfWork = unitOfWork;
             _documentGeneratorService = documentGeneratorService;
+            _emailService = emailService;
         }
         public async Task<ServiceResult> Create(PurchaseOrderDto purchaseOrder)
         {
@@ -195,6 +198,19 @@ namespace Northwind.Core.Services
             var filename = _documentGeneratorService.CreatePurchaseOrderPdf(poModel);
 
             return filename;
+        }
+
+        public async Task EmailPdfToSupplier(int purchaseOrderId)
+        {
+            if (purchaseOrderId <= 0) throw new ArgumentOutOfRangeException("Purchase Order Id");
+
+            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(1);
+            if(purchaseOrder == null) throw new DataNotFoundException("Purchase Order");
+
+            var supplier = await _unitOfWork.SuppliersRepository.Get(purchaseOrder.SupplierId);
+            if (supplier == null) throw new DataNotFoundException("Supplier");
+
+            _emailService.Send("address@mail.com", supplier.Email, $"Purchase Order #{purchaseOrder.Id}", "Please see attached file.");
         }
     }
 }
