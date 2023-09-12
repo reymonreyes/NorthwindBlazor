@@ -233,6 +233,15 @@ namespace Northwind.Core.Services
                     {
                         //todo: add inventory transaction and flag as posted to inventory
                         poItem.PostedToInventory = true;
+                        await _unitOfWork.InventoryTransactionsRepository.Create(new InventoryTransaction
+                        {
+                            ProductId = poItem.ProductId,
+                            PurchaseOrderId = purchaseOrder.Id,
+                            Quantity = poItem.Quantity,
+                            Created = DateTime.UtcNow,
+                            TransactionType = Enums.InventoryTransactionType.Purchased
+                        });
+
                         await _unitOfWork.Commit();
                         result.Add((item.purchaseOrderId, item.purchaseOrderItemId, "Purchase Order Item posted."));
                     }
