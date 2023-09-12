@@ -41,6 +41,7 @@ namespace Northwind.Data.Postgresql
             modelBuilder.Entity<OrderItem>().Property(x => x.ProductId).HasColumnType("int").IsRequired(true);
             modelBuilder.Entity<OrderItem>().Property(x => x.Quantity).HasColumnType("int").IsRequired(true);
             modelBuilder.Entity<OrderItem>().Property(x => x.UnitCost).HasColumnType("decimal").IsRequired(true);
+            modelBuilder.Entity<OrderItem>().Property(x => x.PostedToInventory).HasColumnType("boolean").HasDefaultValue(false);
         }
 
         private void ConfigureProductEntity(ModelBuilder modelBuilder)
