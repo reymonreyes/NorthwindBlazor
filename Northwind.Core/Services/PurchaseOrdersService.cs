@@ -212,5 +212,36 @@ namespace Northwind.Core.Services
 
             _emailService.Send("address@mail.com", supplier.Email, $"Purchase Order #{purchaseOrder.Id}", "Please see attached file.");
         }
+
+        public async Task<List<(int purchaseOrderId, int purchaseOrderItemId, string result)>> ReceiveInventory(List<(int purchaseOrderId, int purchaseOrderItemId)> itemsToReceive)
+        {
+            var result = new List<(int purchaseOrderId, int purchaseOrderItemId, string result)>();
+
+            await _unitOfWork.Start();
+            
+            foreach (var item in itemsToReceive)
+            {
+                var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(item.purchaseOrderId);
+                if (purchaseOrder == null)
+                    result.Add((item.purchaseOrderId, item.purchaseOrderItemId, "Purchase Order not found."));
+                else
+                {
+                    var poItem = purchaseOrder.OrderItems.FirstOrDefault(x => x.Id == item.purchaseOrderItemId);
+                    if(poItem == null)
+                        result.Add((item.purchaseOrderId, item.purchaseOrderItemId, "Purchase Order Item not found."));
+                    else
+                    {
+                        //todo: add inventory transaction and flag as posted to inventory
+                        poItem.PostedToInventory = true;
+                        await _unitOfWork.Commit();
+                        result.Add((item.purchaseOrderId, item.purchaseOrderItemId, "Purchase Order Item posted."));
+                    }
+                }
+            }
+
+            await _unitOfWork.Stop();
+
+            return result;
+        }
     }
 }
