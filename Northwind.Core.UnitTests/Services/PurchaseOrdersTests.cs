@@ -486,5 +486,109 @@ namespace Northwind.Core.UnitTests.Services
 
             await Assert.ThrowsAsync<FileNotFoundException>(() => service.EmailPdfToSupplier(1));
         }
+
+        [Fact]
+        public async Task ReceiveInventory_ShouldReturnSameNumberOfPostedItems()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder
+            {
+                Id = 1,
+                SupplierId = 1,
+                Status = OrderStatus.New,
+                OrderItems = new List<OrderItem> {
+                    new OrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1 },
+                    new OrderItem { Id = 2, ProductId = 2 , UnitCost = 2, Quantity = 1 }
+                }
+            });
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            var itemsToReceive = new List<(int purchaseOrderId, int purchaseOrderItemId)>
+            {
+                (purchaseOrderId: 1, purchaseOrderItemId: 1),
+                (purchaseOrderId: 1, purchaseOrderItemId: 2)
+            };
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+            
+            List<(int purchaseOrderId, int purchaseOrderItemId, string result)> receivedItems = await service.ReceiveInventory(itemsToReceive);
+
+            Assert.Equal(itemsToReceive.Count, receivedItems.Count);
+        }
+
+        [Fact]
+        public async Task ReceiveInventory_PurchaseOrderNotFoundResult()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var poRepo = mock.Mock<IPurchaseOrdersRepository>();
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((PurchaseOrder)null);
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+            var itemsToReceive = new List<(int purchaseOrderId, int purchaseOrderItemId)>
+            {
+                (purchaseOrderId: 1, purchaseOrderItemId: 1)
+            };
+            List<(int purchaseOrderId, int purchaseOrderItemId, string result)> receivedItems = await service.ReceiveInventory(itemsToReceive);
+            var itemResult = receivedItems.FirstOrDefault();
+
+            Assert.Equal("Purchase Order not found.", itemResult.result);
+        }
+
+        [Fact]
+        public async Task ReceiveInventory_PurchaseOrderItemNotFoundResult()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var poRepo = mock.Mock<IPurchaseOrdersRepository>();
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder
+            {
+                Id = 1,
+                SupplierId = 1,
+                Status = OrderStatus.New,
+                OrderItems = new List<OrderItem>()
+            });
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+            var itemsToReceive = new List<(int purchaseOrderId, int purchaseOrderItemId)>
+            {
+                (purchaseOrderId: 1, purchaseOrderItemId: 1)
+            };
+            List<(int purchaseOrderId, int purchaseOrderItemId, string result)> receivedItems = await service.ReceiveInventory(itemsToReceive);
+            var itemResult = receivedItems.FirstOrDefault();
+
+            Assert.Equal("Purchase Order Item not found.", itemResult.result);
+        }
+
+        [Fact]
+        public async Task ReceiveInventory_PurchaseOrderItemPostedResult()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var poRepo = mock.Mock<IPurchaseOrdersRepository>();
+            var poData = new PurchaseOrder
+            {
+                Id = 1,
+                SupplierId = 1,
+                Status = OrderStatus.New,
+                OrderItems = new List<OrderItem>()
+                {
+                    new OrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1, PostedToInventory = false }
+                }
+            };
+
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(poData);
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+            var itemsToReceive = new List<(int purchaseOrderId, int purchaseOrderItemId)>
+            {
+                (purchaseOrderId: 1, purchaseOrderItemId: 1)
+            };
+            List<(int purchaseOrderId, int purchaseOrderItemId, string result)> receivedItems = await service.ReceiveInventory(itemsToReceive);
+            var itemResult = receivedItems.FirstOrDefault();
+
+            Assert.Equal("Purchase Order Item posted.", itemResult.result);            
+            Assert.True(poData.OrderItems.First().PostedToInventory);
+        }
     }
 }
