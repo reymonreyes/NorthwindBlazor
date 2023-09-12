@@ -504,6 +504,10 @@ namespace Northwind.Core.UnitTests.Services
                 }
             });
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            
+            var inventoryTransactionRepo = mock.Mock<IInventoryTransactionsRepository>();
+            uow.Setup(x => x.InventoryTransactionsRepository).Returns(inventoryTransactionRepo.Object);
+
             var itemsToReceive = new List<(int purchaseOrderId, int purchaseOrderItemId)>
             {
                 (purchaseOrderId: 1, purchaseOrderItemId: 1),
@@ -579,6 +583,10 @@ namespace Northwind.Core.UnitTests.Services
 
             poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(poData);
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
+
+            var inventoryTransactionRepo = mock.Mock<IInventoryTransactionsRepository>();
+            uow.Setup(x => x.InventoryTransactionsRepository).Returns(inventoryTransactionRepo.Object);
+
             IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
             var itemsToReceive = new List<(int purchaseOrderId, int purchaseOrderItemId)>
             {
@@ -589,6 +597,38 @@ namespace Northwind.Core.UnitTests.Services
 
             Assert.Equal("Purchase Order Item posted.", itemResult.result);            
             Assert.True(poData.OrderItems.First().PostedToInventory);
+        }
+
+        [Fact]
+        public async Task ReceiveInventory_VerifyInventoryTransactionIsAddedInRepository()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var poRepo = mock.Mock<IPurchaseOrdersRepository>();
+            var poData = new PurchaseOrder
+            {
+                Id = 1,
+                SupplierId = 1,
+                Status = OrderStatus.New,
+                OrderItems = new List<OrderItem>()
+                {
+                    new OrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1, PostedToInventory = false }
+                }
+            };
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(poData);
+
+            var inventoryTransactionRepo = mock.Mock<IInventoryTransactionsRepository>();
+            uow.Setup(x => x.InventoryTransactionsRepository).Returns(inventoryTransactionRepo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            var itemsToReceive = new List<(int purchaseOrderId, int purchaseOrderItemId)>
+            {
+                (purchaseOrderId: 1, purchaseOrderItemId: 1)
+            };
+            List<(int purchaseOrderId, int purchaseOrderItemId, string result)> receivedItems = await service.ReceiveInventory(itemsToReceive);
+
+            mock.Mock<IInventoryTransactionsRepository>().Verify(x => x.Create(It.IsAny<InventoryTransaction>()));
         }
     }
 }
