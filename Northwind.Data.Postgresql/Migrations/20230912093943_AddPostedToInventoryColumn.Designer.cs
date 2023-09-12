@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Northwind.Data.Postgresql;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Northwind.Data.Postgresql.Migrations
 {
     [DbContext(typeof(EfDbContext))]
-    partial class EfDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230912093943_AddPostedToInventoryColumn")]
+    partial class AddPostedToInventoryColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,42 +109,6 @@ namespace Northwind.Data.Postgresql.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("customers", (string)null);
-                });
-
-            modelBuilder.Entity("Northwind.Core.Entities.InventoryTransaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Comments")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("serial");
-
-                    b.Property<int>("PurchaseOrderId")
-                        .HasColumnType("serial");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<short>("TransactionType")
-                        .HasColumnType("smallint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("PurchaseOrderId");
-
-                    b.ToTable("inventorytransactions", (string)null);
                 });
 
             modelBuilder.Entity("Northwind.Core.Entities.OrderItem", b =>
@@ -381,17 +347,6 @@ namespace Northwind.Data.Postgresql.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("suppliers", (string)null);
-                });
-
-            modelBuilder.Entity("Northwind.Core.Entities.InventoryTransaction", b =>
-                {
-                    b.HasOne("Northwind.Core.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-
-                    b.HasOne("Northwind.Core.Entities.PurchaseOrder", null)
-                        .WithMany()
-                        .HasForeignKey("PurchaseOrderId");
                 });
 
             modelBuilder.Entity("Northwind.Core.Entities.OrderItem", b =>

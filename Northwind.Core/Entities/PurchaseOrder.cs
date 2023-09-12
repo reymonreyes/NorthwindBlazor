@@ -24,5 +24,6 @@ namespace Northwind.Core.Entities
         public int ProductId { get; set; }
         public int Quantity { get; set; }
         public decimal UnitCost { get; set; }
+        public bool PostedToInventory { get; set; }
     }
 }
