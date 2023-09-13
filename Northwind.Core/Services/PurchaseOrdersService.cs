@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Northwind.Core.Interfaces.Infrastructure;
+using Northwind.Core.ValueObjects;
 
 namespace Northwind.Core.Services
 {
@@ -251,6 +252,22 @@ namespace Northwind.Core.Services
             await _unitOfWork.Stop();
 
             return result;
+        }
+
+        public async Task PaySupplierAsync(int purchaseOrderId, Payment payment)
+        {
+            if(payment == null) throw new ArgumentNullException(nameof(payment));
+
+            await _unitOfWork.Start();
+            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(purchaseOrderId);
+            if (purchaseOrder == null) throw new DataNotFoundException("Purchase Order not found.");
+            
+            var supplier = await _unitOfWork.SuppliersRepository.Get(purchaseOrder.SupplierId);
+            if (supplier == null) throw new DataNotFoundException("Supplier not found.");
+
+            purchaseOrder.Payment = payment;
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
         }
     }
 }
