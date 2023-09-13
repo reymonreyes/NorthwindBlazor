@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Northwind.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,6 @@ namespace Northwind.Core.ValueObjects
     {
         public DateTime Date { get; set; }
         public decimal Amount { get; set; }
-        public string Method { get; set; }
+        public PaymentMethodType? Method { get; set; }
     }
 }

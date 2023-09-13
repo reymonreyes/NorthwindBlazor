@@ -11,6 +11,7 @@ using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
 using Northwind.Core.Services;
+using Northwind.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -629,6 +630,65 @@ namespace Northwind.Core.UnitTests.Services
             List<(int purchaseOrderId, int purchaseOrderItemId, string result)> receivedItems = await service.ReceiveInventory(itemsToReceive);
 
             mock.Mock<IInventoryTransactionsRepository>().Verify(x => x.Create(It.IsAny<InventoryTransaction>()));
+        }
+
+        [Fact]
+        public async Task PaySupplier_ShouldThrowExceptionIfPurchaseOrderDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var poData = new PurchaseOrder
+            {
+                Id = 1,
+                SupplierId = 1,
+                Status = OrderStatus.New,
+                OrderItems = new List<OrderItem>()
+                {
+                    new OrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1, PostedToInventory = false }
+                }
+            };
+            var poRepo = mock.Mock<IPurchaseOrdersRepository>();
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((PurchaseOrder)null);
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.PaySupplierAsync(1, new Payment { Date = DateTime.Now, Method = PaymentMethodType.Cash, Amount = 10 }));
+        }
+
+        [Fact]
+        public async Task PaySupplier_ShouldThrowExceptionIfSupplierDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var poData = new PurchaseOrder
+            {
+                Id = 1,
+                SupplierId = 1,
+                Status = OrderStatus.New,
+                OrderItems = new List<OrderItem>()
+                {
+                    new OrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1, PostedToInventory = false }
+                }
+            };
+            var poRepo = mock.Mock<IPurchaseOrdersRepository>();
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(poData);
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
+            var suppliersRepo = mock.Mock<ISuppliersRepository>();
+            suppliersRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Entities.Supplier)null);
+            uow.Setup(x => x.SuppliersRepository).Returns(suppliersRepo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.PaySupplierAsync(1, new Payment { Date = DateTime.Now, Method = PaymentMethodType.Cash, Amount = 10 }));
+        }
+
+        [Fact]
+        public async Task PaySupplier_ShouldThrowExceptionIfPaymentDataIsNull()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();            
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.PaySupplierAsync(1, null));
         }
     }
 }
