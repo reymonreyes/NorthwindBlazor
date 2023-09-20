@@ -15,6 +15,7 @@ namespace Northwind.Core.Interfaces.Repositories
         ICustomersRepository CustomersRepository { get; }
         IPurchaseOrdersRepository PurchaseOrdersRepository { get; }
         IInventoryTransactionsRepository InventoryTransactionsRepository { get; }
+        ICustomerOrdersRepository CustomerOrdersRepository { get; }
         Task Commit();        
         Task Start();
         Task Stop();
