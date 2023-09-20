@@ -22,7 +22,7 @@ using Xunit;
 
 namespace Northwind.Core.UnitTests.Services
 {
-    public class PurchaseOrdersTests
+    public class PurchaseOrdersServiceTests
     {        
         [Fact]
         public async Task Create_ShouldThrowNullExceptionForNullParameter()
