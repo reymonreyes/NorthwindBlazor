@@ -19,6 +19,7 @@ namespace Northwind.Data.Postgresql
         public DbSet<Customer> Customers => Set<Customer>();
         public DbSet<PurchaseOrder> PurchaseOrders => Set<PurchaseOrder>();
         public DbSet<InventoryTransaction> InventoryTransactions => Set<InventoryTransaction>();
+        public DbSet<CustomerOrder> CustomerOrders => Set<CustomerOrder>();
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder.UseNpgsql(@"Host=localhost:5432;Username=postgres;Password=admin;Database=northwind").EnableDetailedErrors(true);
 
