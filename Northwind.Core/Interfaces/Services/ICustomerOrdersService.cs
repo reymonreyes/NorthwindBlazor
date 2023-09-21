@@ -9,6 +9,7 @@ namespace Northwind.Core.Interfaces.Services
 {
     public interface ICustomerOrdersService
     {
+        Task AddItem(int customerOrderId, CustomerOrderItemDto? customerOrderItemDto);
         Task<ServiceResult> Create(int customerId, DateTime? orderDate, List<CustomerOrderItemDto> orderItems);
     }
 }
