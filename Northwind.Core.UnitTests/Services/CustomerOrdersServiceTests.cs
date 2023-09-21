@@ -99,5 +99,53 @@ namespace Northwind.Core.UnitTests.Services
 
             Assert.Contains($"Item quantity for Product[1] must be greater than 0.", result.Messages?.FirstOrDefault(x => x.MessageType == Enums.ServiceMessageType.Error)?.Message.Value);
         }
+
+        [Fact]
+        public async Task AddItem_ShouldThrowExceptionIfCustomerOrderDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((Entities.CustomerOrder)null!);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.AddItem(1, (CustomerOrderItemDto)null!));
+        }
+
+        [Fact]
+        public async Task AddItem_ShouldThrowExceptionIfProductDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, CustomerId = 1 });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            var productsRepo = mock.Mock<IProductsRepository>();
+            productsRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Entities.Product)null);
+            uow.Setup(x => x.ProductsRepository).Returns(productsRepo.Object);
+            
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.AddItem(1, new CustomerOrderItemDto { ProductId = 1, Quantity = 1, CustomerOrderid = 1 }));
+        }
+
+        [Fact]
+        public async Task AddItem_ShouldThrowExceptionIfQuantityIsInvalid()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, CustomerId = 1 });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            var productsRepo = mock.Mock<IProductsRepository>();
+            productsRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync(new Product { Id = 1, Name = "Product One" });
+            uow.Setup(x => x.ProductsRepository).Returns(productsRepo.Object);
+
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.AddItem(1, new CustomerOrderItemDto { ProductId = 1, Quantity = 0, CustomerOrderid = 1 }));
+        }
     }
 }
