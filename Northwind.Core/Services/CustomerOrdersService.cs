@@ -18,6 +18,34 @@ namespace Northwind.Core.Services
         {            
             _unitOfWork = unitOfWork;
         }
+
+        public async Task AddItem(int customerOrderId, CustomerOrderItemDto? customerOrderItemDto)
+        {
+            await _unitOfWork.Start();
+            var customerOrder = await _unitOfWork.CustomerOrdersRepository.GetAsync(customerOrderId);
+            if(customerOrder == null) throw new DataNotFoundException("Customer Order not found.");
+
+            if (customerOrderItemDto != null)
+            {
+                var product = await _unitOfWork.ProductsRepository.Get(customerOrderItemDto.ProductId);
+                if (product == null) throw new DataNotFoundException("Product not found.");
+                if (customerOrderItemDto.Quantity <= 0) throw new ValidationFailedException("Quantity must be greater than 0.");
+
+                customerOrder.Items.Add(new CustomerOrderItem
+                {
+                    CustomerOrderId = customerOrderItemDto.ProductId,
+                    Quantity = customerOrderItemDto.Quantity,
+                    ProductId = customerOrderItemDto.ProductId,
+                    UnitPrice = customerOrderItemDto.UnitPrice ?? product.ListPrice,
+                });
+                _unitOfWork.CustomerOrdersRepository.Update(customerOrder);
+
+                await _unitOfWork.Commit();
+            }
+
+            await _unitOfWork.Stop();
+        }
+
         public async Task<ServiceResult> Create(int customerId, DateTime? orderDate, List<Dtos.CustomerOrderItemDto> orderItems)
         {
             
