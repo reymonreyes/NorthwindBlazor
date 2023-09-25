@@ -23,6 +23,7 @@ namespace Northwind.Data.Postgresql
         public ICustomersRepository CustomersRepository => new CustomersRepository(_dbContext);
         public IPurchaseOrdersRepository PurchaseOrdersRepository => new PurchaseOrdersRepository(_dbContext);
         public IInventoryTransactionsRepository InventoryTransactionsRepository => new InventoryTransactionsRepository(_dbContext);
+        public ICustomerOrdersRepository CustomerOrdersRepository => new CustomerOrdersRepository(_dbContext);
 
         public async Task Commit()
         {            
