@@ -47,7 +47,8 @@ namespace Northwind.Data.Postgresql
             modelBuilder.Entity<CustomerOrder>().HasMany(x => x.Items).WithOne().HasForeignKey(x => x.CustomerOrderId).IsRequired(true);
             modelBuilder.Entity<CustomerOrderItem>().HasOne<Product>().WithMany().HasForeignKey(x => x.ProductId).IsRequired(true);
             modelBuilder.Entity<PurchaseOrder>().HasMany<CustomerOrderItem>().WithOne().HasForeignKey(x => x.PurchaseOrderId).IsRequired(false);
-            modelBuilder.Entity<InventoryTransaction>().HasMany<CustomerOrderItem>().WithOne().HasForeignKey(x => x.InventoryTransactionId).IsRequired(false);            
+            modelBuilder.Entity<InventoryTransaction>().HasMany<CustomerOrderItem>().WithOne().HasForeignKey(x => x.InventoryTransactionId).IsRequired(false);
+            modelBuilder.Entity<Shipper>().HasMany<CustomerOrder>().WithOne().HasForeignKey(x => x.ShipperId).IsRequired(false);
         }
 
         private void ConfigureProductEntity(ModelBuilder modelBuilder)
