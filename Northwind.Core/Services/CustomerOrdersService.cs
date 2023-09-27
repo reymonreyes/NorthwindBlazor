@@ -95,5 +95,19 @@ namespace Northwind.Core.Services
             
             return result;
         }
+
+        public async Task CreateInvoice(int orderId)
+        {
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(orderId);
+            if (order == null) throw new DataNotFoundException("Customer Order not found.");
+            if(order.ShipperId == null) throw new DataNotFoundException("Shipper not found.");
+            var shipper = await _unitOfWork.ShippersRepository.Get(order.ShipperId!.Value);
+            if (shipper == null) throw new DataNotFoundException("Shipper not found.");
+
+
+
+            await _unitOfWork.Stop();
+        }
     }
 }
