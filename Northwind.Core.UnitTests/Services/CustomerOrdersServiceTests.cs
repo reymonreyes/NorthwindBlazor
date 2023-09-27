@@ -147,5 +147,35 @@ namespace Northwind.Core.UnitTests.Services
 
             await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.AddItem(1, new CustomerOrderItemDto { ProductId = 1, Quantity = 0, CustomerOrderid = 1 }));
         }
+
+        [Fact]
+        public async Task CreateInvoice_ShouldThrowExceptionIfOrderDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((Entities.CustomerOrder)null!);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.CreateInvoice(1));
+        }
+
+        [Fact]
+        public async Task CreateInvoice_ShouldThrowExceptionIfShippingInformationIsNotSet()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, CustomerId = 1, ShipperId = 0 });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            var shippersRepo = mock.Mock<IShippersRepository>();
+            shippersRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Entities.Shipper)null!);
+            uow.Setup(x => x.ShippersRepository).Returns(shippersRepo.Object);
+
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.CreateInvoice(1));
+        }
     }
 }
