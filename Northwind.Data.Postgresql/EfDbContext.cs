@@ -35,6 +35,18 @@ namespace Northwind.Data.Postgresql
             ConfigureOrderItemEntity(modelBuilder);
             ConfigureInventoryTransactionEntity(modelBuilder);
             ConfigureCustomerOrderEntity(modelBuilder);
+            ConfigureInvoiceEntity(modelBuilder);            
+        }
+
+        private void ConfigureInvoiceEntity(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Invoice>().ToTable("invoices");
+            modelBuilder.Entity<Invoice>().HasKey(x => x.Id);
+            modelBuilder.Entity<Invoice>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
+            modelBuilder.Entity<Invoice>().Property(x => x.InvoiceDate).HasColumnType("timestamp").IsRequired(true);
+            modelBuilder.Entity<Invoice>().Property(x => x.DueDate).HasColumnType("timestamp").IsRequired(false);
+            modelBuilder.Entity<Invoice>().Property(x => x.ShippingCost).HasColumnType("money");
+            modelBuilder.Entity<CustomerOrder>().HasMany<Invoice>().WithOne().HasForeignKey(x => x.CustomerOrderId);
         }
 
         private void ConfigureProductEntity(ModelBuilder modelBuilder)
