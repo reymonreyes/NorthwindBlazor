@@ -158,7 +158,7 @@ namespace Northwind.Core.UnitTests.Services
             uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
             ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
 
-            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.CreateInvoice(1));
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.CreateInvoice(1, null, null, 0));
         }
 
         [Fact]
@@ -172,10 +172,13 @@ namespace Northwind.Core.UnitTests.Services
             var shippersRepo = mock.Mock<IShippersRepository>();
             shippersRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Entities.Shipper)null!);
             uow.Setup(x => x.ShippersRepository).Returns(shippersRepo.Object);
+            var invoicesRepo = mock.Mock<IInvoicesRepository>();
+            invoicesRepo.Setup(x => x.GetByOrderId(It.IsAny<int>())).ReturnsAsync((Invoice)null);
+            uow.Setup(x => x.InvoicesRepository).Returns(invoicesRepo.Object);
 
             ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
 
-            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.CreateInvoice(1));
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.CreateInvoice(1, null, null, 0));
         }
     }
 }
