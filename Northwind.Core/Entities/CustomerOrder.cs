@@ -11,6 +11,7 @@ namespace Northwind.Core.Entities
     {
         public int Id { get; set; }
         public int CustomerId { get; set; }
+        public int? ShipperId { get; set; }
         //public int EmployeeId { get; set; } TODO: Implement as identity user
         public DateTime OrderDate { get; set; }
         public string Notes { get; set; }
@@ -19,7 +20,6 @@ namespace Northwind.Core.Entities
 
         /* TODO: Implement as value objects
         public DateTime ShippedDate { get; set; }
-        public int ShipperId { get; set; }
         public string ShipperName { get; set; }
         public string ShipperAddress { get; set; }
         public string ShipperCity { get; set; }

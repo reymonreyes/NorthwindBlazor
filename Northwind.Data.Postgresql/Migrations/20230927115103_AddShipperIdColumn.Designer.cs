@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Northwind.Data.Postgresql;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Northwind.Data.Postgresql.Migrations
 {
     [DbContext(typeof(EfDbContext))]
-    partial class EfDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230927115103_AddShipperIdColumn")]
+    partial class AddShipperIdColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,33 +219,6 @@ namespace Northwind.Data.Postgresql.Migrations
                     b.HasIndex("PurchaseOrderId");
 
                     b.ToTable("inventorytransactions", (string)null);
-                });
-
-            modelBuilder.Entity("Northwind.Core.Entities.Invoice", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("serial");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CustomerOrderId")
-                        .HasColumnType("serial");
-
-                    b.Property<DateTime?>("DueDate")
-                        .HasColumnType("timestamp");
-
-                    b.Property<DateTime>("InvoiceDate")
-                        .HasColumnType("timestamp");
-
-                    b.Property<decimal>("ShippingCost")
-                        .HasColumnType("money");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CustomerOrderId");
-
-                    b.ToTable("invoices", (string)null);
                 });
 
             modelBuilder.Entity("Northwind.Core.Entities.OrderItem", b =>
@@ -522,15 +498,6 @@ namespace Northwind.Data.Postgresql.Migrations
                     b.HasOne("Northwind.Core.Entities.PurchaseOrder", null)
                         .WithMany()
                         .HasForeignKey("PurchaseOrderId");
-                });
-
-            modelBuilder.Entity("Northwind.Core.Entities.Invoice", b =>
-                {
-                    b.HasOne("Northwind.Core.Entities.CustomerOrder", null)
-                        .WithMany()
-                        .HasForeignKey("CustomerOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Northwind.Core.Entities.OrderItem", b =>

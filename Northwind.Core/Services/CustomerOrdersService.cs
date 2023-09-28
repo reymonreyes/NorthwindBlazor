@@ -95,5 +95,35 @@ namespace Northwind.Core.Services
             
             return result;
         }
+
+        public async Task<int> CreateInvoice(int orderId, DateTime? dueDate, DateTime? invoiceDate, decimal shippingCost)
+        {
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(orderId);
+            if (order == null) throw new DataNotFoundException("Customer Order not found.");
+            var invoice = await _unitOfWork.InvoicesRepository.GetByOrderId(order.Id);
+            if (invoice != null) throw new Exception("Invoice already exist.");
+            if(order.ShipperId == null) throw new DataNotFoundException("Shipper not found.");
+            var shipper = await _unitOfWork.ShippersRepository.Get(order.ShipperId!.Value);
+            if (shipper == null) throw new DataNotFoundException("Shipper not found.");
+
+            int id = 0;
+            if (invoice == null)
+            {
+                invoice = new Invoice();
+                invoice.CustomerOrderId = order.Id;
+                invoice.InvoiceDate = invoiceDate ?? DateTime.UtcNow;
+                invoice.DueDate = dueDate;
+                invoice.ShippingCost = shippingCost;
+
+                await _unitOfWork.InvoicesRepository.Create(invoice);
+                await _unitOfWork.Commit();
+                
+                id = invoice.Id;
+            }
+
+            await _unitOfWork.Stop();
+            return id;
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace Northwind.Core.Interfaces.Services
     {
         Task AddItem(int customerOrderId, CustomerOrderItemDto? customerOrderItemDto);
         Task<ServiceResult> Create(int customerId, DateTime? orderDate, List<CustomerOrderItemDto> orderItems);
+        Task<int> CreateInvoice(int orderId, DateTime? dueDate, DateTime? invoiceDate, decimal shippingCost);
     }
 }
