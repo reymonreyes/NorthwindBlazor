@@ -14,8 +14,8 @@ namespace Northwind.Core.Entities
         public DateTime Created { get; set; }
         public int ProductId { get; set; }
         public int Quantity { get; set; }
-        public int PurchaseOrderId { get; set; }
-        //public int CustomerOrderId { get; set; }
+        public int? PurchaseOrderId { get; set; }
+        public int? CustomerOrderId { get; set; }
         public string Comments { get; set; }
     }
 }
