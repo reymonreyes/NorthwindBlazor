@@ -174,11 +174,13 @@ namespace Northwind.Data.Postgresql
             modelBuilder.Entity<CustomerOrder>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
             modelBuilder.Entity<CustomerOrder>().Property(x => x.OrderDate).HasColumnType("timestamp").IsRequired(true);
             modelBuilder.Entity<CustomerOrder>().Property(x => x.Notes).HasColumnType("text");
+            modelBuilder.Entity<CustomerOrder>().Property(x => x.Status).HasColumnType("smallint");
             modelBuilder.Entity<CustomerOrderItem>().ToTable("customerorderitems").HasKey(x => x.Id);
             modelBuilder.Entity<CustomerOrderItem>().Property(x => x.Quantity).HasColumnType("int");
             modelBuilder.Entity<CustomerOrderItem>().Property(x => x.UnitPrice).HasColumnType("money");
             modelBuilder.Entity<CustomerOrderItem>().Property(x => x.Discount).HasColumnType("int");
             modelBuilder.Entity<CustomerOrderItem>().Property(x => x.DateAllocated).HasColumnType("timestamp").IsRequired(false);
+            modelBuilder.Entity<CustomerOrderItem>().Property(x => x.Status).HasColumnType("smallint");
 
             modelBuilder.Entity<CustomerOrder>().HasMany(x => x.Items).WithOne().HasForeignKey(x => x.CustomerOrderId).IsRequired(true);
             modelBuilder.Entity<CustomerOrderItem>().HasOne<Product>().WithMany().HasForeignKey(x => x.ProductId).IsRequired(true);
