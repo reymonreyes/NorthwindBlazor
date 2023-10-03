@@ -117,8 +117,30 @@ namespace Northwind.Core.Services
                 invoice.ShippingCost = shippingCost;
 
                 await _unitOfWork.InvoicesRepository.Create(invoice);
-                await _unitOfWork.Commit();
+
                 
+
+                //set status to Invoiced
+                order.Status = Enums.OrderStatus.Invoiced;
+
+                foreach (var item in order.Items)
+                {
+                    item.Status = Enums.OrderStatus.Invoiced;
+                    //create inventory transaction as Sold
+                    var inventoryTransaction = new InventoryTransaction
+                    {
+                        ProductId = item.ProductId,
+                        Created = DateTime.UtcNow,
+                        CustomerOrderId = order.Id,
+                        Quantity = item.Quantity,
+                        TransactionType = Enums.InventoryTransactionType.Sold
+                    };
+                    await _unitOfWork.InventoryTransactionsRepository.Create(inventoryTransaction);
+                }
+
+                _unitOfWork.CustomerOrdersRepository.Update(order);
+                await _unitOfWork.Commit();
+
                 id = invoice.Id;
             }
 
