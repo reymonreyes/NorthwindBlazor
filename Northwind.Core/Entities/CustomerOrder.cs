@@ -15,6 +15,7 @@ namespace Northwind.Core.Entities
         //public int EmployeeId { get; set; } TODO: Implement as identity user
         public DateTime OrderDate { get; set; }
         public string Notes { get; set; }
+        public OrderStatus Status { get; set; }
 
         public List<CustomerOrderItem> Items { get; set; }
 
@@ -47,5 +48,6 @@ namespace Northwind.Core.Entities
         public DateTime? DateAllocated { get; set; }
         public int? PurchaseOrderId { get; set; }
         public int? InventoryTransactionId { get; set; }
+        public OrderStatus Status { get; set; }
     }
 }
