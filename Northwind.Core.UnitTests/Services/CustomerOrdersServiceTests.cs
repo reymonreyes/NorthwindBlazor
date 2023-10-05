@@ -180,5 +180,87 @@ namespace Northwind.Core.UnitTests.Services
 
             await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.CreateInvoice(1, null, null, 0));
         }
+
+        [Fact]
+        public async Task ShipOrder_ShouldThrowExceptionIfOrderDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((Entities.CustomerOrder)null!);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.ShipOrder(1));
+        }
+
+        [Fact]
+        public async Task ShipOrder_ShouldThrowExceptionIfShippingInformationIsNotSet()
+        {
+            var mock = AutoMock.GetLoose();
+            var order = new CustomerOrder { Id = 1, CustomerId = 1, ShipperId = 0 };
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(order);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.ShipOrder(1));
+        }
+
+        [Fact]
+        public async Task ShipOrder_ShouldThrowExceptionIfInvoiceDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var order = new CustomerOrder { Id = 1, CustomerId = 1, ShipperId = 1, ShipTo=new ValueObjects.ShippingInformation { Name = "Customer One", Address = "Somewhere" } };
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(order);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            var invoicesRepo = mock.Mock<IInvoicesRepository>();
+            invoicesRepo.Setup(x => x.GetByOrderId(It.IsAny<int>())).ReturnsAsync((Invoice)null!);
+            uow.Setup(x => x.InvoicesRepository).Returns(invoicesRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.ShipOrder(1));
+        }
+
+        [Fact]
+        public async Task ShipOrder_ShouldSetStatusToShippedIfSuccessful()
+        {
+            var mock = AutoMock.GetLoose();
+            var order = new CustomerOrder
+            {
+                Id = 1,
+                CustomerId = 1,
+                ShipperId = 1,
+                ShipTo = new ValueObjects.ShippingInformation { Name = "Customer One", Address = "Somewhere" },
+                Items = new List<CustomerOrderItem> {
+                    new CustomerOrderItem
+                    {
+                        Id = 1,
+                        ProductId = 1,
+                        Quantity = 1,
+                        UnitPrice = 1
+                    }
+                }
+            };
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(order);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            var invoicesRepo = mock.Mock<IInvoicesRepository>();
+            invoicesRepo.Setup(x => x.GetByOrderId(It.IsAny<int>())).ReturnsAsync(new Invoice { Id = 1, CustomerOrderId = 1 });
+            uow.Setup(x => x.InvoicesRepository).Returns(invoicesRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await service.ShipOrder(1);
+
+            Assert.Equal(Enums.OrderStatus.Shipped, order.Status);
+            Assert.All(order.Items, item =>
+            {
+                Assert.Equal(Enums.OrderStatus.Shipped, item.Status);
+            });
+        }
     }
 }

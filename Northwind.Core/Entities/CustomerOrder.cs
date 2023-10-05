@@ -1,4 +1,6 @@
-﻿using Northwind.Core.Enums;
+﻿using Northwind.Core.Dtos.Document;
+using Northwind.Core.Enums;
+using Northwind.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,25 +18,8 @@ namespace Northwind.Core.Entities
         public DateTime OrderDate { get; set; }
         public string Notes { get; set; }
         public OrderStatus Status { get; set; }
-
         public List<CustomerOrderItem> Items { get; set; }
-
-        /* TODO: Implement as value objects
-        public DateTime ShippedDate { get; set; }
-        public string ShipperName { get; set; }
-        public string ShipperAddress { get; set; }
-        public string ShipperCity { get; set; }
-        public string ShipperState { get; set; }
-        public string ShipperPostalCode { get; set; }
-        public string Country { get; set; }
-        public decimal ShippingFee { get; set; }
-        public decimal Taxes { get; set; }
-        public PaymentMethodType PaymentMethodType { get; set; }
-        public DateTime PaidDate { get; set; }
-        public decimal TaxRate { get; set; }
-        public int TaxStatus { get; set; }
-        public int StatusId { get; set; }
-        */
+        public ShippingInformation?  ShipTo { get; set; }        
     }
 
     public class CustomerOrderItem

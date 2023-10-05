@@ -147,5 +147,24 @@ namespace Northwind.Core.Services
             await _unitOfWork.Stop();
             return id;
         }
+
+        public async Task ShipOrder(int orderId)
+        {
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(orderId);
+            if (order == null) throw new DataNotFoundException("Order is not found.");
+            if(order.ShipTo == null) throw new DataNotFoundException("Shipping information not found.");
+            var invoice = await _unitOfWork.InvoicesRepository.GetByOrderId(order.Id);
+            if (invoice == null) throw new DataNotFoundException("Invoice not found.");
+
+            order.Status = Enums.OrderStatus.Shipped;
+            foreach (var item in order.Items)
+                item.Status = Enums.OrderStatus.Shipped;
+
+            _unitOfWork.CustomerOrdersRepository.Update(order);
+            await _unitOfWork.Commit();
+
+            await _unitOfWork.Stop();
+        }
     }
 }
