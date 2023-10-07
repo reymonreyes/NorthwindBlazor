@@ -1,4 +1,5 @@
 ﻿using Northwind.Core.Dtos;
+using Northwind.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace Northwind.Core.Interfaces.Services
         Task<ServiceResult> Create(int customerId, DateTime? orderDate, List<CustomerOrderItemDto> orderItems);
         Task<int> CreateInvoice(int orderId, DateTime? dueDate, DateTime? invoiceDate, decimal shippingCost);
         Task ShipOrder(int orderId);
+        Task ReceivePayment(int orderId, DateTime paymenDate, decimal amount, PaymentMethodType paymentType);
     }
 }
