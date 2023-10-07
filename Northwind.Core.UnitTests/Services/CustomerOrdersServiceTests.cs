@@ -212,7 +212,7 @@ namespace Northwind.Core.UnitTests.Services
         public async Task ShipOrder_ShouldThrowExceptionIfInvoiceDoesNotExist()
         {
             var mock = AutoMock.GetLoose();
-            var order = new CustomerOrder { Id = 1, CustomerId = 1, ShipperId = 1, ShipTo=new ValueObjects.ShippingInformation { Name = "Customer One", Address = "Somewhere" } };
+            var order = new CustomerOrder { Id = 1, CustomerId = 1, ShipperId = 1, ShipTo = new ValueObjects.ShippingInformation { Name = "Customer One", Address = "Somewhere" } };
             var uow = mock.Mock<IUnitOfWork>();
             var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
             customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(order);
@@ -261,6 +261,49 @@ namespace Northwind.Core.UnitTests.Services
             {
                 Assert.Equal(Enums.OrderStatus.Shipped, item.Status);
             });
+        }
+
+        [Fact]
+        public async Task ReceivePayment_ShouldThrowExceptionIfOrderDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((Entities.CustomerOrder)null!);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.ReceivePayment(1, DateTime.UtcNow, 100, Enums.PaymentMethodType.Cash));
+        }
+
+        [Fact]
+        public async Task ReceivePayment_ShouldThrowExceptionIfOrderStatusIsClosed()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var order = new CustomerOrder { Id = 1, CustomerId = 1, Status = Enums.OrderStatus.Closed, ShipperId = 1, ShipTo = new ValueObjects.ShippingInformation { Name = "Customer One", Address = "Somewhere" } };
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(order);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.ReceivePayment(1, DateTime.UtcNow, 100, Enums.PaymentMethodType.Cash));
+        }
+
+        [Fact]
+        public async Task ReceivePayment_ShouldSetPaymentInformationIfSuccessful()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var order = new CustomerOrder { Id = 1, CustomerId = 1, Status = Enums.OrderStatus.Shipped, ShipperId = 1, ShipTo = new ValueObjects.ShippingInformation { Name = "Customer One", Address = "Somewhere" } };
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(order);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await service.ReceivePayment(1, DateTime.UtcNow, 100, Enums.PaymentMethodType.Cash);
+
+            Assert.NotNull(order.Payment);
         }
     }
 }

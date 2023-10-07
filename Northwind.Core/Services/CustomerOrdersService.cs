@@ -1,8 +1,10 @@
 ﻿using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
+using Northwind.Core.Enums;
 using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
+using Northwind.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -146,6 +148,26 @@ namespace Northwind.Core.Services
 
             await _unitOfWork.Stop();
             return id;
+        }
+
+        public async Task ReceivePayment(int orderId, DateTime paymentDate, decimal amount, PaymentMethodType paymentType)
+        {
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(orderId);
+            if (order == null) throw new DataNotFoundException("Customer Order not found.");
+            if (order.Status == OrderStatus.Closed) throw new ValidationFailedException("Customer Order Status closed.");
+
+            var payment = new Payment
+            {
+                Date = paymentDate,
+                Amount = amount,
+                Method = paymentType
+            };
+
+            order.Payment = payment;
+            _unitOfWork.CustomerOrdersRepository.Update(order);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
         }
 
         public async Task ShipOrder(int orderId)

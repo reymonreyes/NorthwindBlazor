@@ -19,7 +19,8 @@ namespace Northwind.Core.Entities
         public string Notes { get; set; }
         public OrderStatus Status { get; set; }
         public List<CustomerOrderItem> Items { get; set; }
-        public ShippingInformation?  ShipTo { get; set; }        
+        public ShippingInformation?  ShipTo { get; set; }
+        public Payment? Payment { get; set; }
     }
 
     public class CustomerOrderItem
