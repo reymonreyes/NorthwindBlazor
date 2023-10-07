@@ -15,5 +15,6 @@ namespace Northwind.Core.Interfaces.Services
         Task<int> CreateInvoice(int orderId, DateTime? dueDate, DateTime? invoiceDate, decimal shippingCost);
         Task ShipOrder(int orderId);
         Task ReceivePayment(int orderId, DateTime paymenDate, decimal amount, PaymentMethodType paymentType);
+        Task CloseOrder(int orderId);
     }
 }

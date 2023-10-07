@@ -48,6 +48,18 @@ namespace Northwind.Core.Services
             await _unitOfWork.Stop();
         }
 
+        public async Task CloseOrder(int orderId)
+        {
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(orderId);
+            if (order == null) throw new DataNotFoundException("Customer Order not found.");
+
+            order.Status = OrderStatus.Closed;
+            await _unitOfWork.Commit();
+
+            await _unitOfWork.Stop();
+        }
+
         public async Task<ServiceResult> Create(int customerId, DateTime? orderDate, List<Dtos.CustomerOrderItemDto> orderItems)
         {
             
