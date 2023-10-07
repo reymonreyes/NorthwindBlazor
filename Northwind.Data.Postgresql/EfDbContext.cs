@@ -188,6 +188,7 @@ namespace Northwind.Data.Postgresql
             modelBuilder.Entity<InventoryTransaction>().HasMany<CustomerOrderItem>().WithOne().HasForeignKey(x => x.InventoryTransactionId).IsRequired(false);
             modelBuilder.Entity<Shipper>().HasMany<CustomerOrder>().WithOne().HasForeignKey(x => x.ShipperId).IsRequired(false);
             modelBuilder.Entity<CustomerOrder>().OwnsOne(x => x.ShipTo);
+            modelBuilder.Entity<CustomerOrder>().OwnsOne(x => x.Payment);
         }
     }
 }
