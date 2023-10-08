@@ -12,6 +12,7 @@ namespace Northwind.Core.Interfaces.Services
     {
         Task<ServiceMessageResult> ApproveAsync(int id);
         Task<ServiceMessageResult> CancelAsync(int id);
+        Task CloseOrder(int id);
         Task<ServiceResult> Create(PurchaseOrderDto purchaseOrder);
         Task EmailPdfToSupplier(int purchaseOrderId);
         Task<string> GeneratePdfDocument(int id);
