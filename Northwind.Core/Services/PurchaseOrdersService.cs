@@ -269,5 +269,18 @@ namespace Northwind.Core.Services
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
         }
+
+        public async Task CloseOrder(int id)
+        {
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
+            if (order == null) throw new DataNotFoundException("Customer Order not found.");
+
+            order.Status = Enums.OrderStatus.Closed;
+            _unitOfWork.PurchaseOrdersRepository.Update(order);
+
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+        }
     }
 }
