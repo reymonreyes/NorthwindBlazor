@@ -10,6 +10,7 @@ namespace Northwind.Core.Interfaces.Services
 {
     public interface IPurchaseOrdersService
     {
+        Task AddItem(int id, PurchaseOrderItemDto purchaseOrderItemDto);
         Task<ServiceMessageResult> ApproveAsync(int id);
         Task<ServiceMessageResult> CancelAsync(int id);
         Task CloseOrder(int id);

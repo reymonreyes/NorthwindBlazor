@@ -282,5 +282,31 @@ namespace Northwind.Core.Services
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
         }
+
+        public async Task AddItem(int id, PurchaseOrderItemDto purchaseOrderItemDto)
+        {
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
+            if (order == null) throw new DataNotFoundException("Purchase Order not found.");
+            
+            if (purchaseOrderItemDto != null)
+            {
+                var product = await _unitOfWork.ProductsRepository.Get(purchaseOrderItemDto.ProductId);
+                if (product == null) throw new DataNotFoundException("Product not found.");
+                if (purchaseOrderItemDto.Quantity <= 0) throw new ValidationFailedException("Quantity must be greater than 0.");
+
+                order.OrderItems.Add(new OrderItem
+                {
+                    ProductId = purchaseOrderItemDto.ProductId,
+                    Quantity = purchaseOrderItemDto.Quantity,                   
+                    UnitCost = purchaseOrderItemDto.UnitPrice ?? product.ListPrice,
+                });
+                _unitOfWork.PurchaseOrdersRepository.Update(order);
+
+                await _unitOfWork.Commit();
+            }
+
+            await _unitOfWork.Stop();
+        }
     }
 }
