@@ -692,7 +692,7 @@ namespace Northwind.Core.UnitTests.Services
         }
 
         [Fact]
-        public async void CloseOrder_ShouldThrowExceptionIfOrderDoesNotExist()
+        public async void CompleteOrder_ShouldThrowExceptionIfOrderDoesNotExist()
         {
             var mock = AutoMock.GetLoose();
             var uow = mock.Mock<IUnitOfWork>();
@@ -701,11 +701,11 @@ namespace Northwind.Core.UnitTests.Services
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
             IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
-            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.CloseOrder(1));
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.CompleteOrder(1));
         }
 
         [Fact]
-        public async void CloseOrder_ShouldSetStatusToClosedIfSuccessful()
+        public async void CompleteOrder_ShouldSetStatusToClosedIfSuccessful()
         {
             var mock = AutoMock.GetLoose();
             var uow = mock.Mock<IUnitOfWork>();
@@ -715,7 +715,7 @@ namespace Northwind.Core.UnitTests.Services
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
             IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
-            await service.CloseOrder(1);
+            await service.CompleteOrder(1);
 
             Assert.Equal(Enums.OrderStatus.Closed, order.Status);
         }
