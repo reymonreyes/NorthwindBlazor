@@ -48,7 +48,7 @@ namespace Northwind.Core.Services
             await _unitOfWork.Stop();
         }
 
-        public async Task CloseOrder(int orderId)
+        public async Task CompleteOrder(int orderId)
         {
             await _unitOfWork.Start();
             var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(orderId);
