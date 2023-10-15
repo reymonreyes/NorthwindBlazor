@@ -1,0 +1,25 @@
+﻿@page "/purchaseorders"
+
+<MudPaper Elevation="2" Class="my-1">
+    <MudToolBar>
+        <MudText Typo="Typo.subtitle1">Purchase Orders</MudText>
+        <MudSpacer/>
+        <MudButton Href="purchaseorders/create" Variant="Variant.Filled" Color="Color.Primary">New</MudButton>
+        <MudDivider Vertical="true" FlexItem="true" Class="mx-4" Light="true"/>
+        <MudSelect T="string" Label="Supplier" AnchorOrigin="Origin.BottomCenter" Margin="Margin.Dense" Variant="Variant.Outlined" Dense="true" Class="mx-1">
+            <MudSelectItem Value="@("Cappuccino")" />
+            <MudSelectItem Value="@("Cafe Latte")" />
+            <MudSelectItem Value="@("Espresso")" />
+        </MudSelect>
+        <MudSelect T="string" Label="Status" AnchorOrigin="Origin.BottomCenter" Margin="Margin.Dense" Variant="Variant.Outlined" Dense="true" Class="mx-1">
+            <MudSelectItem Value="@("Cappuccino")" />
+            <MudSelectItem Value="@("Cafe Latte")" />
+            <MudSelectItem Value="@("Espresso")" />
+        </MudSelect>
+        <MudButton Href="products/create" Variant="Variant.Filled" Color="Color.Secondary">Find</MudButton>
+    </MudToolBar>
+</MudPaper>
+
+@code {
+
+}

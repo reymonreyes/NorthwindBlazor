@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Common.UnitTests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Data.Postgresql", "Northwind.Data.Postgresql\Northwind.Data.Postgresql.csproj", "{753CB8C4-D9C0-4EA2-97A1-56A2BDC25C75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Northwind.Infrastructure.IntegrationTests", "Northwind.Infrastructure.IntegrationTests\Northwind.Infrastructure.IntegrationTests.csproj", "{AA829CE3-D8B1-43CC-8B19-F53A998F6C01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Infrastructure.IntegrationTests", "Northwind.Infrastructure.IntegrationTests\Northwind.Infrastructure.IntegrationTests.csproj", "{AA829CE3-D8B1-43CC-8B19-F53A998F6C01}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Infrastructure", "Northwind.Infrastructure\Northwind.Infrastructure.csproj", "{C863695B-AC62-4468-8334-164FF60A50E7}"
 EndProject
