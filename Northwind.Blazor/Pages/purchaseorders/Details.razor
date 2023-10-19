@@ -1,4 +1,7 @@
 ﻿@page "/purchaseorders/create"
+@using Northwind.Blazor.Models;
+@using Northwind.Common.Enums;
+@inject NavigationManager NavigationManager
 
 <MudToolBar WrapContent="true">
     <MudText><b>Purchase Order</b></MudText>
@@ -27,21 +30,21 @@
                             <MudText>Order # <b>1</b> @_isPODetailsValid</MudText>
                             <MudSpacer />
                             <MudButton Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small" Class="mr-1" Disabled="@(!_isPODetailsValid)">Save</MudButton>
-                            <MudButton Color="Color.Secondary" Variant="Variant.Filled" Size="Size.Small" Class="mf-1" OnClick="(() => TestValidation())">Print PO</MudButton>
+                            <MudButton Color="Color.Secondary" Variant="Variant.Filled" Size="Size.Small" Class="mf-1">Print PO</MudButton>
                         </MudToolBar>
                     </MudPaper>
                 </MudItem>
                 <MudItem xs="12" sm="8" md="8" lg="8">
-                    <MudTextField @bind-Value="Supplier" Required="true" RequiredError="Supplier is required" Variant="Variant.Outlined" Margin="Margin.Dense" Label="Supplier" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.MoreHoriz"></MudTextField>
+                    <MudTextField @bind-Value="_purchaseOrder.Supplier" Required="true" RequiredError="Supplier is required" Variant="Variant.Outlined" Margin="Margin.Dense" Label="Supplier" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.MoreHoriz"></MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="4" md="4" lg="4">
-                    <MudDatePicker @bind-Date="OrderDate" Required="true" RequiredError="Order Date is required" Label="Order Date(YYYY-MM-DD)" Margin="Margin.Dense" Variant="Variant.Outlined" Editable="true" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd"/>
+                    <MudDatePicker @bind-Date="_purchaseOrder.OrderDate" Required="true" RequiredError="Order Date is required" Label="Order Date(YYYY-MM-DD)" Margin="Margin.Dense" Variant="Variant.Outlined" Editable="true" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd"/>
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12" lg="12">
-                    <MudTextField @bind-Value="ShipTo" Label="Ship To" Required="true" RequiredError="Shipping address is required" Margin="Margin.Dense" Variant="Variant.Outlined"></MudTextField>
+                    <MudTextField @bind-Value="_purchaseOrder.ShipTo" Label="Ship To" Required="true" RequiredError="Shipping address is required" Margin="Margin.Dense" Variant="Variant.Outlined"></MudTextField>
                 </MudItem>
                 <MudItem xs="12" sm="12" md="12" lg="12">
-                    <MudTextField T="string" Label="Notes - Optional" Lines="3" Margin="Margin.Dense" Variant="Variant.Outlined"></MudTextField>
+                    <MudTextField Value="_purchaseOrder.Notes" Label="Notes - Optional" Lines="3" Margin="Margin.Dense" Variant="Variant.Outlined"></MudTextField>
                 </MudItem>
             </MudGrid>
         </MudForm>
@@ -93,12 +96,11 @@
 
 
 @code {
-    public string Supplier { get; set; }
-    public string ShipTo { get; set; }
-    public DateTime? OrderDate { get; set; }
     public bool _isPODetailsValid { get; set; }
-    MudForm _poForm;
-
+    private MudForm _poForm;
+    private PurchaseOrder _purchaseOrder;
+    private EntryMode _entryMode = EntryMode.Create;
+    
     string[] headings = { "ID", "Description", "Qty", "Unit price", "Total" };
     string[] rows = {
         @"1,Krishna kpartner0@usatoday.com Male, 28, 250.02,123.44",
@@ -111,17 +113,24 @@
 
     protected override void OnInitialized()
     {
-        Console.WriteLine("OnInitialized");
-        Supplier = "Some Supplier Here";
-        ShipTo = "Some, shipping, address 1234";
-        OrderDate = DateTime.Now;
+        Console.WriteLine("OnInitialized--");
+
+        _entryMode = NavigationManager.Uri.EndsWith("create") ? EntryMode.Create : EntryMode.Edit;
+
+        switch (_entryMode)
+        {
+            case EntryMode.Create:
+                _purchaseOrder = new PurchaseOrder();                
+                _purchaseOrder.OrderDate = DateTime.Now;
+                break;
+            case EntryMode.Edit:
+                break;
+        }               
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
-        Console.WriteLine("OnAfterRender");
-        if (firstRender)
-            _poForm.Validate();
+        _poForm.Validate();
     }
 
     protected override void OnParametersSet()
