@@ -1,7 +1,10 @@
 ﻿@page "/purchaseorders/create"
 @using Northwind.Blazor.Models;
 @using Northwind.Common.Enums;
+@using Northwind.Core.Dtos;
+@using Northwind.Core.Interfaces.Services;
 @inject NavigationManager NavigationManager
+@inject ISuppliersService SuppliersService
 
 <MudToolBar WrapContent="true">
     <MudText><b>Purchase Order</b></MudText>
@@ -22,7 +25,7 @@
 
 <MudGrid Class="pt-3" Spacing="3">
     <MudItem sm="12" md="6" lg="6">
-       <MudForm @ref="_poForm" @bind-IsValid="@_isPODetailsValid">
+       <MudForm @ref="_poForm" @bind-IsValid="@_isPODetailsValid">           
             <MudGrid>
                 <MudItem xs="12" sm="12" md="12" lg="12">
                     <MudPaper Elevation="1" Square="true">
@@ -35,7 +38,8 @@
                     </MudPaper>
                 </MudItem>
                 <MudItem xs="12" sm="8" md="8" lg="8">
-                    <MudTextField @bind-Value="_purchaseOrder.Supplier" Required="true" RequiredError="Supplier is required" Variant="Variant.Outlined" Margin="Margin.Dense" Label="Supplier" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.MoreHoriz"></MudTextField>
+                    <MudAutocomplete Label="Supplier" @bind-Value="_supplier" SearchFunc="@FindSupplier" ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
+                        ResetValueOnEmptyText="true" Required="true" ShowProgressIndicator="true" RequiredError="Supplier is required" ProgressIndicatorColor="Color.Info" />
                 </MudItem>
                 <MudItem xs="12" sm="4" md="4" lg="4">
                     <MudDatePicker @bind-Date="_purchaseOrder.OrderDate" Required="true" RequiredError="Order Date is required" Label="Order Date(YYYY-MM-DD)" Margin="Margin.Dense" Variant="Variant.Outlined" Editable="true" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd"/>
@@ -100,7 +104,8 @@
     private MudForm _poForm;
     private PurchaseOrder _purchaseOrder;
     private EntryMode _entryMode = EntryMode.Create;
-    
+    private string _supplierSearch;
+    private SupplierDto _supplier = null;
     string[] headings = { "ID", "Description", "Qty", "Unit price", "Total" };
     string[] rows = {
         @"1,Krishna kpartner0@usatoday.com Male, 28, 250.02,123.44",
@@ -133,8 +138,15 @@
         _poForm.Validate();
     }
 
-    protected override void OnParametersSet()
+    private async Task<IEnumerable<SupplierDto>> FindSupplier(string supplierName)
     {
-        Console.WriteLine("OnParametersSet");
+        if (string.IsNullOrWhiteSpace(supplierName))
+            return new List<SupplierDto>();
+
+        Console.WriteLine("FindSupplier");
+
+        ICollection<SupplierDto> matchedSuppliers = await SuppliersService.Find(supplierName);
+
+        return matchedSuppliers;
     }
 }
