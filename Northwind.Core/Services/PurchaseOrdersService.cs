@@ -53,6 +53,7 @@ namespace Northwind.Core.Services
             var newPurchaseOrder = new PurchaseOrder();
             newPurchaseOrder.Status = Enums.OrderStatus.New;
             newPurchaseOrder.SupplierId = purchaseOrder.SupplierId;
+            newPurchaseOrder.ShipTo = purchaseOrder.ShipTo;
 
             await _unitOfWork.Start();
             await _unitOfWork.PurchaseOrdersRepository.CreateAsync(newPurchaseOrder);
