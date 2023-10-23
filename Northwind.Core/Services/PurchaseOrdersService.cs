@@ -49,7 +49,6 @@ namespace Northwind.Core.Services
 
             if (validationExceptions.Any())
             {
-                await _unitOfWork.Stop();
                 throw new ValidationFailedException(validationExceptions);
             }
 
