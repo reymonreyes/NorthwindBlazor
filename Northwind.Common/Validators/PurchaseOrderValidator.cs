@@ -14,7 +14,8 @@ namespace Northwind.Common.Validators
     {
         public PurchaseOrderValidator()
         {
-            RuleFor(x => x.SupplierId).NotEmpty().WithName("SupplierId");
+            RuleFor(x => x.SupplierId).NotEmpty().WithName("SupplierId").WithMessage("SupplierId is required");
+            RuleFor(x => x.ShipTo).NotEmpty().WithName("ShipTo").WithMessage("ShipTo is required");
         }
 
         List<ServiceMessageResult>? Core.Interfaces.Validators.IValidator<PurchaseOrderDto>.Validate(PurchaseOrderDto purchaseOrder)
