@@ -37,9 +37,7 @@ namespace Northwind.Core.Services
             
             validationExceptions.AddRange(_poValidator.Validate(purchaseOrder)!);
 
-            if (purchaseOrder.OrderItems is null || purchaseOrder.OrderItems.Count == 0)
-                validationExceptions.Add(new ServiceMessageResult { Message = new KeyValuePair<string, string>("OrderItems", "Order Items are required"), MessageType = Enums.ServiceMessageType.Error });
-            else
+            if (purchaseOrder.OrderItems != null && purchaseOrder.OrderItems.Count > 0)           
             {
                 if (purchaseOrder.OrderItems!.Any(x => x.Quantity <= 0)) 
                     validationExceptions.Add(new ServiceMessageResult { Message = new KeyValuePair<string, string>("OrderItems", "Order Item quantity must be greater than 0"), MessageType = Enums.ServiceMessageType.Error });
