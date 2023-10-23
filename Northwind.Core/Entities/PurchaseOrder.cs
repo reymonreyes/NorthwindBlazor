@@ -15,6 +15,7 @@ namespace Northwind.Core.Entities
         public OrderStatus Status { get; set; }
         public Payment? Payment { get; set; }
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+        public string ShipTo { get; set; }
     }
     
     public class OrderItem
