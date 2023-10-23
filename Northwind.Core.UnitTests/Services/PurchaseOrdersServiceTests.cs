@@ -36,7 +36,7 @@ namespace Northwind.Core.UnitTests.Services
         [Fact]
         public async Task Create_ShouldThrowValidationExceptionForInvalidFields()
         {
-            var poDto = new Dtos.PurchaseOrderDto { SupplierId = 1, OrderItems = new List<OrderItemDto> { new OrderItemDto { ProductId = 1, Quantity = 1 } } };            
+            var poDto = new Dtos.PurchaseOrderDto { SupplierId = 1 };
             var mock = AutoMock.GetLoose();
             var validator = mock.Mock<IPurchaseOrderValidator>();
             validator.Setup(x => x.Validate(poDto)).Returns(new List<ServiceMessageResult> {
@@ -49,7 +49,7 @@ namespace Northwind.Core.UnitTests.Services
         [Fact]
         public void Create_ShouldUseValidatorForValidation()
         {
-            var purchaseOrder = new Dtos.PurchaseOrderDto { SupplierId = 1, OrderItems = new List<OrderItemDto> { new OrderItemDto { ProductId = 1, Quantity = 1, UnitCost = 1 } } };
+            var purchaseOrder = new Dtos.PurchaseOrderDto { SupplierId = 1 };
             var mock = AutoMock.GetLoose();
             IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
             var validator = mock.Mock<IPurchaseOrderValidator>();
@@ -60,22 +60,9 @@ namespace Northwind.Core.UnitTests.Services
             service.Create(purchaseOrder);
             validator.Verify(x => x.Validate(purchaseOrder), Times.Once);
         }
-
+        
         [Fact]
-        public async Task Create_PurchaseOrderMustContainAnItem()
-        {
-            var purchaseOrder = new Dtos.PurchaseOrderDto { SupplierId = 1 };
-            var mock = AutoMock.GetLoose();
-            var validator = mock.Mock<IPurchaseOrderValidator>();
-            validator.Setup(x => x.Validate(purchaseOrder)).Returns(new List<ServiceMessageResult>());
-            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
-
-            var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.Create(purchaseOrder));
-            Assert.Contains(exception.ValidationErrors, x => x.Message.Value.Contains("Order Items are required"));
-        }
-
-        [Fact]
-        public async Task Create_PurchaseOrderMustThrowExceptionIfItemQuantityIsLessThanOne()
+        public async Task Create_MustThrowExceptionIfItemQuantityIsLessThanOne()
         {
             var purchaseOrder = new Dtos.PurchaseOrderDto { SupplierId = 1, OrderItems = new List<OrderItemDto> { new OrderItemDto { ProductId = 1, Quantity = 0 } } };
             var mock = AutoMock.GetLoose();
@@ -88,7 +75,7 @@ namespace Northwind.Core.UnitTests.Services
         }
 
         [Fact]
-        public async Task Create_PurchaseOrderMustThrowExceptionIfItemUnitCostIsLessThanZero()
+        public async Task Create_MustThrowExceptionIfItemUnitCostIsLessThanZero()
         {
             var purchaseOrder = new Dtos.PurchaseOrderDto { SupplierId = 1, OrderItems = new List<OrderItemDto> { new OrderItemDto { ProductId = 1, Quantity = 1, UnitCost = 0 } } };
             var mock = AutoMock.GetLoose();
