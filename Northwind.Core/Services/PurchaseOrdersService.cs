@@ -306,5 +306,23 @@ namespace Northwind.Core.Services
 
             await _unitOfWork.Stop();
         }
+
+        public async Task<PurchaseOrderDto?> GetAsync(int id)
+        {
+            PurchaseOrderDto? result = null;
+            await _unitOfWork.Start();
+            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
+            if(purchaseOrder != null)
+            {
+                result = new PurchaseOrderDto
+                {
+                    SupplierId = purchaseOrder.SupplierId,
+                    ShipTo = purchaseOrder.ShipTo
+                };
+            }
+
+            await _unitOfWork.Stop();
+            return result;
+        }
     }
 }
