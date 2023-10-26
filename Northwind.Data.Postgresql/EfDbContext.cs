@@ -143,7 +143,7 @@ namespace Northwind.Data.Postgresql
             modelBuilder.Entity<PurchaseOrder>().Property(x => x.SupplierId).HasColumnType("int").IsRequired(true);
             modelBuilder.Entity<PurchaseOrder>().Property(x => x.Status).HasColumnType("smallint").HasDefaultValue(OrderStatus.New);
             modelBuilder.Entity<PurchaseOrder>().HasMany(x => x.OrderItems).WithOne().HasForeignKey(x => x.PurchaseOrderId).IsRequired();
-            modelBuilder.Entity<PurchaseOrder>().OwnsOne(x => x.Payment);
+            modelBuilder.Entity<PurchaseOrder>().OwnsOne(x => x.Payment).Property(x => x.Method).IsRequired(false);
             modelBuilder.Entity<PurchaseOrder>().Property(x => x.ShipTo).HasColumnType("varchar(256)").IsRequired(true);
         }
 

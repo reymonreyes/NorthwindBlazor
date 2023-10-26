@@ -502,7 +502,7 @@ namespace Northwind.Data.Postgresql.Migrations
                         .WithMany()
                         .HasForeignKey("ShipperId");
 
-                    b.OwnsOne("Northwind.Core.ValueObjects.Payment", "Payment", b1 =>
+                    b.OwnsOne("Northwind.Core.Entities.CustomerOrder.Payment#Northwind.Core.ValueObjects.Payment", "Payment", b1 =>
                         {
                             b1.Property<int>("CustomerOrderId")
                                 .HasColumnType("serial");
@@ -518,13 +518,13 @@ namespace Northwind.Data.Postgresql.Migrations
 
                             b1.HasKey("CustomerOrderId");
 
-                            b1.ToTable("customerorders");
+                            b1.ToTable("customerorders", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CustomerOrderId");
                         });
 
-                    b.OwnsOne("Northwind.Core.ValueObjects.ShippingInformation", "ShipTo", b1 =>
+                    b.OwnsOne("Northwind.Core.Entities.CustomerOrder.ShipTo#Northwind.Core.ValueObjects.ShippingInformation", "ShipTo", b1 =>
                         {
                             b1.Property<int>("CustomerOrderId")
                                 .HasColumnType("serial");
@@ -539,7 +539,7 @@ namespace Northwind.Data.Postgresql.Migrations
 
                             b1.HasKey("CustomerOrderId");
 
-                            b1.ToTable("customerorders");
+                            b1.ToTable("customerorders", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CustomerOrderId");
@@ -604,7 +604,7 @@ namespace Northwind.Data.Postgresql.Migrations
 
             modelBuilder.Entity("Northwind.Core.Entities.PurchaseOrder", b =>
                 {
-                    b.OwnsOne("Northwind.Core.ValueObjects.Payment", "Payment", b1 =>
+                    b.OwnsOne("Northwind.Core.Entities.PurchaseOrder.Payment#Northwind.Core.ValueObjects.Payment", "Payment", b1 =>
                         {
                             b1.Property<int>("PurchaseOrderId")
                                 .HasColumnType("serial");
@@ -620,7 +620,7 @@ namespace Northwind.Data.Postgresql.Migrations
 
                             b1.HasKey("PurchaseOrderId");
 
-                            b1.ToTable("purchaseorders");
+                            b1.ToTable("purchaseorders", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("PurchaseOrderId");
