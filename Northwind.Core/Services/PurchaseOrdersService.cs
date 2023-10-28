@@ -55,6 +55,7 @@ namespace Northwind.Core.Services
             newPurchaseOrder.SupplierId = purchaseOrder.SupplierId;
             newPurchaseOrder.ShipTo = purchaseOrder.ShipTo;
             newPurchaseOrder.OrderDate = purchaseOrder.OrderDate;
+            newPurchaseOrder.Notes = purchaseOrder.Notes;
 
             await _unitOfWork.Start();
             await _unitOfWork.PurchaseOrdersRepository.CreateAsync(newPurchaseOrder);
