@@ -145,6 +145,7 @@ namespace Northwind.Data.Postgresql
             modelBuilder.Entity<PurchaseOrder>().HasMany(x => x.OrderItems).WithOne().HasForeignKey(x => x.PurchaseOrderId).IsRequired();
             modelBuilder.Entity<PurchaseOrder>().OwnsOne(x => x.Payment).Property(x => x.Method).IsRequired(false);
             modelBuilder.Entity<PurchaseOrder>().Property(x => x.ShipTo).HasColumnType("varchar(256)").IsRequired(true);
+            modelBuilder.Entity<PurchaseOrder>().Property(x => x.OrderDate).HasColumnType("timestamp").IsRequired(false);
         }
 
         private void ConfigureOrderItemEntity(ModelBuilder modelBuilder)
