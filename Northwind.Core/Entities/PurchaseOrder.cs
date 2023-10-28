@@ -17,6 +17,7 @@ namespace Northwind.Core.Entities
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
         public string ShipTo { get; set; }
         public DateTime? OrderDate { get; set; }
+        public string Notes { get; set; }
     }
     
     public class OrderItem
