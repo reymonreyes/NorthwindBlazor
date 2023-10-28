@@ -14,7 +14,7 @@ namespace Northwind.Data.Postgresql.Migrations
             migrationBuilder.AddColumn<DateTime>(
                 name: "OrderDate",
                 table: "purchaseorders",
-                type: "timestamp",
+                type: "timestamp with time zone",
                 nullable: true);
         }
 
