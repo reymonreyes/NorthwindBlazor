@@ -54,6 +54,7 @@ namespace Northwind.Core.Services
             newPurchaseOrder.Status = Enums.OrderStatus.New;
             newPurchaseOrder.SupplierId = purchaseOrder.SupplierId;
             newPurchaseOrder.ShipTo = purchaseOrder.ShipTo;
+            newPurchaseOrder.OrderDate = purchaseOrder.OrderDate;
 
             await _unitOfWork.Start();
             await _unitOfWork.PurchaseOrdersRepository.CreateAsync(newPurchaseOrder);
@@ -89,6 +90,8 @@ namespace Northwind.Core.Services
             
             var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             purchaseOrder.SupplierId = purchaseOrderDto.SupplierId;
+            purchaseOrder.OrderDate = purchaseOrderDto.OrderDate;
+            purchaseOrder.ShipTo = purchaseOrderDto.ShipTo;
             _unitOfWork.PurchaseOrdersRepository.Update(purchaseOrder);
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
@@ -317,7 +320,8 @@ namespace Northwind.Core.Services
                 result = new PurchaseOrderDto
                 {
                     SupplierId = purchaseOrder.SupplierId,
-                    ShipTo = purchaseOrder.ShipTo
+                    ShipTo = purchaseOrder.ShipTo,
+                    OrderDate = purchaseOrder.OrderDate.Value
                 };
             }
 
