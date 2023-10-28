@@ -16,6 +16,7 @@ namespace Northwind.Core.Entities
         public Payment? Payment { get; set; }
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
         public string ShipTo { get; set; }
+        public DateTime? OrderDate { get; set; }
     }
     
     public class OrderItem
