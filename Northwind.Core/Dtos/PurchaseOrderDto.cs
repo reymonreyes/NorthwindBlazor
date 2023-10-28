@@ -13,6 +13,7 @@ namespace Northwind.Core.Dtos
         public string Notes { get; set; }
         public string ShipTo { get; set; }
         public List<OrderItemDto> OrderItems { get; set; }
+        public DateTime OrderDate { get; set; }
     }
 
     public class OrderItemDto
