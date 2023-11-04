@@ -9,6 +9,7 @@
 @inject NavigationManager NavigationManager
 @inject ISuppliersService SuppliersService
 @inject IPurchaseOrdersService PurchaseOrdersService
+@inherits PageBase
 
 <MudToolBar WrapContent="true">
     <MudText><b>Purchase Order</b></MudText>
@@ -40,7 +41,18 @@
                             <MudButton Color="Color.Secondary" Variant="Variant.Filled" Size="Size.Small" Class="mf-1">Print PO</MudButton>
                         </MudToolBar>
                     </MudPaper>
-                </MudItem>                
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12" lg="12">
+                    @if (_errors.Count > 0)
+                    {
+                        <MudAlert Severity="MudBlazor.Severity.Error">
+                            @foreach (var error in _errors)
+                            {
+                                <MudText>@error</MudText>
+                            }
+                        </MudAlert>
+                    }
+                </MudItem>
                 <MudItem xs="12" sm="8" md="8" lg="8">
                     <MudAutocomplete Label="Supplier" @bind-Value="_purchaseOrder.Supplier" SearchFunc="@FindSupplier" ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
                         For="@(() => _purchaseOrder.Supplier)" ResetValueOnEmptyText="true" Immediate="true" ProgressIndicatorColor="Color.Info" />
@@ -59,17 +71,14 @@
     </MudItem>    
 </MudGrid>
 
-
-
-
-
 @code {
+    private EntryMode _entryMode = EntryMode.Create;
     public bool _isPODetailsValid = false;
     private MudForm _poForm;
     private PurchaseOrder _purchaseOrder = new PurchaseOrder();
-    private EntryMode _entryMode = EntryMode.Create;
     private string _supplierSearch;
     private PurchaseOrderFluentValidator _purchaseOrderValidator = new PurchaseOrderFluentValidator();
+    private List<string> _errors = new List<string>();
 
     [Parameter]
     public int? Id { get; set; }
@@ -106,10 +115,9 @@
         {
             _purchaseOrder = new PurchaseOrder
             {
-                //Supplier = new SupplierDto { Id = purchaseOrder.SupplierId },
-                ShipTo = purchaseOrder.ShipTo
-                //TODO OrderDate
-                //TODO Notes
+                ShipTo = purchaseOrder.ShipTo,
+                OrderDate = purchaseOrder.OrderDate,
+                Notes = purchaseOrder.Notes
             };
 
             var supplier = await SuppliersService.Get(purchaseOrder.SupplierId);
@@ -135,7 +143,6 @@
     private async Task Save()
     {
         Console.WriteLine("Save()");
-        //Console.WriteLine(_purchaseOrder.SupplierObj.Name);
         await _poForm.Validate();
 
         if (!_isPODetailsValid)
@@ -158,8 +165,8 @@
             var purchaseOrder = new PurchaseOrderDto();
             purchaseOrder.SupplierId = _purchaseOrder!.Supplier!.Id;
             purchaseOrder.ShipTo = _purchaseOrder.ShipTo;
-            //TODO: OrderDate field
-            //TODO: Notes field            
+            purchaseOrder.OrderDate = _purchaseOrder.OrderDate!.Value;
+            purchaseOrder.Notes = _purchaseOrder.Notes;
 
             var result = await PurchaseOrdersService.Create(purchaseOrder);
             if (result.IsSuccessful)
@@ -167,11 +174,13 @@
                 var id = result?.Messages?.FirstOrDefault()?.Message.Value;
                 _entryMode = EntryMode.Edit;
                 NavigationManager.NavigateTo($"purchaseorders/{id}", false, true);
+                Notify($"Purchase Order # {id} {(_entryMode == EntryMode.Create ? "created" : "updated")} successfully.", MudBlazor.Severity.Success);
             }
         }
         catch (ValidationFailedException exc)//server side error
         {
             Console.WriteLine("creation failed");
+            _errors = exc.ValidationErrors.Select(x => x.Message.Value).ToList();
         }
     }
 
