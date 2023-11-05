@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Northwind.Data.Postgresql;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Northwind.Data.Postgresql.Migrations
 {
     [DbContext(typeof(EfDbContext))]
-    partial class EfDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231028095039_PurchaseOrderNotesPropertyMigration")]
+    partial class PurchaseOrderNotesPropertyMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -351,7 +354,7 @@ namespace Northwind.Data.Postgresql.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("OrderDate")
-                        .HasColumnType("timestamp without timezone");
+                        .HasColumnType("timestamp");
 
                     b.Property<string>("ShipTo")
                         .IsRequired()

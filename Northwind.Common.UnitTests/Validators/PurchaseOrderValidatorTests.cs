@@ -15,9 +15,13 @@ namespace Northwind.Common.UnitTests.Validators
         public void ShouldReturnErrors()
         {
             IPurchaseOrderValidator validator = new PurchaseOrderValidator();
-            var result = validator.Validate(new Core.Dtos.PurchaseOrderDto());
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
+            var purchaseOrder = new Core.Dtos.PurchaseOrderDto();
+            var result = validator.Validate(purchaseOrder);
+            var errorMessages = result!.Select(x => x.Message.Value).ToList();
+            Assert.Contains(errorMessages, x => x == "SupplierId is required");
+            Assert.Contains(errorMessages, x => x == "ShipTo is required");
+            Assert.Contains(errorMessages, x => x == "OrderDate is required");
+            Assert.Contains(errorMessages, x => x == "OrderDate is invalid");
         }
 
         [Fact]

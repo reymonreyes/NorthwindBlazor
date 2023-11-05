@@ -37,9 +37,7 @@ namespace Northwind.Core.Services
             
             validationExceptions.AddRange(_poValidator.Validate(purchaseOrder)!);
 
-            if (purchaseOrder.OrderItems is null || purchaseOrder.OrderItems.Count == 0)
-                validationExceptions.Add(new ServiceMessageResult { Message = new KeyValuePair<string, string>("OrderItems", "Order Items are required"), MessageType = Enums.ServiceMessageType.Error });
-            else
+            if (purchaseOrder.OrderItems != null && purchaseOrder.OrderItems.Count > 0)           
             {
                 if (purchaseOrder.OrderItems!.Any(x => x.Quantity <= 0)) 
                     validationExceptions.Add(new ServiceMessageResult { Message = new KeyValuePair<string, string>("OrderItems", "Order Item quantity must be greater than 0"), MessageType = Enums.ServiceMessageType.Error });
@@ -49,13 +47,15 @@ namespace Northwind.Core.Services
 
             if (validationExceptions.Any())
             {
-                await _unitOfWork.Stop();
                 throw new ValidationFailedException(validationExceptions);
             }
 
             var newPurchaseOrder = new PurchaseOrder();
             newPurchaseOrder.Status = Enums.OrderStatus.New;
             newPurchaseOrder.SupplierId = purchaseOrder.SupplierId;
+            newPurchaseOrder.ShipTo = purchaseOrder.ShipTo;
+            newPurchaseOrder.OrderDate = purchaseOrder.OrderDate;
+            newPurchaseOrder.Notes = purchaseOrder.Notes;
 
             await _unitOfWork.Start();
             await _unitOfWork.PurchaseOrdersRepository.CreateAsync(newPurchaseOrder);
@@ -91,6 +91,8 @@ namespace Northwind.Core.Services
             
             var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             purchaseOrder.SupplierId = purchaseOrderDto.SupplierId;
+            purchaseOrder.OrderDate = purchaseOrderDto.OrderDate;
+            purchaseOrder.ShipTo = purchaseOrderDto.ShipTo;
             _unitOfWork.PurchaseOrdersRepository.Update(purchaseOrder);
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
@@ -307,6 +309,25 @@ namespace Northwind.Core.Services
             }
 
             await _unitOfWork.Stop();
+        }
+
+        public async Task<PurchaseOrderDto?> GetAsync(int id)
+        {
+            PurchaseOrderDto? result = null;
+            await _unitOfWork.Start();
+            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
+            if(purchaseOrder != null)
+            {
+                result = new PurchaseOrderDto
+                {
+                    SupplierId = purchaseOrder.SupplierId,
+                    ShipTo = purchaseOrder.ShipTo,
+                    OrderDate = purchaseOrder.OrderDate.Value.ToUniversalTime()
+                };
+            }
+
+            await _unitOfWork.Stop();
+            return result;
         }
     }
 }

@@ -14,5 +14,6 @@ namespace Northwind.Core.Interfaces.Services
         Task<ServiceResult> Create(SupplierDto supplierDto);
         Task<ServiceResult> Update(int supplierId, SupplierDto supplier);
         Task Delete(int supplierId);
+        Task<ICollection<SupplierDto>> Find(string name);
     }
 }

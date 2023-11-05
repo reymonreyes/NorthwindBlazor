@@ -29,6 +29,16 @@ namespace Northwind.Data.Postgresql.Repositories
                 _dbContext.Suppliers.Remove(supplier);
         }
 
+        public async Task<ICollection<Supplier>> Find(string name)
+        {
+            if(string.IsNullOrWhiteSpace(name))
+                return new List<Supplier>();
+
+            var result = await _dbContext.Suppliers.Where(x => x.Name.ToLower().Contains(name.ToLower())).ToListAsync();
+
+            return result;
+        }
+
         public async Task<Supplier?> Get(int supplierId)
         {
             return await _dbContext.Suppliers.FirstOrDefaultAsync(x => x.Id == supplierId);   

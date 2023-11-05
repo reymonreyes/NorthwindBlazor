@@ -158,5 +158,19 @@ namespace Northwind.Core.Services
             if (validationResult?.Count > 0)
                 throw new ValidationFailedException(validationResult);            
         }
+
+        public async Task<ICollection<SupplierDto>> Find(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return new List<SupplierDto>();
+
+            await _unitOfWork.Start();
+            ICollection<Supplier> matchedSuppliers = await _unitOfWork.SuppliersRepository.Find(name);
+            await _unitOfWork.Stop();
+
+            ICollection<SupplierDto> result = matchedSuppliers.Select(x => new SupplierDto { Id = x.Id, Name = x.Name }).ToList();
+
+            return result;
+        }
     }
 }

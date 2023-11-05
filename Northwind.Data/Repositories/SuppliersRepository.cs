@@ -29,6 +29,11 @@ namespace Northwind.Data.Repositories
                 _dbContext.Suppliers.Remove(supplier);
         }
 
+        public async Task<ICollection<Supplier>> Find(string name)
+        {
+            return await _dbContext.Suppliers.Where(x => x.Name.ToLower().Contains(name.ToLower())).ToListAsync();
+        }
+
         public async Task<Supplier?> Get(int supplierId)
         {
             return await _dbContext.Suppliers.FirstOrDefaultAsync(x => x.Id == supplierId);   

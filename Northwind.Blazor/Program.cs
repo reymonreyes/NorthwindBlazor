@@ -1,11 +1,13 @@
 using MudBlazor.Services;
 using Northwind.Blazor.Data;
 using Northwind.Common.Validators;
+using Northwind.Core.Interfaces.Infrastructure;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Interfaces.Validators;
 using Northwind.Core.Services;
 using Northwind.Data.Postgresql;
+using Northwind.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,12 +21,16 @@ builder.Services.AddTransient<ICategoriesService, CategoriesService>();
 builder.Services.AddTransient<ISuppliersService, SuppliersService>();
 builder.Services.AddTransient<IShippersService, ShippersService>();
 builder.Services.AddTransient<ICustomersService, CustomersService>();
+builder.Services.AddTransient<IPurchaseOrdersService, PurchaseOrdersService>();
+builder.Services.AddTransient<IDocumentGeneratorService, DocumentGeneratorService>();
+builder.Services.AddTransient<IEmailService, SmtpEmailService>();
 builder.Services.AddTransient<IUnitOfWork, EfUnitOfWork>();
 builder.Services.AddSingleton<IProductValidator, ProductValidator>();
 builder.Services.AddSingleton<ICategoryValidator, CategoryValidator>();
 builder.Services.AddSingleton<ISupplierValidator, SupplierValidator>();
 builder.Services.AddSingleton<IShipperValidator, ShipperValidator>();
 builder.Services.AddSingleton<ICustomerValidator, CustomerValidator>();
+builder.Services.AddSingleton<IPurchaseOrderValidator, PurchaseOrderValidator>();
 
 var app = builder.Build();
 
