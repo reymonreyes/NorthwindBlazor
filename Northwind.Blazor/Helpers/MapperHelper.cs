@@ -103,5 +103,19 @@ namespace Northwind.Blazor.Helpers
             TinyMapper.Bind<Customer, CustomerDto>();
             return TinyMapper.Map<CustomerDto>(customer);
         }
+
+        public static PurchaseOrderDto ToPurchaseOrderDto(this PurchaseOrder purchaseOrder)
+        {
+            if (purchaseOrder is null)
+                throw new ArgumentNullException("purchaseOrder");
+            
+            TinyMapper.Bind<PurchaseOrder, PurchaseOrderDto>(config =>
+            {
+                config.Bind(source => source.Supplier!.Id, target => target.SupplierId);
+            });
+            var result = TinyMapper.Map<PurchaseOrderDto>(purchaseOrder);
+            result.OrderDate = result.OrderDate.ToUniversalTime();
+            return result;
+        }
     }
 }
