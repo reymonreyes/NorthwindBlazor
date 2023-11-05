@@ -322,7 +322,7 @@ namespace Northwind.Core.Services
                 {
                     SupplierId = purchaseOrder.SupplierId,
                     ShipTo = purchaseOrder.ShipTo,
-                    OrderDate = purchaseOrder.OrderDate.Value
+                    OrderDate = purchaseOrder.OrderDate.Value.ToUniversalTime()
                 };
             }
 
