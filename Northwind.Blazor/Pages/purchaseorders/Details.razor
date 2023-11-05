@@ -1,6 +1,7 @@
 ﻿@page "/purchaseorders/create"
 @page "/purchaseorders/{id:int}"
 @using FluentValidation;
+@using Northwind.Blazor.Helpers;
 @using Northwind.Blazor.Models;
 @using Northwind.Common.Enums;
 @using Northwind.Core.Dtos;
@@ -116,7 +117,7 @@
             _purchaseOrder = new PurchaseOrder
             {
                 ShipTo = purchaseOrder.ShipTo,
-                OrderDate = purchaseOrder.OrderDate,
+                OrderDate = purchaseOrder.OrderDate.ToLocalTime(),
                 Notes = purchaseOrder.Notes
             };
 
@@ -154,6 +155,7 @@
                 await Create();
                 break;
             case EntryMode.Edit:
+                Update();
                 break;
         }
     }
@@ -161,13 +163,8 @@
     private async Task Create()
     {
         try
-        {            
-            var purchaseOrder = new PurchaseOrderDto();
-            purchaseOrder.SupplierId = _purchaseOrder!.Supplier!.Id;
-            purchaseOrder.ShipTo = _purchaseOrder.ShipTo;
-            purchaseOrder.OrderDate = _purchaseOrder.OrderDate!.Value;
-            purchaseOrder.Notes = _purchaseOrder.Notes;
-
+        {
+            var purchaseOrder = _purchaseOrder.ToPurchaseOrderDto();
             var result = await PurchaseOrdersService.Create(purchaseOrder);
             if (result.IsSuccessful)
             {
@@ -184,6 +181,26 @@
         }
     }
 
+    private async void Update()
+    {
+        try
+        {
+            if (Id.HasValue)
+            {
+                var purchaseOrder = _purchaseOrder.ToPurchaseOrderDto();
+                var result = await PurchaseOrdersService.UpdateAsync(Id.Value, purchaseOrder);
+                if (result.IsSuccessful)
+                {
+                    Notify($"Purchase Order # {Id} {(_entryMode == EntryMode.Create ? "created" : "updated")} successfully.", MudBlazor.Severity.Success);
+                }
+            }
+        }
+        catch (ValidationFailedException exc)//server side error
+        {
+            //TODO: logging
+            _errors = exc.ValidationErrors.Select(x => x.Message.Value).ToList();
+        }
+    }
 
     public class PurchaseOrderFluentValidator : AbstractValidator<PurchaseOrder>
     {
