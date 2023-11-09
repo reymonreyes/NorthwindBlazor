@@ -202,7 +202,7 @@ namespace Northwind.Core.UnitTests.Services
             var mock = AutoMock.GetLoose();
             var uow = mock.Mock<IUnitOfWork>();
             var poRepo = mock.Mock<IPurchaseOrdersRepository>();
-            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, Status = OrderStatus.New, SupplierId = 1, OrderItems = new List<OrderItem> { new OrderItem { ProductId = 1, Quantity = 1, UnitCost = 1 } } });
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, Status = OrderStatus.New, SupplierId = 1, OrderItems = new List<PurchaseOrderItem> { new PurchaseOrderItem { ProductId = 1, Quantity = 1, UnitCost = 1 } } });
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
             IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
@@ -264,7 +264,7 @@ namespace Northwind.Core.UnitTests.Services
             var mock = AutoMock.GetLoose();
             var uow = mock.Mock<IUnitOfWork>();
             var poRepo = mock.Mock<IPurchaseOrdersRepository>();
-            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, Status = OrderStatus.New, SupplierId = 1, OrderItems = new List<OrderItem> { new OrderItem { ProductId = 1, Quantity = 1, UnitCost = 1 } } });
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, Status = OrderStatus.New, SupplierId = 1, OrderItems = new List<PurchaseOrderItem> { new PurchaseOrderItem { ProductId = 1, Quantity = 1, UnitCost = 1 } } });
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
             IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
@@ -361,9 +361,9 @@ namespace Northwind.Core.UnitTests.Services
                 Id = 1,
                 SupplierId = 1,
                 Status = OrderStatus.New,
-                OrderItems = new List<OrderItem> {
-                    new OrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1 },
-                    new OrderItem { Id = 2, ProductId = 2 , UnitCost = 2, Quantity = 1 }
+                OrderItems = new List<PurchaseOrderItem> {
+                    new PurchaseOrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1 },
+                    new PurchaseOrderItem { Id = 2, ProductId = 2 , UnitCost = 2, Quantity = 1 }
                 }
             });
             
@@ -486,9 +486,9 @@ namespace Northwind.Core.UnitTests.Services
                 Id = 1,
                 SupplierId = 1,
                 Status = OrderStatus.New,
-                OrderItems = new List<OrderItem> {
-                    new OrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1 },
-                    new OrderItem { Id = 2, ProductId = 2 , UnitCost = 2, Quantity = 1 }
+                OrderItems = new List<PurchaseOrderItem> {
+                    new PurchaseOrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1 },
+                    new PurchaseOrderItem { Id = 2, ProductId = 2 , UnitCost = 2, Quantity = 1 }
                 }
             });
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
@@ -538,7 +538,7 @@ namespace Northwind.Core.UnitTests.Services
                 Id = 1,
                 SupplierId = 1,
                 Status = OrderStatus.New,
-                OrderItems = new List<OrderItem>()
+                OrderItems = new List<PurchaseOrderItem>()
             });
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
             IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
@@ -563,9 +563,9 @@ namespace Northwind.Core.UnitTests.Services
                 Id = 1,
                 SupplierId = 1,
                 Status = OrderStatus.New,
-                OrderItems = new List<OrderItem>()
+                OrderItems = new List<PurchaseOrderItem>()
                 {
-                    new OrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1, PostedToInventory = false }
+                    new PurchaseOrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1, PostedToInventory = false }
                 }
             };
 
@@ -598,9 +598,9 @@ namespace Northwind.Core.UnitTests.Services
                 Id = 1,
                 SupplierId = 1,
                 Status = OrderStatus.New,
-                OrderItems = new List<OrderItem>()
+                OrderItems = new List<PurchaseOrderItem>()
                 {
-                    new OrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1, PostedToInventory = false }
+                    new PurchaseOrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1, PostedToInventory = false }
                 }
             };
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
@@ -629,9 +629,9 @@ namespace Northwind.Core.UnitTests.Services
                 Id = 1,
                 SupplierId = 1,
                 Status = OrderStatus.New,
-                OrderItems = new List<OrderItem>()
+                OrderItems = new List<PurchaseOrderItem>()
                 {
-                    new OrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1, PostedToInventory = false }
+                    new PurchaseOrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1, PostedToInventory = false }
                 }
             };
             var poRepo = mock.Mock<IPurchaseOrdersRepository>();
@@ -652,9 +652,9 @@ namespace Northwind.Core.UnitTests.Services
                 Id = 1,
                 SupplierId = 1,
                 Status = OrderStatus.New,
-                OrderItems = new List<OrderItem>()
+                OrderItems = new List<PurchaseOrderItem>()
                 {
-                    new OrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1, PostedToInventory = false }
+                    new PurchaseOrderItem { Id = 1, ProductId = 1 , UnitCost = 1, Quantity = 1, PostedToInventory = false }
                 }
             };
             var poRepo = mock.Mock<IPurchaseOrdersRepository>();
