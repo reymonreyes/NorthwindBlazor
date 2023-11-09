@@ -14,13 +14,13 @@ namespace Northwind.Core.Entities
         public int SupplierId { get; set; }
         public OrderStatus Status { get; set; }
         public Payment? Payment { get; set; }
-        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+        public List<PurchaseOrderItem> OrderItems { get; set; } = new List<PurchaseOrderItem>();
         public string ShipTo { get; set; }
         public DateTime? OrderDate { get; set; }
         public string Notes { get; set; }
     }
     
-    public class OrderItem
+    public class PurchaseOrderItem
     {
         public int Id { get; set; }
         public int PurchaseOrderId { get; set; }
