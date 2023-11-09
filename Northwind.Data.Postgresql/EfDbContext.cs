@@ -145,18 +145,18 @@ namespace Northwind.Data.Postgresql
             modelBuilder.Entity<PurchaseOrder>().HasMany(x => x.OrderItems).WithOne().HasForeignKey(x => x.PurchaseOrderId).IsRequired();
             modelBuilder.Entity<PurchaseOrder>().OwnsOne(x => x.Payment).Property(x => x.Method).IsRequired(false);
             modelBuilder.Entity<PurchaseOrder>().Property(x => x.ShipTo).HasColumnType("varchar(256)").IsRequired(true);
-            modelBuilder.Entity<PurchaseOrder>().Property(x => x.OrderDate).HasColumnType("timestamp without timezone").IsRequired(false);
+            modelBuilder.Entity<PurchaseOrder>().Property(x => x.OrderDate).HasColumnType("timestamp with time zone").IsRequired(false);
             modelBuilder.Entity<PurchaseOrder>().Property(x => x.Notes).HasColumnType("text").IsRequired(false);
         }
 
         private void ConfigureOrderItemEntity(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OrderItem>().ToTable("orderitems").HasKey(x => x.Id);
-            modelBuilder.Entity<OrderItem>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
-            modelBuilder.Entity<OrderItem>().Property(x => x.ProductId).HasColumnType("int").IsRequired(true);
-            modelBuilder.Entity<OrderItem>().Property(x => x.Quantity).HasColumnType("int").IsRequired(true);
-            modelBuilder.Entity<OrderItem>().Property(x => x.UnitCost).HasColumnType("decimal").IsRequired(true);
-            modelBuilder.Entity<OrderItem>().Property(x => x.PostedToInventory).HasColumnType("boolean").HasDefaultValue(false);
+            modelBuilder.Entity<PurchaseOrderItem>().ToTable("purchaseorderitems").HasKey(x => x.Id);
+            modelBuilder.Entity<PurchaseOrderItem>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
+            modelBuilder.Entity<PurchaseOrderItem>().Property(x => x.ProductId).HasColumnType("int").IsRequired(true);
+            modelBuilder.Entity<PurchaseOrderItem>().Property(x => x.Quantity).HasColumnType("int").IsRequired(true);
+            modelBuilder.Entity<PurchaseOrderItem>().Property(x => x.UnitCost).HasColumnType("decimal").IsRequired(true);
+            modelBuilder.Entity<PurchaseOrderItem>().Property(x => x.PostedToInventory).HasColumnType("boolean").HasDefaultValue(false);
         }
     
         private void ConfigureInventoryTransactionEntity(ModelBuilder modelBuilder)
