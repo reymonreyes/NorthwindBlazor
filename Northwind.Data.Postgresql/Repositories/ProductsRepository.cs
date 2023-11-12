@@ -31,6 +31,16 @@ namespace Northwind.Data.Postgresql.Repositories
                 _dbContext.Products.Remove(product);
         }
 
+        public async Task<ICollection<Product>> Find(string productName)
+        {
+            if (string.IsNullOrEmpty(productName))
+                return new List<Product>();
+
+            var result = await _dbContext.Products.Where(x => x.Name.ToLower().Contains(productName.ToLower())).ToListAsync();
+
+            return result;
+        }
+
         public async Task<Product?> Get(int productId)
         {
             var result = await _dbContext.Products.FirstOrDefaultAsync(x => x.Id == productId);
