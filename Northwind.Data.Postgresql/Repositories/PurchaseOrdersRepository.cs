@@ -24,7 +24,7 @@ namespace Northwind.Data.Postgresql.Repositories
 
         public async Task<PurchaseOrder?> GetAsync(int id)
         {
-            return await _efDbContext.PurchaseOrders.FirstOrDefaultAsync(x => x.Id == id);
+            return await _efDbContext.PurchaseOrders.Include("OrderItems").FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public void Update(PurchaseOrder purchaseOrder)
