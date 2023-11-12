@@ -152,5 +152,19 @@ namespace Northwind.Core.Services
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
         }
+
+        public async Task<ICollection<ProductDto>> Find(string productName)
+        {
+            if(string.IsNullOrWhiteSpace(productName))
+                return new List<ProductDto>();
+
+            await _unitOfWork.Start();
+            ICollection<Product> matchedProducts = await _unitOfWork.ProductsRepository.Find(productName);
+            await _unitOfWork.Stop();
+
+            ICollection<ProductDto> result = matchedProducts.Select(x => new ProductDto { Id = x.Id, Name = x.Name, ListPrice = x.ListPrice }).ToList();
+
+            return result;
+        }
     }
 }
