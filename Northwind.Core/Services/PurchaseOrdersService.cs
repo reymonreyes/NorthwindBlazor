@@ -289,26 +289,27 @@ namespace Northwind.Core.Services
         {
             await _unitOfWork.Start();
             var order = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
+            await _unitOfWork.Stop();
             if (order == null) throw new DataNotFoundException("Purchase Order not found.");
             
             if (purchaseOrderItemDto != null)
             {
+                await _unitOfWork.Start();
                 var product = await _unitOfWork.ProductsRepository.Get(purchaseOrderItemDto.ProductId);
                 if (product == null) throw new DataNotFoundException("Product not found.");
                 if (purchaseOrderItemDto.Quantity <= 0) throw new ValidationFailedException("Quantity must be greater than 0.");
 
-                order.OrderItems.Add(new OrderItem
+                var orderItem = new PurchaseOrderItem
                 {
+                    PurchaseOrderId = order.Id,
                     ProductId = purchaseOrderItemDto.ProductId,
-                    Quantity = purchaseOrderItemDto.Quantity,                   
+                    Quantity = purchaseOrderItemDto.Quantity,
                     UnitCost = purchaseOrderItemDto.UnitPrice ?? product.ListPrice,
-                });
-                _unitOfWork.PurchaseOrdersRepository.Update(order);
-
+                };
+                await _unitOfWork.PurchaseOrderItemsRepository.Create(orderItem);                
                 await _unitOfWork.Commit();
+                await _unitOfWork.Stop();
             }
-
-            await _unitOfWork.Stop();
         }
 
         public async Task<PurchaseOrderDto?> GetAsync(int id)
@@ -322,7 +323,8 @@ namespace Northwind.Core.Services
                 {
                     SupplierId = purchaseOrder.SupplierId,
                     ShipTo = purchaseOrder.ShipTo,
-                    OrderDate = purchaseOrder.OrderDate.Value.ToUniversalTime()
+                    OrderDate = purchaseOrder.OrderDate.Value.ToUniversalTime(),
+                    OrderItems = purchaseOrder.OrderItems.Select(x => new OrderItemDto { Id = x.Id, ProductId = x.ProductId, Quantity = x.Quantity, UnitCost = x.UnitCost }).ToList()
                 };
             }
 
