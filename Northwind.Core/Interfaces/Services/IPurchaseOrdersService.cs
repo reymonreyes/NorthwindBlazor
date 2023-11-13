@@ -20,6 +20,7 @@ namespace Northwind.Core.Interfaces.Services
         Task<PurchaseOrderDto?> GetAsync(int id);
         Task PaySupplierAsync(int v, Payment payment);
         Task<List<(int purchaseOrderId, int purchaseOrderItemId, string result)>> ReceiveInventory(List<(int purchaseOrderId, int purchaseOrderItemId)> itemsToReceive);
+        Task RemoveItem(int purchaseOrderItemId);
         Task<ServiceMessageResult> SubmitAsync(int id);
         Task<ServiceResult> UpdateAsync(int id, PurchaseOrderDto purchaseOrderDto);
     }
