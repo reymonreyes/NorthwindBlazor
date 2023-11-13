@@ -97,9 +97,13 @@
             </MudForm>
         </MudPaper>
 
-        <MudSimpleTable Style="overflow-x: auto;" Hover="true" Bordered="true">
-            <thead>
+        <MudSimpleTable Style="overflow-x: auto;" Hover="true" Bordered="true" Dense="true">
+            <colgroup>
+                <col width="5%" />
+            </colgroup>
+            <thead>                
                 <tr>
+                    <th></th>
                     @foreach (var h in headings)
                     {
                         <th style="text-align:center;">@h</th>
@@ -112,6 +116,9 @@
                     @foreach (var item in _purchaseOrder.Items)
                     {
                     <tr>
+                        <td>
+                            <MudIconButton OnClick="() => RemoveItem(item.Id)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>
+                        </td>
                         <td>@item.Product.Id</td>
                         <td>@item.Product.Id</td>
                         <td style="text-align:right;">@item.Quantity</td>
@@ -179,7 +186,7 @@
                 ShipTo = purchaseOrder.ShipTo,
                 OrderDate = purchaseOrder.OrderDate.ToLocalTime(),
                 Notes = purchaseOrder.Notes,
-                Items = purchaseOrder.OrderItems.Select(x => new PurchaseOrderItem { Product = new ProductDto { Id = x.Id }, Quantity = x.Quantity, UnitPrice = x.UnitCost }).ToList()
+                Items = purchaseOrder.OrderItems.Select(x => new PurchaseOrderItem { Id = x.Id, Product = new ProductDto { Id = x.Id }, Quantity = x.Quantity, UnitPrice = x.UnitPrice.Value }).ToList()
             };
 
             var supplier = await SuppliersService.Get(purchaseOrder.SupplierId);
@@ -333,6 +340,12 @@
         }
 
         _isOverlayVisible = false;
+    }
+
+    private void RemoveItem(int purchaseOrderItemId)
+    {
+        Console.WriteLine($"RemoveItem: {purchaseOrderItemId}");
+        
     }
 
     public class PurchaseOrderFluentValidator : AbstractValidator<PurchaseOrder>
