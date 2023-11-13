@@ -152,7 +152,8 @@
         switch (_entryMode)
         {
             case EntryMode.Create:
-                _purchaseOrder = new PurchaseOrder();                
+                _purchaseOrder = new PurchaseOrder();
+                _purchaseOrder.Items = new List<PurchaseOrderItem>();
                 _purchaseOrder.OrderDate = DateTime.Now;
                 break;
             case EntryMode.Edit:
@@ -212,13 +213,13 @@
         return matchedProducts;
     }
 
-    private async Task Save()
+    private async Task<bool> Save()
     {
         Console.WriteLine("Save()");
         await _poForm.Validate();
 
         if (!_isPODetailsValid)
-            return;
+            return false;
 
         switch (_entryMode)
         {
@@ -226,9 +227,11 @@
                 await Create();
                 break;
             case EntryMode.Edit:
-                Update();
+                await Update();
                 break;
         }
+
+        return true;
     }
 
     private async Task Create()
@@ -240,6 +243,7 @@
             if (result.IsSuccessful)
             {
                 var id = result?.Messages?.FirstOrDefault()?.Message.Value;
+                Id = int.Parse(id);
                 _entryMode = EntryMode.Edit;
                 NavigationManager.NavigateTo($"purchaseorders/{id}", false, true);
                 Notify($"Purchase Order # {id} {(_entryMode == EntryMode.Create ? "created" : "updated")} successfully.", MudBlazor.Severity.Success);
@@ -252,7 +256,7 @@
         }
     }
 
-    private async void Update()
+    private async Task Update()
     {
         try
         {
@@ -291,7 +295,10 @@
         switch (_entryMode)
         {
             case EntryMode.Create:
-
+                //saved PO first before saving the item
+                var success = await Save();
+                if (success)
+                    await AddItemToPurchaseOrder();
                 break;
             case EntryMode.Edit:
                 await AddItemToPurchaseOrder();
