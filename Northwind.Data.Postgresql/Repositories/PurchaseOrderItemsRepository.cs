@@ -1,4 +1,5 @@
-﻿using Northwind.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
