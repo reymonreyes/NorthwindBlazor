@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Northwind.Core.Interfaces.Infrastructure;
 using Northwind.Core.ValueObjects;
+using Microsoft.VisualBasic;
 
 namespace Northwind.Core.Services
 {
@@ -330,6 +331,30 @@ namespace Northwind.Core.Services
 
             await _unitOfWork.Stop();
             return result;
+        }
+
+        public async Task RemoveItem(int purchaseOrderItemId)
+        {
+            if(purchaseOrderItemId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(purchaseOrderItemId));
+
+            await _unitOfWork.Start();
+            var purchaseOrderItem = await _unitOfWork.PurchaseOrderItemsRepository.GetAsync(purchaseOrderItemId);
+            if (purchaseOrderItem is null)
+            {
+                await _unitOfWork.Stop();
+                throw new DataNotFoundException("PurchaseOrderItem not found");
+            }
+            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(purchaseOrderItem.Id);
+            if (purchaseOrder is null)
+            {
+                await _unitOfWork.Stop();
+                throw new DataNotFoundException("PurchaseOrder not found");
+            }
+
+            await _unitOfWork.PurchaseOrderItemsRepository.DeleteAsync(purchaseOrderItemId);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
         }
     }
 }

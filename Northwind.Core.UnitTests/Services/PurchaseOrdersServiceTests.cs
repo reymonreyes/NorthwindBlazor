@@ -754,5 +754,44 @@ namespace Northwind.Core.UnitTests.Services
 
             await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.AddItem(1, new PurchaseOrderItemDto { ProductId = 1, Quantity = 0, CustomerOrderid = 1 }));
         }
+
+        [Fact]
+        public async Task RemoveItem_ShouldThrowExceptionIfIdIsInvalid()
+        {
+            var mock = AutoMock.GetLoose();
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => service.RemoveItem(0));
+        }
+
+        [Fact]
+        public async Task RemoveItem_ShouldThrowExceptionIfItemDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var poItemsRepo = mock.Mock<IPurchaseOrderItemsRepository>();
+            poItemsRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((PurchaseOrderItem?)null);
+            var uow = mock.Mock<IUnitOfWork>();
+            uow.Setup(x => x.PurchaseOrderItemsRepository).Returns(poItemsRepo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(() => service.RemoveItem(1));
+        }
+
+        [Fact]
+        public async Task RemoveItem_ShouldThrowExceptionIfPurchaseOrerDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var poItemsRepo = mock.Mock<IPurchaseOrderItemsRepository>();
+            poItemsRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrderItem { Id = 1});
+            uow.Setup(x => x.PurchaseOrderItemsRepository).Returns(poItemsRepo.Object);
+            var poRepo = mock.Mock<IPurchaseOrdersRepository>();
+            poRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((PurchaseOrder?)null);
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(poRepo.Object);
+
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(() => service.RemoveItem(1));
+        }
     }
 }
