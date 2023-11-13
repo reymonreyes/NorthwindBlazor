@@ -41,7 +41,7 @@ namespace Northwind.Core.Services
             {
                 if (purchaseOrder.OrderItems!.Any(x => x.Quantity <= 0)) 
                     validationExceptions.Add(new ServiceMessageResult { Message = new KeyValuePair<string, string>("OrderItems", "Order Item quantity must be greater than 0"), MessageType = Enums.ServiceMessageType.Error });
-                if (purchaseOrder.OrderItems!.Any(x => x.UnitCost <= 0))
+                if (purchaseOrder.OrderItems!.Any(x => x.UnitPrice <= 0))
                     validationExceptions.Add(new ServiceMessageResult { Message = new KeyValuePair<string, string>("OrderItems", "Order Item unit cost must be greater than 0"), MessageType = Enums.ServiceMessageType.Error });
             }
 
@@ -324,7 +324,7 @@ namespace Northwind.Core.Services
                     SupplierId = purchaseOrder.SupplierId,
                     ShipTo = purchaseOrder.ShipTo,
                     OrderDate = purchaseOrder.OrderDate.Value.ToUniversalTime(),
-                    OrderItems = purchaseOrder.OrderItems.Select(x => new OrderItemDto { Id = x.Id, ProductId = x.ProductId, Quantity = x.Quantity, UnitCost = x.UnitCost }).ToList()
+                    OrderItems = purchaseOrder.OrderItems.Select(x => new PurchaseOrderItemDto { Id = x.Id, ProductId = x.ProductId, Quantity = x.Quantity, UnitPrice = x.UnitCost }).ToList()
                 };
             }
 
