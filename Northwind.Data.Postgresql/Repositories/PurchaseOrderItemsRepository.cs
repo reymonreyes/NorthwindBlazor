@@ -20,6 +20,14 @@ namespace Northwind.Data.Postgresql.Repositories
         {
             await _efDbContext.PurchaseOrderItems.AddAsync(purchaseOrderItem);
         }
+
+        public async Task DeleteAsync(int purchaseOrderItemId)
+        {
+            var purchaseOrderItem = await GetAsync(purchaseOrderItemId);
+            if (purchaseOrderItem is not null)
+                _efDbContext.PurchaseOrderItems.Remove(purchaseOrderItem);
+        }
+
         public async Task<PurchaseOrderItem?> GetAsync(int purchaseOrderItemId)
         {
             return await _efDbContext.PurchaseOrderItems.FirstOrDefaultAsync(x => x.Id == purchaseOrderItemId);
