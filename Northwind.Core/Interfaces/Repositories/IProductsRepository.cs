@@ -15,5 +15,6 @@ namespace Northwind.Core.Interfaces.Repositories
         Task<Product?> Get(int productId);
         Task Update(Product product);
         Task Delete(int productId);
+        Task<ICollection<Product>> Find(string productName);
     }
 }

@@ -10,6 +10,7 @@
 @inject NavigationManager NavigationManager
 @inject ISuppliersService SuppliersService
 @inject IPurchaseOrdersService PurchaseOrdersService
+@inject IProductsService ProductsService
 @inherits PageBase
 
 <MudToolBar WrapContent="true">
@@ -28,7 +29,6 @@
     @* <MudButton>Complete</MudButton> *@
 </MudToolBar>
 <MudDivider DividerType="DividerType.FullWidth" Light="true"/>
-
 <MudGrid Class="pt-3" Spacing="3">
     <MudItem sm="12" md="6" lg="6">
        <MudForm @ref="_poForm" Model="_purchaseOrder" @bind-IsValid="@_isPODetailsValid" Validation="(_purchaseOrderValidator.ValidateValue)">
@@ -56,7 +56,7 @@
                 </MudItem>
                 <MudItem xs="12" sm="8" md="8" lg="8">
                     <MudAutocomplete Label="Supplier" @bind-Value="_purchaseOrder.Supplier" SearchFunc="@FindSupplier" ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
-                        For="@(() => _purchaseOrder.Supplier)" ResetValueOnEmptyText="true" Immediate="true" ProgressIndicatorColor="Color.Info" />
+                        For="@(() => _purchaseOrder.Supplier)" ResetValueOnEmptyText="true" Immediate="true" ProgressIndicatorColor="Color.Info" Variant="Variant.Outlined" Margin="Margin.Dense" />
                 </MudItem>
                 <MudItem xs="12" sm="4" md="4" lg="4">
                     <MudDatePicker @bind-Date="_purchaseOrder.OrderDate"  For="@(() => _purchaseOrder.OrderDate)" Label="Order Date(YYYY-MM-DD)" Margin="Margin.Dense" Variant="Variant.Outlined" Editable="true" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd"/>
@@ -69,17 +69,76 @@
                 </MudItem>
             </MudGrid>
         </MudForm>
-    </MudItem>    
+    </MudItem>
+    <MudItem sm="12" md="6" lg="6" Style="position: relative;">
+        <MudOverlay Visible="_isOverlayVisible" Absolute="true" DarkBackground="true">
+            <MudStack>
+                <MudText Style="@($"color:{Colors.Shades.White};")">Updating</MudText>
+                <MudProgressCircular Class="align-self-center" Color="Color.Primary" Indeterminate="true"/>
+            </MudStack>
+        </MudOverlay>
+        <MudPaper Elevation="0">
+            <MudForm @ref="_addItemForm" Model="_purchaseOrderItem" @bind-IsValid="_isAddItemFormValid" Validation="(_purchaseOrderItemValidator.ValidateValue)">
+                <MudGrid>
+                    <MudItem md="6">
+                        <MudAutocomplete @ref="_productAutocomplete" Label="Product" Value="_purchaseOrderItem.Product" SearchFunc="@FindProduct" ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
+                                         For="@(() => _purchaseOrderItem.Product)" ValueChanged="OnProductValueChanged" T="ProductDto" ResetValueOnEmptyText="true" Immediate="true" ProgressIndicatorColor="Color.Info" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    </MudItem>
+                    <MudItem md="2">
+                        <MudNumericField @bind-Value="_purchaseOrderItem.Quantity" For="@(() => _purchaseOrderItem.Quantity)" Variant="Variant.Outlined" Margin="Margin.Dense" T="int" Label="Qty" Adornment="Adornment.End"></MudNumericField>
+                    </MudItem>
+                    <MudItem md="2">
+                        <MudNumericField @bind-Value="_purchaseOrderItem.UnitPrice" For="@(() => _purchaseOrderItem.UnitPrice)" Format="N2" Variant="Variant.Outlined" Margin="Margin.Dense" T="decimal" Label="Unit Price" Adornment="Adornment.End"></MudNumericField>
+                    </MudItem>
+                    <MudItem md="2" Class="d-flex px-8 pt-1">                    
+                        <MudButton Class="align-self-center" OnClick="AddItem" Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Add</MudButton>                    
+                    </MudItem>
+                </MudGrid>
+            </MudForm>
+        </MudPaper>
+
+        <MudSimpleTable Style="overflow-x: auto;" Hover="true" Bordered="true">
+            <thead>
+                <tr>
+                    @foreach (var h in headings)
+                    {
+                        <th style="text-align:center;">@h</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if(_purchaseOrder.Items is not null)
+                {
+                    @foreach (var item in _purchaseOrder.Items)
+                    {
+                    <tr>
+                        <td>@item.Product.Id</td>
+                        <td>@item.Product.Id</td>
+                        <td style="text-align:right;">@item.Quantity</td>
+                        <td style="text-align:right;">@item.UnitPrice.ToString("N")</td>
+                        <td style="text-align:right;">@item.Total.ToString("N")</td>
+                    </tr>
+                    }
+                }                
+            </tbody>
+        </MudSimpleTable>
+    </MudItem>
 </MudGrid>
 
 @code {
     private EntryMode _entryMode = EntryMode.Create;
-    public bool _isPODetailsValid = false;
-    private MudForm _poForm;
+    public bool _isPODetailsValid = false, _isAddItemFormValid;
+    private MudForm _poForm, _addItemForm;
     private PurchaseOrder _purchaseOrder = new PurchaseOrder();
+    private PurchaseOrderItem _purchaseOrderItem = new PurchaseOrderItem();
     private string _supplierSearch;
     private PurchaseOrderFluentValidator _purchaseOrderValidator = new PurchaseOrderFluentValidator();
+    private PurchaseOrderItemFluentValidator _purchaseOrderItemValidator = new PurchaseOrderItemFluentValidator();
+    private bool _isOverlayVisible = false;
+    private MudAutocomplete<ProductDto> _productAutocomplete;
+
     private List<string> _errors = new List<string>();
+    string[] headings = { "ID", "Description", "Qty", "Unit price", "Total" };    
 
     [Parameter]
     public int? Id { get; set; }
@@ -93,7 +152,8 @@
         switch (_entryMode)
         {
             case EntryMode.Create:
-                _purchaseOrder = new PurchaseOrder();                
+                _purchaseOrder = new PurchaseOrder();
+                _purchaseOrder.Items = new List<PurchaseOrderItem>();
                 _purchaseOrder.OrderDate = DateTime.Now;
                 break;
             case EntryMode.Edit:
@@ -118,7 +178,8 @@
             {
                 ShipTo = purchaseOrder.ShipTo,
                 OrderDate = purchaseOrder.OrderDate.ToLocalTime(),
-                Notes = purchaseOrder.Notes
+                Notes = purchaseOrder.Notes,
+                Items = purchaseOrder.OrderItems.Select(x => new PurchaseOrderItem { Product = new ProductDto { Id = x.Id }, Quantity = x.Quantity, UnitPrice = x.UnitCost }).ToList()
             };
 
             var supplier = await SuppliersService.Get(purchaseOrder.SupplierId);
@@ -141,13 +202,24 @@
         return matchedSuppliers;
     }
 
-    private async Task Save()
+    private async Task<IEnumerable<ProductDto>> FindProduct(string productName)
+    {
+        Console.WriteLine("FindProduct");
+        if (string.IsNullOrWhiteSpace(productName))
+            return new List<ProductDto>();
+
+        ICollection<ProductDto> matchedProducts = await ProductsService.Find(productName);
+
+        return matchedProducts;
+    }
+
+    private async Task<bool> Save()
     {
         Console.WriteLine("Save()");
         await _poForm.Validate();
 
         if (!_isPODetailsValid)
-            return;
+            return false;
 
         switch (_entryMode)
         {
@@ -155,9 +227,11 @@
                 await Create();
                 break;
             case EntryMode.Edit:
-                Update();
+                await Update();
                 break;
         }
+
+        return true;
     }
 
     private async Task Create()
@@ -169,6 +243,7 @@
             if (result.IsSuccessful)
             {
                 var id = result?.Messages?.FirstOrDefault()?.Message.Value;
+                Id = int.Parse(id);
                 _entryMode = EntryMode.Edit;
                 NavigationManager.NavigateTo($"purchaseorders/{id}", false, true);
                 Notify($"Purchase Order # {id} {(_entryMode == EntryMode.Create ? "created" : "updated")} successfully.", MudBlazor.Severity.Success);
@@ -181,7 +256,7 @@
         }
     }
 
-    private async void Update()
+    private async Task Update()
     {
         try
         {
@@ -202,6 +277,64 @@
         }
     }
 
+    private void OnProductValueChanged(ProductDto? productDto)
+    {
+        Console.WriteLine("ValueChanged");
+        _purchaseOrderItem.Product = productDto;
+        if (productDto is not null)
+            _purchaseOrderItem.UnitPrice = productDto.ListPrice;
+    }
+
+    private async Task AddItem()
+    {
+        await _addItemForm.Validate();
+
+        if (!_isAddItemFormValid)
+            return;
+
+        switch (_entryMode)
+        {
+            case EntryMode.Create:
+                //saved PO first before saving the item
+                var success = await Save();
+                if (success)
+                    await AddItemToPurchaseOrder();
+                break;
+            case EntryMode.Edit:
+                await AddItemToPurchaseOrder();
+                break;
+        }
+    }
+
+    private async Task AddItemToPurchaseOrder()
+    {
+        _isOverlayVisible = true;
+
+        var item = new PurchaseOrderItemDto
+        {
+            ProductId = _purchaseOrderItem.Product.Id,
+            Quantity = _purchaseOrderItem.Quantity,
+            UnitPrice = _purchaseOrderItem.UnitPrice
+        };
+
+        try
+        {
+            await PurchaseOrdersService.AddItem(Id.Value, item);
+            _purchaseOrder.Items.Add(_purchaseOrderItem);
+            _purchaseOrderItem = new PurchaseOrderItem();
+            await _productAutocomplete.Clear();
+            _isOverlayVisible = false;
+            Notify($"Item added successfully.", MudBlazor.Severity.Success);
+        }
+        catch(Exception exc)
+        {
+            var message = exc.Message;
+            Notify(message, MudBlazor.Severity.Error);
+        }
+
+        _isOverlayVisible = false;
+    }
+
     public class PurchaseOrderFluentValidator : AbstractValidator<PurchaseOrder>
     {
         public PurchaseOrderFluentValidator()
@@ -218,5 +351,23 @@
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);
         };        
-    }    
+    }
+
+    public class PurchaseOrderItemFluentValidator : AbstractValidator<PurchaseOrderItem>
+    {
+        public PurchaseOrderItemFluentValidator()
+        {
+            RuleFor(x => x.Product).NotEmpty().WithMessage("Required");
+            RuleFor(x => x.Quantity).NotEmpty().WithMessage("Required").GreaterThanOrEqualTo(0).WithMessage("Invalid");
+            RuleFor(x => x.UnitPrice).NotEmpty().WithMessage("Required").GreaterThanOrEqualTo(0).WithMessage("Invalid");
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<PurchaseOrderItem>.CreateWithOptions((PurchaseOrderItem)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
 }
