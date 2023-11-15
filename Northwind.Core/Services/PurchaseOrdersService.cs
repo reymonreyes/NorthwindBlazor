@@ -345,7 +345,7 @@ namespace Northwind.Core.Services
                 await _unitOfWork.Stop();
                 throw new DataNotFoundException("PurchaseOrderItem not found");
             }
-            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(purchaseOrderItem.Id);
+            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(purchaseOrderItem.PurchaseOrderId);
             if (purchaseOrder is null)
             {
                 await _unitOfWork.Stop();
