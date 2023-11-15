@@ -64,7 +64,7 @@ namespace Northwind.Core.UnitTests.Services
         [Fact]
         public async Task Create_MustThrowExceptionIfItemQuantityIsLessThanOne()
         {
-            var purchaseOrder = new Dtos.PurchaseOrderDto { SupplierId = 1, OrderItems = new List<OrderItemDto> { new OrderItemDto { ProductId = 1, Quantity = 0 } } };
+            var purchaseOrder = new Dtos.PurchaseOrderDto { SupplierId = 1, OrderItems = new List<PurchaseOrderItemDto> { new PurchaseOrderItemDto { ProductId = 1, Quantity = 0 } } };
             var mock = AutoMock.GetLoose();
             var validator = mock.Mock<IPurchaseOrderValidator>();
             validator.Setup(x => x.Validate(purchaseOrder)).Returns(new List<ServiceMessageResult>());
@@ -77,7 +77,7 @@ namespace Northwind.Core.UnitTests.Services
         [Fact]
         public async Task Create_MustThrowExceptionIfItemUnitCostIsLessThanZero()
         {
-            var purchaseOrder = new Dtos.PurchaseOrderDto { SupplierId = 1, OrderItems = new List<OrderItemDto> { new OrderItemDto { ProductId = 1, Quantity = 1, UnitCost = 0 } } };
+            var purchaseOrder = new Dtos.PurchaseOrderDto { SupplierId = 1, OrderItems = new List<PurchaseOrderItemDto> { new PurchaseOrderItemDto { ProductId = 1, Quantity = 1, UnitPrice = 0 } } };
             var mock = AutoMock.GetLoose();
             var validator = mock.Mock<IPurchaseOrderValidator>();
             validator.Setup(x => x.Validate(purchaseOrder)).Returns(new List<ServiceMessageResult>());
@@ -90,7 +90,7 @@ namespace Northwind.Core.UnitTests.Services
         [Fact]
         public async Task Create_ShouldReturnIsSuccessfulOnValidData()
         {
-            var purchaseOrderDto = new Dtos.PurchaseOrderDto { SupplierId = 1, OrderItems = new List<OrderItemDto> { new OrderItemDto { ProductId = 1, Quantity = 1, UnitCost = 1 } } };
+            var purchaseOrderDto = new Dtos.PurchaseOrderDto { SupplierId = 1, OrderItems = new List<PurchaseOrderItemDto> { new PurchaseOrderItemDto { ProductId = 1, Quantity = 1, UnitPrice = 1 } } };
             var mock = AutoMock.GetLoose();
             var validator = mock.Mock<IPurchaseOrderValidator>();
             validator.Setup(x => x.Validate(purchaseOrderDto)).Returns(new List<ServiceMessageResult>());
@@ -171,7 +171,7 @@ namespace Northwind.Core.UnitTests.Services
             uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
             IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
-            var serviceResult = await service.UpdateAsync(1, new Dtos.PurchaseOrderDto { SupplierId = 1, OrderItems = new List<OrderItemDto> { new OrderItemDto { ProductId = 1, Quantity = 1, UnitCost = 1 } } });
+            var serviceResult = await service.UpdateAsync(1, new Dtos.PurchaseOrderDto { SupplierId = 1, OrderItems = new List<PurchaseOrderItemDto> { new PurchaseOrderItemDto { ProductId = 1, Quantity = 1, UnitPrice = 1 } } });
             Assert.True(serviceResult.IsSuccessful);
         }
 
@@ -735,7 +735,7 @@ namespace Northwind.Core.UnitTests.Services
 
             IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
-            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.AddItem(1, new PurchaseOrderItemDto { ProductId = 1, Quantity = 1, CustomerOrderid = 1, UnitPrice = 1 }));
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.AddItem(1, new PurchaseOrderItemDto { ProductId = 1, Quantity = 1, UnitPrice = 1 }));
         }
 
         [Fact]
@@ -752,7 +752,7 @@ namespace Northwind.Core.UnitTests.Services
 
             IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
 
-            await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.AddItem(1, new PurchaseOrderItemDto { ProductId = 1, Quantity = 0, CustomerOrderid = 1 }));
+            await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.AddItem(1, new PurchaseOrderItemDto { ProductId = 1, Quantity = 0 }));
         }
 
         [Fact]
