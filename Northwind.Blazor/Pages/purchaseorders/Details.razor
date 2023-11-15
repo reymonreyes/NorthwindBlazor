@@ -117,7 +117,7 @@
                     {
                     <tr>
                         <td>
-                            <MudIconButton OnClick="() => RemoveItem(item.Id)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>
+                            <MudIconButton OnClick="() => RemoveItem(item)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>
                         </td>
                         <td>@item.Product.Id</td>
                         <td>@item.Product.Id</td>
@@ -342,10 +342,12 @@
         _isOverlayVisible = false;
     }
 
-    private void RemoveItem(int purchaseOrderItemId)
+    private async Task RemoveItem(PurchaseOrderItem purchaseOrderItem)
     {
-        Console.WriteLine($"RemoveItem: {purchaseOrderItemId}");
-        
+        _isOverlayVisible = true;
+        _purchaseOrder.Items.Remove(purchaseOrderItem);
+        await PurchaseOrdersService.RemoveItem(purchaseOrderItem.Id);
+        _isOverlayVisible = false;
     }
 
     public class PurchaseOrderFluentValidator : AbstractValidator<PurchaseOrder>
