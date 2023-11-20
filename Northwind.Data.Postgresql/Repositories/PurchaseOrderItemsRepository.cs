@@ -33,5 +33,10 @@ namespace Northwind.Data.Postgresql.Repositories
         {
             return await _efDbContext.PurchaseOrderItems.FirstOrDefaultAsync(x => x.Id == purchaseOrderItemId);
         }
+
+        public void Update(PurchaseOrderItem purchaseOrderItem)
+        {
+            _efDbContext.PurchaseOrderItems.Update(purchaseOrderItem);
+        }
     }
 }
