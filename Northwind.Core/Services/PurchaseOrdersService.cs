@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Northwind.Core.Interfaces.Infrastructure;
 using Northwind.Core.ValueObjects;
 using Microsoft.VisualBasic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Northwind.Core.Services
 {
@@ -353,6 +354,27 @@ namespace Northwind.Core.Services
             }
 
             await _unitOfWork.PurchaseOrderItemsRepository.DeleteAsync(purchaseOrderItemId);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+        }
+
+        public async Task UpdateItem(int purchaseOrderId, PurchaseOrderItemDto purchaseOrderItem)
+        {
+            if (purchaseOrderId <= 0) throw new ArgumentOutOfRangeException($"{nameof(purchaseOrderId)}");
+            if (purchaseOrderItem is null) throw new ArgumentNullException($"{nameof(purchaseOrderItem)}");
+            if (purchaseOrderItem.Quantity <= 0) throw new ValidationFailedException("Quantity must be greater than 0");
+            if (!purchaseOrderItem.UnitPrice.HasValue) throw new ValidationFailedException("UnitPrice is required");
+            if (purchaseOrderItem.UnitPrice <= 0) throw new ValidationFailedException("UnitPrice must be greater than 0");
+
+            await _unitOfWork.Start();
+            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(purchaseOrderId);
+            if (purchaseOrder is null) throw new DataNotFoundException("PurchaseOrder not found");
+            var purchaseOrderItemData = purchaseOrder.OrderItems.FirstOrDefault(x => x.Id == purchaseOrderItem.Id);
+            if (purchaseOrderItemData is null) throw new DataNotFoundException("PurchaseOrderItem not found");
+
+            purchaseOrderItemData.Quantity = purchaseOrderItem.Quantity;
+            purchaseOrderItemData.UnitCost = purchaseOrderItem.UnitPrice.Value;
+            _unitOfWork.PurchaseOrdersRepository.Update(purchaseOrder);
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
         }
