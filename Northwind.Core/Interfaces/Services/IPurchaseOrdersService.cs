@@ -23,5 +23,6 @@ namespace Northwind.Core.Interfaces.Services
         Task RemoveItem(int purchaseOrderItemId);
         Task<ServiceMessageResult> SubmitAsync(int id);
         Task<ServiceResult> UpdateAsync(int id, PurchaseOrderDto purchaseOrderDto);
+        Task UpdateItem(int purchaseOrderId, PurchaseOrderItemDto purchaseOrderItem);
     }
 }
