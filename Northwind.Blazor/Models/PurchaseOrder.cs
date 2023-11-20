@@ -1,4 +1,5 @@
-﻿using Northwind.Core.Dtos;
+﻿using Microsoft.AspNetCore.Components;
+using Northwind.Core.Dtos;
 
 namespace Northwind.Blazor.Models
 {
@@ -24,5 +25,9 @@ namespace Northwind.Blazor.Models
                 return Quantity * UnitPrice;
             }
         }
+        public bool IsInEditMode { get; set; } = false;
+        public RenderFragment? QuantityInput { get; set; }
+        public RenderFragment? UnitPriceInput { get; set; }
+        public RenderFragment? EditItem { get; set; }
     }
 }

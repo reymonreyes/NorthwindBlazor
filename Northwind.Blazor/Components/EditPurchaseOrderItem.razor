@@ -1,0 +1,73 @@
+﻿@using FluentValidation
+@using Northwind.Blazor.Models
+@if (Item is not null)
+{
+    <tr height="90px">
+        <td style=""><MudText>@Item.Product?.Id</MudText></td>
+        <td style=""><MudText>@Item.Product?.Id</MudText>
+        </td>
+        <td style="text-align:right;vertical-align: top;">
+            <MudForm @ref="_editItemForm" @bind-IsValid="_isEditItemFormValid" Model="Item" Validation="(_purchaseOrderItemValidator.ValidateValue)">
+                <MudNumericField @bind-Value="Item.Quantity" For="@(() => Item.Quantity)" Margin="Margin.Dense" Required="true"></MudNumericField>
+            </MudForm>        
+        </td>
+        <td style="text-align:right;vertical-align: top;">
+            <MudForm @ref="_editItemForm" @bind-IsValid="_isEditItemFormValid" Model="Item" Validation="(_purchaseOrderItemValidator.ValidateValue)">
+                <MudNumericField @bind-Value="Item.UnitPrice" For="@(() => Item.UnitPrice)" Margin="Margin.Dense" Format="N2" Required="true"></MudNumericField>
+            </MudForm>
+        </td>
+        <td style="text-align:right;">
+            <MudText>@Item.Total.ToString("N")</MudText>
+        </td>
+        <td style="text-align: center;">
+            <MudIconButton OnClick="() => UpdateItem(Item)" Icon="@Icons.Material.Filled.Check" Color="Color.Success" aria-label="delete" Size="Size.Small"></MudIconButton>
+            <MudIconButton OnClick="() => CancelUpdateItem(Item)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>        
+        </td>
+    </tr>
+}
+@code {
+    private MudForm _editItemForm;
+    private bool _isEditItemFormValid = false;
+    private PurchaseOrderItemFluentValidator _purchaseOrderItemValidator = new PurchaseOrderItemFluentValidator();
+
+    [Parameter]
+    public PurchaseOrderItem? Item { get; set; }    
+    [Parameter]
+    public EventCallback<PurchaseOrderItem> OnUpdateItem { get; set; }
+    [Parameter]
+    public EventCallback<PurchaseOrderItem> OnCancelUpdateItem { get; set; }
+
+    private async Task UpdateItem(PurchaseOrderItem? purchaseOrderItem)
+    {
+        await _editItemForm.Validate();
+        Console.WriteLine($"_isEditItemFormValid: {_isEditItemFormValid}");
+        if (!_isEditItemFormValid)
+            return;
+
+        await OnUpdateItem.InvokeAsync(purchaseOrderItem);
+    }
+
+    private async Task CancelUpdateItem(PurchaseOrderItem? purchaseOrderItem)
+    {
+        Console.WriteLine("CancelUpdateItem from child");
+        await OnCancelUpdateItem.InvokeAsync(purchaseOrderItem);        
+    }
+
+    public class PurchaseOrderItemFluentValidator : AbstractValidator<PurchaseOrderItem>
+    {
+        public PurchaseOrderItemFluentValidator()
+        {
+            RuleFor(x => x.Product).NotEmpty().WithMessage("Required");
+            RuleFor(x => x.Quantity).NotEmpty().WithMessage("Required").GreaterThanOrEqualTo(0).WithMessage("Invalid");
+            RuleFor(x => x.UnitPrice).NotEmpty().WithMessage("Required").GreaterThanOrEqualTo(0).WithMessage("Invalid");
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<PurchaseOrderItem>.CreateWithOptions((PurchaseOrderItem)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+}
