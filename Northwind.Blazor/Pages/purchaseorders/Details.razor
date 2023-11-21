@@ -128,49 +128,13 @@
                         {
                             <tr>
                                 <td>@item.Product.Id</td>
-                                <td>                            
-                                    @item.Product.Id
-                                </td>
-                                <td style="text-align:right;">
-                                    @item.Quantity
-                                    @* @if (item.IsInEditMode)
-                                    {
-                                        item.QuantityInput = @<MudForm Model="item" Validation="(_purchaseOrderItemValidator.ValidateValue)">
-                                                                <MudNumericField @bind-Value="item.Quantity" For="@(() => item.Quantity)" Margin="Margin.Dense"></MudNumericField>
-                                                            </MudForm>;
-                                        @item.QuantityInput
-                                    }
-                                    else
-                                    {                                
-                                    }*@
-                                </td>
-                                <td style="text-align:right;">
-                                    @item.UnitPrice.ToString("N")
-                                    @* @if (item.IsInEditMode)
-                                    {
-                                        item.UnitPriceInput = @<MudForm Model="item" Validation="(_purchaseOrderItemValidator.ValidateValue)">
-                                                                <MudNumericField @bind-Value="item.UnitPrice" For="@(() => item.UnitPrice)" Margin="Margin.Dense" Format="N2"></MudNumericField>
-                                                            </MudForm>;
-                                            @item.UnitPriceInput
-                                    }
-                                    else
-                                    {
-                                    } *@
-                                </td>
-                                <td style="text-align:right;">
-                                    @item.Total.ToString("N")
-                                </td>
+                                <td>@item.Product.Id</td>
+                                <td style="text-align:right;">@item.Quantity</td>
+                                <td style="text-align:right;">@item.UnitPrice.ToString("N")</td>
+                                <td style="text-align:right;">@item.Total.ToString("N")</td>
                                 <td style="text-align: center;">
-                                        <MudIconButton OnClick="() => EditItem(item)" Icon="@Icons.Material.Filled.Edit" aria-label="delete" Size="Size.Small"></MudIconButton>
-                                        <MudIconButton OnClick="() => RemoveItem(item)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>
-                                    @* @if (item.IsInEditMode)
-                                    {
-                                        <MudIconButton OnClick="() => UpdateItem(item)" Icon="@Icons.Material.Filled.Check" Color="Color.Success" aria-label="delete" Size="Size.Small"></MudIconButton>
-                                        <MudIconButton OnClick="() => CancelUpdateItem(item)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>
-                                    }
-                                    else
-                                    {                                    
-                                    } *@
+                                    <MudIconButton OnClick="() => EditItem(item)" Icon="@Icons.Material.Filled.Edit" aria-label="delete" Size="Size.Small"></MudIconButton>
+                                    <MudIconButton OnClick="() => RemoveItem(item)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>                                    
                                 </td>
                             </tr>
                         }
@@ -414,17 +378,17 @@
         
         var item = new PurchaseOrderItemDto
         {
-            ProductId = _purchaseOrderItem.Product.Id,
-            Quantity = _purchaseOrderItem.Quantity,
-            UnitPrice = _purchaseOrderItem.UnitPrice
+            Id = purchaseOrderItem.Id,
+            ProductId = purchaseOrderItem.Product.Id,
+            Quantity = purchaseOrderItem.Quantity,
+            UnitPrice = purchaseOrderItem.UnitPrice
         };
 
         try
         {
-            //await PurchaseOrdersService.UpdateAsync(Id.Value, item);//add updateitemasync method
-            _purchaseOrder.Items.Add(_purchaseOrderItem);
-            _purchaseOrderItem = new PurchaseOrderItem();
-            await _productAutocomplete.Clear();
+            await PurchaseOrdersService.UpdateItem(Id.Value, item);//add updateitemasync method
+            purchaseOrderItem.IsInEditMode = false;
+            purchaseOrderItem.EditItem = null;            
             _isOverlayVisible = false;
             Notify($"Item added successfully.", MudBlazor.Severity.Success);
         }
