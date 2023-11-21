@@ -1,5 +1,7 @@
-﻿@using FluentValidation
+﻿@using System.Runtime
+@using FluentValidation
 @using Northwind.Blazor.Models
+@using Northwind.Core.Dtos
 @if (Item is not null)
 {
     <tr height="90px">
@@ -29,6 +31,7 @@
     private MudForm _editItemForm;
     private bool _isEditItemFormValid = false;
     private PurchaseOrderItemFluentValidator _purchaseOrderItemValidator = new PurchaseOrderItemFluentValidator();
+    private PurchaseOrderItem? _originalItemValues;
 
     [Parameter]
     public PurchaseOrderItem? Item { get; set; }    
@@ -36,6 +39,12 @@
     public EventCallback<PurchaseOrderItem> OnUpdateItem { get; set; }
     [Parameter]
     public EventCallback<PurchaseOrderItem> OnCancelUpdateItem { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (Item is not null)
+            _originalItemValues = new PurchaseOrderItem { Id = Item.Id, Product = new ProductDto { Id = Item.Id }, Quantity = Item.Quantity, UnitPrice = Item.UnitPrice };
+    }
 
     private async Task UpdateItem(PurchaseOrderItem? purchaseOrderItem)
     {
@@ -49,8 +58,10 @@
 
     private async Task CancelUpdateItem(PurchaseOrderItem? purchaseOrderItem)
     {
-        Console.WriteLine("CancelUpdateItem from child");
-        await OnCancelUpdateItem.InvokeAsync(purchaseOrderItem);        
+        Console.WriteLine("CancelUpdateItem from child");        
+        purchaseOrderItem.Quantity = _originalItemValues.Quantity;
+        purchaseOrderItem.UnitPrice = _originalItemValues.UnitPrice;
+        await OnCancelUpdateItem.InvokeAsync(purchaseOrderItem);
     }
 
     public class PurchaseOrderItemFluentValidator : AbstractValidator<PurchaseOrderItem>
