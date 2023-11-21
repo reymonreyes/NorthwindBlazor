@@ -99,32 +99,45 @@
 
         <MudSimpleTable Style="overflow-x: auto;" Hover="true" Bordered="true" Dense="true">
             <colgroup>
-                <col width="5%" />
+                <col/><col/>
+                <col width="15%"/>
+                <col width="15%" />
+                <col/>
+                <col width="11%" />
             </colgroup>
             <thead>                
                 <tr>
-                    <th></th>
                     @foreach (var h in headings)
                     {
                         <th style="text-align:center;">@h</th>
                     }
+                    <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody>                
                 @if(_purchaseOrder.Items is not null)
                 {
                     @foreach (var item in _purchaseOrder.Items)
                     {
-                    <tr>
-                        <td>
-                            <MudIconButton OnClick="() => RemoveItem(item)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>
-                        </td>
-                        <td>@item.Product.Id</td>
-                        <td>@item.Product.Id</td>
-                        <td style="text-align:right;">@item.Quantity</td>
-                        <td style="text-align:right;">@item.UnitPrice.ToString("N")</td>
-                        <td style="text-align:right;">@item.Total.ToString("N")</td>
-                    </tr>
+                        if (item.IsInEditMode)
+                        {
+                            item.EditItem = @<Northwind.Blazor.Components.EditPurchaseOrderItem Item="item" OnUpdateItem="UpdateItem" OnCancelUpdateItem="CancelUpdateItem"></Northwind.Blazor.Components.EditPurchaseOrderItem>;
+                            @item.EditItem
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>@item.Product.Id</td>
+                                <td>@item.Product.Id</td>
+                                <td style="text-align:right;">@item.Quantity</td>
+                                <td style="text-align:right;">@item.UnitPrice.ToString("N")</td>
+                                <td style="text-align:right;">@item.Total.ToString("N")</td>
+                                <td style="text-align: center;">
+                                    <MudIconButton OnClick="() => EditItem(item)" Icon="@Icons.Material.Filled.Edit" aria-label="delete" Size="Size.Small"></MudIconButton>
+                                    <MudIconButton OnClick="() => RemoveItem(item)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>                                    
+                                </td>
+                            </tr>
+                        }
                     }
                 }                
             </tbody>
@@ -143,6 +156,9 @@
     private PurchaseOrderItemFluentValidator _purchaseOrderItemValidator = new PurchaseOrderItemFluentValidator();
     private bool _isOverlayVisible = false;
     private MudAutocomplete<ProductDto> _productAutocomplete;
+
+    RenderFragment? dummy = @<MudForm></MudForm>;
+
 
     private List<string> _errors = new List<string>();
     string[] headings = { "ID", "Description", "Qty", "Unit price", "Total" };    
@@ -348,6 +364,51 @@
         _purchaseOrder.Items.Remove(purchaseOrderItem);
         await PurchaseOrdersService.RemoveItem(purchaseOrderItem.Id);
         _isOverlayVisible = false;
+    }
+
+    public void EditItem(PurchaseOrderItem purchaseOrderItem)
+    {
+        purchaseOrderItem.IsInEditMode = true;
+    }
+
+    private async Task UpdateItem(PurchaseOrderItem purchaseOrderItem)
+    {
+        Console.WriteLine("UpdateItem");
+        _isOverlayVisible = true;
+        
+        var item = new PurchaseOrderItemDto
+        {
+            Id = purchaseOrderItem.Id,
+            ProductId = purchaseOrderItem.Product.Id,
+            Quantity = purchaseOrderItem.Quantity,
+            UnitPrice = purchaseOrderItem.UnitPrice
+        };
+
+        try
+        {
+            await PurchaseOrdersService.UpdateItem(Id.Value, item);//add updateitemasync method
+            purchaseOrderItem.IsInEditMode = false;
+            purchaseOrderItem.EditItem = null;            
+            _isOverlayVisible = false;
+            Notify($"Item added successfully.", MudBlazor.Severity.Success);
+        }
+        catch (Exception exc)
+        {
+            var message = exc.Message;
+            Notify(message, MudBlazor.Severity.Error);
+        }
+
+        _isOverlayVisible = false;
+
+        purchaseOrderItem.IsInEditMode = false;
+    }
+
+    private void CancelUpdateItem(PurchaseOrderItem purchaseOrderItem)
+    {
+        Console.WriteLine("CancelUpdateItem from parent");
+        purchaseOrderItem.IsInEditMode = false;
+        purchaseOrderItem.EditItem = null;
+        StateHasChanged();
     }
 
     public class PurchaseOrderFluentValidator : AbstractValidator<PurchaseOrder>
