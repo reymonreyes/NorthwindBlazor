@@ -326,6 +326,7 @@ namespace Northwind.Core.Services
                     SupplierId = purchaseOrder.SupplierId,
                     ShipTo = purchaseOrder.ShipTo,
                     OrderDate = purchaseOrder.OrderDate.Value.ToUniversalTime(),
+                    Status = purchaseOrder.Status,
                     OrderItems = purchaseOrder.OrderItems.Select(x => new PurchaseOrderItemDto { Id = x.Id, ProductId = x.ProductId, Quantity = x.Quantity, UnitPrice = x.UnitCost }).ToList()
                 };
             }

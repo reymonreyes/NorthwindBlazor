@@ -18,9 +18,16 @@
     <MudSpacer />
     <MudButton Variant="Variant.Text">Cancel</MudButton>
     <MudText Class="mx-4"><b>></b></MudText>
-    <MudChip Color="Color.Success" Label="true">New</MudChip>
+    @if(_purchaseOrder.Status == Core.Enums.OrderStatus.New)
+    {
+        <MudChip Color="Color.Success" Label="true">New</MudChip>
+    }
+    else
+    {
+        <MudText Typo="Typo.button">New</MudText>
+    }
     <MudText Class="mx-4"><b>></b></MudText>
-    <MudButton>Submit For Approval</MudButton>
+    <MudButton Variant="Variant.Outlined">Submit For Approval</MudButton>
     <MudText Class="mx-4"><b>></b></MudText>
     @* <MudButton Disabled="true">Approve</MudButton> *@
     <MudText Typo="Typo.button">Approve</MudText>
@@ -202,6 +209,7 @@
                 ShipTo = purchaseOrder.ShipTo,
                 OrderDate = purchaseOrder.OrderDate.ToLocalTime(),
                 Notes = purchaseOrder.Notes,
+                Status = purchaseOrder.Status,
                 Items = purchaseOrder.OrderItems.Select(x => new PurchaseOrderItem { Id = x.Id, Product = new ProductDto { Id = x.Id }, Quantity = x.Quantity, UnitPrice = x.UnitPrice.Value }).ToList()
             };
 

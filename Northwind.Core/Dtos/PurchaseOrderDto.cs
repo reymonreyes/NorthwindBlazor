@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Northwind.Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -14,5 +15,6 @@ namespace Northwind.Core.Dtos
         public string ShipTo { get; set; }
         public List<PurchaseOrderItemDto> OrderItems { get; set; }
         public DateTime OrderDate { get; set; }
+        public OrderStatus Status { get; set; }
     }
 }
