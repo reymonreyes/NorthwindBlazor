@@ -277,11 +277,11 @@ namespace Northwind.Core.UnitTests.Services
         }
 
         [Fact]
-        public async Task ReceivePayment_ShouldThrowExceptionIfOrderStatusIsClosed()
+        public async Task ReceivePayment_ShouldThrowExceptionIfOrderStatusIsCompleted()
         {
             var mock = AutoMock.GetLoose();
             var uow = mock.Mock<IUnitOfWork>();
-            var order = new CustomerOrder { Id = 1, CustomerId = 1, Status = Enums.OrderStatus.Closed, ShipperId = 1, ShipTo = new ValueObjects.ShippingInformation { Name = "Customer One", Address = "Somewhere" } };
+            var order = new CustomerOrder { Id = 1, CustomerId = 1, Status = Enums.OrderStatus.Completed, ShipperId = 1, ShipTo = new ValueObjects.ShippingInformation { Name = "Customer One", Address = "Somewhere" } };
             var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
             customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(order);
             uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
@@ -320,7 +320,7 @@ namespace Northwind.Core.UnitTests.Services
         }
 
         [Fact]
-        public async Task CompleteOrder_ShouldSetStatusToClosedIfSuccessful()
+        public async Task CompleteOrder_ShouldSetStatusToCompletedIfSuccessful()
         {
             var mock = AutoMock.GetLoose();
             var uow = mock.Mock<IUnitOfWork>();
@@ -332,7 +332,7 @@ namespace Northwind.Core.UnitTests.Services
 
             await service.CompleteOrder(1);
 
-            Assert.Equal(Enums.OrderStatus.Closed, order.Status);
+            Assert.Equal(Enums.OrderStatus.Completed, order.Status);
         }
     }
 }
