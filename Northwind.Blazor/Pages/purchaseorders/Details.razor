@@ -17,13 +17,18 @@
 <MudToolBar WrapContent="true">
     <MudText><b>Purchase Order</b></MudText>
     <MudSpacer />
-    <MudButton Variant="Variant.Text">Cancel</MudButton>
-    <MudText Class="mx-4"><b>></b></MudText>
+    @if(!(_purchaseOrder.Status == Core.Enums.OrderStatus.Completed))
+    {
+        <MudButton Variant="Variant.Text" Color="Color.Secondary">Cancel</MudButton>
+        <MudText Class="mx-4"><b>></b></MudText>
+    }
     @if(_purchaseOrder.Status == Core.Enums.OrderStatus.New)
     {
         <MudChip Color="Color.Success">New</MudChip>
         <MudText Class="mx-4"><b>></b></MudText>
         <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="SubmitForApproval">Submit For Approval</MudButton>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">Approve</MudText>
         <MudText Class="mx-4"><b>></b></MudText>
         <MudText Typo="Typo.button">Complete</MudText>
     }
@@ -45,15 +50,17 @@
         <MudText Class="mx-4"><b>></b></MudText>
         <MudChip Color="Color.Success">Approved</MudChip>
         <MudText Class="mx-4"><b>></b></MudText>
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="Approve">Complete</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="Complete">Complete</MudButton>
     }
-    @if (_purchaseOrder.Status == Core.Enums.OrderStatus.Closed)
+    @if (_purchaseOrder.Status == Core.Enums.OrderStatus.Completed)
     {
         <MudText Typo="Typo.button">New</MudText>
         <MudText Class="mx-4"><b>></b></MudText>
         <MudText Typo="Typo.button">Submitted</MudText>
         <MudText Class="mx-4"><b>></b></MudText>
-        <MudChip Color="Color.Success">Complete</MudChip>
+        <MudText Typo="Typo.button">Approved</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudChip Color="Color.Success">Completed</MudChip>
     }
 </MudToolBar>
 <MudDivider DividerType="DividerType.FullWidth" Light="true"/>
@@ -480,6 +487,30 @@
             {
                 var result = await PurchaseOrdersService.ApproveAsync(Id.Value);
                 _purchaseOrder.Status = Core.Enums.OrderStatus.Approved;
+                Notify("Purchase Order successfully submitted.", MudBlazor.Severity.Success);
+            }
+            catch (Exception exc)
+            {
+                Notify(exc.Message, MudBlazor.Severity.Error);
+            }
+        }
+    }
+
+    private async Task Complete()
+    {
+        var confirmed = await DialogService.ShowMessageBox(
+            "Close",
+            "Do you want to complete this Purchase Order?",
+            "Yes",
+            "No"
+        );
+
+        if (confirmed.HasValue && confirmed.Value)
+        {
+            try
+            {
+                await PurchaseOrdersService.CompleteOrder(Id.Value);
+                _purchaseOrder.Status = Core.Enums.OrderStatus.Completed;
                 Notify("Purchase Order successfully submitted.", MudBlazor.Severity.Success);
             }
             catch (Exception exc)
