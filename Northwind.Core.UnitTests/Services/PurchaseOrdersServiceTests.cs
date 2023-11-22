@@ -147,9 +147,9 @@ namespace Northwind.Core.UnitTests.Services
         
         [Theory]
         [InlineData(Enums.OrderStatus.Approved)]
-        [InlineData(Enums.OrderStatus.Closed)]
+        [InlineData(Enums.OrderStatus.Completed)]
         [InlineData(Enums.OrderStatus.Cancelled)]
-        public async Task Update_ShouldFailStatusIsApprovedOrClosedOrCancelled(Enums.OrderStatus orderStatus)
+        public async Task Update_ShouldFailStatusIsApprovedOrCompletedOrCancelled(Enums.OrderStatus orderStatus)
         {
             var mock = AutoMock.GetLoose();
             var uow = mock.Mock<IUnitOfWork>();
@@ -298,7 +298,7 @@ namespace Northwind.Core.UnitTests.Services
         [InlineData(OrderStatus.Invoiced)]
         [InlineData(OrderStatus.Shipped)]
         [InlineData(OrderStatus.Paid)]
-        [InlineData(OrderStatus.Closed)]
+        [InlineData(OrderStatus.Completed)]
         [InlineData(OrderStatus.Cancelled)]
         public async Task Cancel_ShouldThrowExceptionIfPurchaseOrderIsNotNewOrSubmitted(OrderStatus orderStatus)
         {
@@ -693,7 +693,7 @@ namespace Northwind.Core.UnitTests.Services
         }
 
         [Fact]
-        public async void CompleteOrder_ShouldSetStatusToClosedIfSuccessful()
+        public async void CompleteOrder_ShouldSetStatusToCompletedIfSuccessful()
         {
             var mock = AutoMock.GetLoose();
             var uow = mock.Mock<IUnitOfWork>();
@@ -705,7 +705,7 @@ namespace Northwind.Core.UnitTests.Services
 
             await service.CompleteOrder(1);
 
-            Assert.Equal(Enums.OrderStatus.Closed, order.Status);
+            Assert.Equal(Enums.OrderStatus.Completed, order.Status);
         }
 
         [Fact]

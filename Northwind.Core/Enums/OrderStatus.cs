@@ -14,7 +14,7 @@ namespace Northwind.Core.Enums
         Paid = 40,
         Submitted = 50,
         Approved = 60,
-        Closed = 70,
+        Completed = 70,
         Cancelled = 80
     }
 }
