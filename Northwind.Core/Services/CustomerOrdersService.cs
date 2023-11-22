@@ -54,7 +54,7 @@ namespace Northwind.Core.Services
             var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(orderId);
             if (order == null) throw new DataNotFoundException("Customer Order not found.");
 
-            order.Status = OrderStatus.Closed;
+            order.Status = OrderStatus.Completed;
             await _unitOfWork.Commit();
 
             await _unitOfWork.Stop();
@@ -167,7 +167,7 @@ namespace Northwind.Core.Services
             await _unitOfWork.Start();
             var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(orderId);
             if (order == null) throw new DataNotFoundException("Customer Order not found.");
-            if (order.Status == OrderStatus.Closed) throw new ValidationFailedException("Customer Order Status closed.");
+            if (order.Status == OrderStatus.Completed) throw new ValidationFailedException("Customer Order Status closed.");
 
             var payment = new Payment
             {

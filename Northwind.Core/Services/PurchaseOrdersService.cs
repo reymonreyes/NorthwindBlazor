@@ -85,7 +85,7 @@ namespace Northwind.Core.Services
                 throw new DataNotFoundException("Purchase Order not found");
             }
 
-            if(purchaseOrder.Status == Enums.OrderStatus.Approved || purchaseOrder.Status == Enums.OrderStatus.Closed || purchaseOrder.Status == Enums.OrderStatus.Cancelled)
+            if(purchaseOrder.Status == Enums.OrderStatus.Approved || purchaseOrder.Status == Enums.OrderStatus.Completed || purchaseOrder.Status == Enums.OrderStatus.Cancelled)
             {
                 await _unitOfWork.Stop();
                 throw new ValidationFailedException($"Purchase Order already {purchaseOrder.Status}");                
@@ -280,7 +280,7 @@ namespace Northwind.Core.Services
             var order = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
             if (order == null) throw new DataNotFoundException("Customer Order not found.");
 
-            order.Status = Enums.OrderStatus.Closed;
+            order.Status = Enums.OrderStatus.Completed;
             _unitOfWork.PurchaseOrdersRepository.Update(order);
 
             await _unitOfWork.Commit();
