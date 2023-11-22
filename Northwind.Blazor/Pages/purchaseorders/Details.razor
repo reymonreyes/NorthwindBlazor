@@ -11,6 +11,7 @@
 @inject ISuppliersService SuppliersService
 @inject IPurchaseOrdersService PurchaseOrdersService
 @inject IProductsService ProductsService
+@inject IDialogService DialogService
 @inherits PageBase
 
 <MudToolBar WrapContent="true">
@@ -27,7 +28,14 @@
         <MudText Typo="Typo.button">New</MudText>
     }
     <MudText Class="mx-4"><b>></b></MudText>
-    <MudButton Variant="Variant.Outlined">Submit For Approval</MudButton>
+    @if(_purchaseOrder.Status == Core.Enums.OrderStatus.Submitted)
+    {
+        <MudChip Color="Color.Success" Label="true">Submitted</MudChip>
+    }
+    else
+    {
+        <MudButton Variant="Variant.Outlined" OnClick="SubmitForApproval">Submit For Approval</MudButton>
+    }
     <MudText Class="mx-4"><b>></b></MudText>
     @* <MudButton Disabled="true">Approve</MudButton> *@
     <MudText Typo="Typo.button">Approve</MudText>
@@ -417,6 +425,31 @@
         purchaseOrderItem.IsInEditMode = false;
         purchaseOrderItem.EditItem = null;
         StateHasChanged();
+    }
+
+    private async Task SubmitForApproval()
+    {
+        //prompt user for confirmation
+        var confirmed = await DialogService.ShowMessageBox(
+            "Submit for Approval",
+            "Do you want to submit this Purchase Order for approval?",
+            "Yes",
+            "No"
+        );
+        Console.WriteLine($"confirmed: {confirmed}");
+        if (confirmed.HasValue && confirmed.Value)
+        {
+            try
+            {
+                var result = await PurchaseOrdersService.SubmitAsync(Id.Value);
+                _purchaseOrder.Status = Core.Enums.OrderStatus.Submitted;
+                Notify("Purchase Order successfully submitted.", MudBlazor.Severity.Success);
+            }
+            catch(Exception exc)
+            {
+                Notify(exc.Message, MudBlazor.Severity.Error);
+            }
+        }
     }
 
     public class PurchaseOrderFluentValidator : AbstractValidator<PurchaseOrder>
