@@ -17,10 +17,22 @@
 <MudToolBar WrapContent="true">
     <MudText><b>Purchase Order</b></MudText>
     <MudSpacer />
-    @if(!(_purchaseOrder.Status == Core.Enums.OrderStatus.Completed))
+    @if (!(_purchaseOrder.Status == Core.Enums.OrderStatus.Completed) && !(_purchaseOrder.Status == Core.Enums.OrderStatus.Cancelled))
     {
-        <MudButton Variant="Variant.Text" Color="Color.Secondary">Cancel</MudButton>
+        <MudButton Variant="Variant.Text" Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
         <MudText Class="mx-4"><b>></b></MudText>
+    }
+    @if(_purchaseOrder.Status == Core.Enums.OrderStatus.Cancelled)
+    {
+        <MudChip Color="Color.Warning">Cancelled</MudChip>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">New</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">Submitted</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">Approved</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">Approved</MudText>
     }
     @if(_purchaseOrder.Status == Core.Enums.OrderStatus.New)
     {
@@ -512,6 +524,30 @@
                 await PurchaseOrdersService.CompleteOrder(Id.Value);
                 _purchaseOrder.Status = Core.Enums.OrderStatus.Completed;
                 Notify("Purchase Order successfully submitted.", MudBlazor.Severity.Success);
+            }
+            catch (Exception exc)
+            {
+                Notify(exc.Message, MudBlazor.Severity.Error);
+            }
+        }
+    }
+
+    private async Task Cancel()
+    {
+        var confirmed = await DialogService.ShowMessageBox(
+            "Cancel",
+            "Are you sure you want to cancel this Purchase Order?",
+            "Yes",
+            "No"
+        );
+
+        if (confirmed.HasValue && confirmed.Value)
+        {
+            try
+            {
+                await PurchaseOrdersService.CancelAsync(Id.Value);
+                _purchaseOrder.Status = Core.Enums.OrderStatus.Cancelled;
+                Notify("Purchase Order cancelled.", MudBlazor.Severity.Warning);
             }
             catch (Exception exc)
             {
