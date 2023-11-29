@@ -177,7 +177,7 @@ namespace Northwind.Data.Postgresql
             modelBuilder.Entity<CustomerOrder>().ToTable("customerorders").HasKey(x => x.Id);
             modelBuilder.Entity<CustomerOrder>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
             modelBuilder.Entity<CustomerOrder>().Property(x => x.OrderDate).HasColumnType("timestamp").IsRequired(true);
-            modelBuilder.Entity<CustomerOrder>().Property(x => x.Notes).HasColumnType("text");
+            modelBuilder.Entity<CustomerOrder>().Property(x => x.Notes).HasColumnType("text").IsRequired(false);
             modelBuilder.Entity<CustomerOrder>().Property(x => x.Status).HasColumnType("smallint");
             modelBuilder.Entity<CustomerOrderItem>().ToTable("customerorderitems").HasKey(x => x.Id);
             modelBuilder.Entity<CustomerOrderItem>().Property(x => x.Quantity).HasColumnType("int");
