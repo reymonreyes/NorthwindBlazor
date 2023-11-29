@@ -62,7 +62,7 @@ namespace Northwind.Core.Services
 
         public async Task<ServiceResult> Create(int customerId, DateTime? orderDate, List<Dtos.CustomerOrderItemDto> orderItems)
         {
-            
+            await _unitOfWork.Start();
             var customer = await _unitOfWork.CustomersRepository.Get(customerId);
             if (customer == null) throw new DataNotFoundException("Customer not found.");
 
@@ -92,7 +92,6 @@ namespace Northwind.Core.Services
                             ProductId = orderItem.ProductId,
                             UnitPrice = orderItem.UnitPrice ?? product.ListPrice,
                         });
-                        await _unitOfWork.CustomerOrdersRepository.CreateAsync(customerOrder);
                     }
                     else
                     {
@@ -104,6 +103,7 @@ namespace Northwind.Core.Services
                 }
             }
 
+            await _unitOfWork.CustomerOrdersRepository.CreateAsync(customerOrder);
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
             

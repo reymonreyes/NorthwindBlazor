@@ -1,5 +1,13 @@
 ﻿@page "/customerorders/create"
+@using FluentValidation
+@using Northwind.Blazor.Models
+@using Northwind.Blazor.Models.Validators
+@using Northwind.Common.Enums
+@using Northwind.Core.Exceptions
+@using Northwind.Core.Interfaces.Services
 @inherits PageBase
+@inject NavigationManager NavigationManager
+@inject ICustomerOrdersService CustomerOrdersService
 
 <MudToolBar>
     <MudText><b>Customer Order</b></MudText>
@@ -7,43 +15,118 @@
 <MudDivider DividerType="DividerType.FullWidth" Light="true" />
 <MudGrid Class="pt-3" Spacing="3">
     <MudItem sm="12" md="6" lg="6">
-        <MudGrid>
-            <MudItem xs="12" sm="12" md="12" lg="12">
-                <MudPaper Elevation="1" Square="true">
-                    <MudToolBar>
-                        <MudText>Order # <b>1</b></MudText>
-                        <MudSpacer />
-                        <MudButton Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small" Class="mr-1">Save</MudButton>                        
-                    </MudToolBar>
-                </MudPaper>
-            </MudItem>
-            <MudItem xs="12" sm="12" md="12" lg="12">
-                <MudTextField T="string" Label="Customer"></MudTextField>
-            </MudItem>
-            <MudItem md="4" lg="4">
-                <MudDatePicker Label="Order Date" />
-            </MudItem>
-            <MudItem md="4" lg="4">
-                <MudDatePicker Label="Due Date" />
-            </MudItem>
-            <MudItem md="4" lg="4">
-                <MudDatePicker Label="Shipped Date" />
-            </MudItem>
-            <MudItem md="6" lg="6">
-                <MudTextField T="string" Label="Shipper"></MudTextField>
-            </MudItem>
-            <MudItem md="6" lg="6">
-                <MudTextField T="string" Label="Ship To"></MudTextField>
-            </MudItem>
-            <MudItem xs="12" sm="12" md="12" lg="12">
-                <MudTextField T="string" Label="Notes" Lines="3"></MudTextField>
-            </MudItem>
-        </MudGrid>
+        <MudForm @ref="_customerOrderForm" @bind-IsValid="_isCustomerOrderFormValid" Model="_customerOrder" Validation="(_customerOrderValidator.ValidateValue)">
+            <MudGrid>
+                <MudItem xs="12" sm="12" md="12" lg="12">
+                    <MudPaper Elevation="1" Square="true">
+                        <MudToolBar>
+                            <MudText>Order # <b>1</b></MudText>
+                            <MudSpacer />
+                            <MudButton OnClick="Save" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small" Class="mr-1">Save</MudButton>
+                        </MudToolBar>
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12" lg="12">
+                    @if (_errors.Count > 0)
+                    {
+                        <MudAlert Severity="MudBlazor.Severity.Error">
+                            @foreach (var error in _errors)
+                            {
+                                <MudText>@error</MudText>
+                            }
+                        </MudAlert>
+                    }
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12" lg="12">
+                    <MudTextField @bind-Value="_customerOrder.CustomerId" For="@(() => _customerOrder.CustomerId)" Immediate="true" Label="Customer"></MudTextField>
+                </MudItem>
+                <MudItem md="4" lg="4">
+                    <MudDatePicker @bind-Date="_customerOrder.OrderDate" For="@(() => _customerOrder.OrderDate)" Label="Order Date" Editable="true" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" />
+                </MudItem>
+                <MudItem md="4" lg="4">
+                    <MudDatePicker @bind-Date="_customerOrder.DueDate" For="@(() => _customerOrder.DueDate)" Label="Due Date" />
+                </MudItem>
+                <MudItem md="4" lg="4">
+                    <MudDatePicker @bind-Date="_customerOrder.ShippedDate" For="@(() => _customerOrder.ShippedDate)" Label="Shipped Date" />
+                </MudItem>
+                <MudItem md="6" lg="6">
+                    <MudTextField @bind-Value="_customerOrder.ShipperId" For="@(() => _customerOrder.ShipperId)" Label="Shipper"></MudTextField>
+                </MudItem>
+                <MudItem md="6" lg="6">
+                    <MudTextField @bind-Value="_customerOrder.ShipTo" For="@(() => _customerOrder.ShipTo)" Label="Ship To"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12" lg="12">
+                    <MudTextField @bind-Value="_customerOrder.Notes" For="@(() => _customerOrder.Notes)" Label="Notes" Lines="3"></MudTextField>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
     </MudItem>
     <MudItem sm="12" md="6" lg="6">
 
     </MudItem>
 </MudGrid>
 @code {
+    private EntryMode _entryMode = EntryMode.Create;
+    private CustomerOrder? _customerOrder = null;
+    private CustomerOrderValidator _customerOrderValidator = new CustomerOrderValidator();
+    private MudForm _customerOrderForm;
+    private bool _isCustomerOrderFormValid;
+    private List<string> _errors = new List<string>();
+
+    protected override Task OnInitializedAsync()
+    {
+        _entryMode = NavigationManager.Uri.EndsWith("create") ? EntryMode.Create : EntryMode.Edit;
+
+        if (_entryMode == EntryMode.Create)
+        {
+            _customerOrder = new CustomerOrder();
+            _customerOrder.OrderDate = DateTime.Now;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private async Task Save()
+    {
+        await _customerOrderForm.Validate();
+        if (!_isCustomerOrderFormValid)
+            return;
+
+        switch (_entryMode)
+        {
+            case EntryMode.Create:
+                await Create();
+                break;
+            case EntryMode.Edit:
+                break;
+        }
+    }
+
+    private async Task Create()
+    {
+        _errors = new List<string>();
+        try
+        {
+            var createResult = await CustomerOrdersService.Create(_customerOrder.CustomerId, _customerOrder.OrderDate, new List<Core.Dtos.CustomerOrderItemDto>());            
+        }
+        catch(ValidationFailedException exc)
+        {
+            _errors = exc.ValidationErrors.Select(x => x.Message.Value).ToList();
+        }
+        catch(Exception exc)
+        {
+            _errors.Add(exc.Message);
+        }
+
+    }
+
+    class CustomerOrderValidator : BaseValidator<CustomerOrder>
+    {
+        public CustomerOrderValidator()
+        {
+            RuleFor(x => x.CustomerId).NotEmpty().WithMessage("Customer is required");
+            RuleFor(x => x.OrderDate).NotEmpty().WithMessage("OrderDate is required");            
+        }
+    }
 
 }
