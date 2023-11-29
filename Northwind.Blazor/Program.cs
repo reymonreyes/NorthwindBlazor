@@ -22,6 +22,7 @@ builder.Services.AddTransient<ISuppliersService, SuppliersService>();
 builder.Services.AddTransient<IShippersService, ShippersService>();
 builder.Services.AddTransient<ICustomersService, CustomersService>();
 builder.Services.AddTransient<IPurchaseOrdersService, PurchaseOrdersService>();
+builder.Services.AddTransient<ICustomerOrdersService, CustomerOrdersService>();
 builder.Services.AddTransient<IDocumentGeneratorService, DocumentGeneratorService>();
 builder.Services.AddTransient<IEmailService, SmtpEmailService>();
 builder.Services.AddTransient<IUnitOfWork, EfUnitOfWork>();
