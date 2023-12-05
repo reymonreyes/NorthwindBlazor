@@ -106,7 +106,8 @@ namespace Northwind.Core.Services
             await _unitOfWork.CustomerOrdersRepository.CreateAsync(customerOrder);
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
-            
+            result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", customerOrder.Id.ToString()) });
+
             return result;
         }
 
@@ -199,6 +200,30 @@ namespace Northwind.Core.Services
             await _unitOfWork.Commit();
 
             await _unitOfWork.Stop();
+        }
+
+        public async Task<CustomerOrderDto?> GetAsync(int orderId)
+        {
+            CustomerOrderDto? result = null;
+
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(orderId);
+            await _unitOfWork.Stop();
+            if (order is not null)
+            {
+                result = new CustomerOrderDto
+                {
+                    Id = order.Id,
+                    CustomerId = order.CustomerId,
+                    OrderDate = order.OrderDate,
+                    //DueDate = order.DueDate, TODO
+                    //ShippedDate = order.ShippedDate TODO
+                    ShipperId = order.ShipperId,
+                    Notes = order.Notes
+                };
+            }
+
+            return result;
         }
     }
 }
