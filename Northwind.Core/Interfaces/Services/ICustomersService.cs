@@ -14,5 +14,6 @@ namespace Northwind.Core.Interfaces.Services
         Task Create(CustomerDto customer);
         Task Update(int customerId, CustomerDto customerDto);
         Task Delete(int customerId);
+        Task<IEnumerable<CustomerDto>> FindAsync(string customerName);
     }
 }
