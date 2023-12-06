@@ -15,5 +15,6 @@ namespace Northwind.Core.Dtos
         public DateTime? ShippedDate { get; set; }
         public int? ShipperId { get; set; }
         public string Notes { get; set; }
+        public DateTime? ShipDate { get; set; }
     }
 }

@@ -14,5 +14,6 @@ namespace Northwind.Core.Interfaces.Repositories
         Task Create(Customer customer);
         Task Update(Customer customer);
         Task Delete(int customerId);
+        Task<IEnumerable<Customer>> Find(string customerName);
     }
 }

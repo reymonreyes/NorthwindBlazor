@@ -40,7 +40,8 @@
                         }
                     </MudItem>
                 <MudItem xs="12" sm="12" md="12" lg="12">
-                    <MudTextField @bind-Value="_customerOrder.CustomerId" For="@(() => _customerOrder.CustomerId)" Immediate="true" Label="Customer"></MudTextField>
+                    <MudAutocomplete @bind-Value="_customerOrder.Customer" Label="Customer" SearchFunc="@FindCustomer" ToStringFunc="@(x => x == null ? null : $"{x.Name}")" For="@(() => _customerOrder.Customer)"
+                        ResetValueOnEmptyText="true" Immediate="true" ProgressIndicatorColor="Color.Info" Variant="Variant.Outlined" Margin="Margin.Dense"></MudAutocomplete>
                 </MudItem>
                 <MudItem md="4" lg="4">
                     <MudDatePicker @bind-Date="_customerOrder.OrderDate" For="@(() => _customerOrder.OrderDate)" Label="Order Date" Editable="true" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" />
@@ -49,7 +50,7 @@
                     <MudDatePicker @bind-Date="_customerOrder.DueDate" For="@(() => _customerOrder.DueDate)" Label="Due Date" />
                 </MudItem>
                 <MudItem md="4" lg="4">
-                    <MudDatePicker @bind-Date="_customerOrder.ShippedDate" For="@(() => _customerOrder.ShippedDate)" Label="Shipped Date" />
+                    <MudDatePicker @bind-Date="_customerOrder.ShipDate" For="@(() => _customerOrder.ShipDate)" Label="Ship Date" />
                 </MudItem>
                 <MudItem md="6" lg="6">
                     <MudTextField @bind-Value="_customerOrder.ShipperId" For="@(() => _customerOrder.ShipperId)" Label="Shipper"></MudTextField>

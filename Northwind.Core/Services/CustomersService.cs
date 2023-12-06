@@ -135,5 +135,17 @@ namespace Northwind.Core.Services
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
         }
+
+        public async Task<IEnumerable<CustomerDto>> FindAsync(string customerName)
+        {
+            if (string.IsNullOrWhiteSpace(customerName) || (!string.IsNullOrWhiteSpace(customerName) && customerName.Length < 2))
+                return new List<CustomerDto>();
+
+            await _unitOfWork.Start();
+            var matchedCustomers = await _unitOfWork.CustomersRepository.Find(customerName);
+            await _unitOfWork.Stop();
+            
+            return matchedCustomers.Select(x => new CustomerDto { Id = x.Id, Name = x.Name}).ToList();
+        }
     }
 }

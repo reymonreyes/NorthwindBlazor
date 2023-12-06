@@ -216,14 +216,14 @@ namespace Northwind.Core.Services
                     Id = order.Id,
                     CustomerId = order.CustomerId,
                     OrderDate = order.OrderDate,
-                    //DueDate = order.DueDate, TODO
-                    //ShippedDate = order.ShippedDate TODO
+                    DueDate = order.DueDate,
+                    ShipDate = order.ShipDate,
                     ShipperId = order.ShipperId,
                     Notes = order.Notes
                 };
             }
 
             return result;
-        }
+        }        
     }
 }

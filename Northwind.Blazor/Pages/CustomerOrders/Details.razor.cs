@@ -4,8 +4,10 @@ using MudBlazor;
 using Northwind.Blazor.Models;
 using Northwind.Blazor.Models.Validators;
 using Northwind.Common.Enums;
+using Northwind.Core.Dtos;
 using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Services;
+using System.Reflection.Metadata.Ecma335;
 using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace Northwind.Blazor.Pages.CustomerOrders
@@ -21,6 +23,8 @@ namespace Northwind.Blazor.Pages.CustomerOrders
         
         [Inject]
         public ICustomerOrdersService CustomerOrdersService { get; set; }
+        [Inject]
+        public ICustomersService CustomersService { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
@@ -68,10 +72,15 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 CustomerId = customerOrder.CustomerId,
                 OrderDate = customerOrder.OrderDate,
                 DueDate = customerOrder.DueDate,
-                ShippedDate = customerOrder.ShippedDate,
+                ShipDate = customerOrder.ShipDate,
                 ShipperId = customerOrder.ShipperId,
                 Notes = customerOrder.Notes
             };
+
+            var customer = await CustomersService.Get(_customerOrder.CustomerId);
+            if(customer is not null)
+                _customerOrder.Customer = new CustomerDto { Id = customer.Id, Name = customer.Name };
+
             Console.WriteLine("CustomerOrder loaded");
         }
 
@@ -97,7 +106,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
             try
             {
                 _isCustomerOrderFormOverlayVisible = true;
-                var createResult = await CustomerOrdersService.Create(_customerOrder.CustomerId, _customerOrder.OrderDate, new List<Core.Dtos.CustomerOrderItemDto>());
+                var createResult = await CustomerOrdersService.Create(_customerOrder.Customer.Id, _customerOrder.OrderDate, new List<Core.Dtos.CustomerOrderItemDto>());
                 if(createResult.IsSuccessful)
                 {
                     var id = createResult?.Messages?.FirstOrDefault()?.Message.Value;
@@ -121,13 +130,23 @@ namespace Northwind.Blazor.Pages.CustomerOrders
             }
 
         }
+
+        private async Task<IEnumerable<CustomerDto>> FindCustomer(string customerName)
+        {
+            if(string.IsNullOrWhiteSpace(customerName) || (!string.IsNullOrWhiteSpace(customerName) && customerName.Length < 2))
+                return new List<CustomerDto>();
+
+            var customers = await CustomersService.FindAsync(customerName);
+
+            return customers.Select(x => new CustomerDto { Id = x.Id, Name = x.Name}).ToList();
+        }
     }
 
     public class CustomerOrderValidator : BaseValidator<CustomerOrder>
     {
         public CustomerOrderValidator()
         {
-            RuleFor(x => x.CustomerId).NotEmpty().WithMessage("Customer is required");
+            RuleFor(x => x.Customer).NotEmpty().WithMessage("Customer is required");
             RuleFor(x => x.OrderDate).NotEmpty().WithMessage("OrderDate is required");
         }
     }
