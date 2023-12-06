@@ -147,7 +147,6 @@ namespace Northwind.Blazor.Pages.CustomerOrders
         public CustomerOrderValidator()
         {
             RuleFor(x => x.Customer).NotEmpty().WithMessage("Customer is required");
-            //RuleFor(x => x.CustomerId).NotEmpty().WithMessage("Customer is required");
             RuleFor(x => x.OrderDate).NotEmpty().WithMessage("OrderDate is required");
         }
     }
