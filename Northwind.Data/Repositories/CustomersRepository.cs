@@ -32,6 +32,11 @@ namespace Northwind.Data.Repositories
             //}
         }
 
+        public Task<IEnumerable<Customer>> Find(string customerName)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Customer?> Get(int customerId)
         {
             //if (string.IsNullOrEmpty(customerId))-revisit
