@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
 using System;
@@ -27,6 +28,17 @@ namespace Northwind.Data.Postgresql.Repositories
             var customer = await Get(customerId);
             if (customer is not null)
                 _dbContext.Customers.Remove(customer);
+        }
+
+        public async Task<IEnumerable<Customer>> Find(string customerName)
+        {
+            if (string.IsNullOrWhiteSpace(customerName) || (!string.IsNullOrWhiteSpace(customerName) && customerName.Length < 2))
+                return new List<Customer>();
+
+            var results = new List<Customer>();
+            results = await _dbContext.Customers.Where(x => x.Name.ToLower().Contains(customerName.ToLower())).ToListAsync();
+
+            return results;
         }
 
         public Task<Customer?> Get(int customerId)
