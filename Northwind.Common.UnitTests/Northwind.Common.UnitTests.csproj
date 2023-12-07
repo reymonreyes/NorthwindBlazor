@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Northwind.Common\Northwind.Common.csproj" />
-    <ProjectReference Include="..\Northwind.Core\Northwind.Core.csproj" />
   </ItemGroup>
 
 </Project>
