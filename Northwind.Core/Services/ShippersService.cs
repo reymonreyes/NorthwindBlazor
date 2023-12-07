@@ -1,4 +1,5 @@
-﻿using Northwind.Core.Dtos;
+﻿using Northwind.Common.Extensions;
+using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
 using Northwind.Core.Exceptions;
 using Northwind.Core.Extensions;
@@ -113,6 +114,18 @@ namespace Northwind.Core.Services
             await _unitOfWork.ShippersRepository.Delete(shipperId);
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
+        }
+
+        public async Task<IEnumerable<ShipperDto>> FindAsync(string shipperName)
+        {
+            if (shipperName.IsEmptyOrLengthLessThan(2))
+                return new List<ShipperDto>();
+
+            await _unitOfWork.Start();
+            var matchedShippers = await _unitOfWork.ShippersRepository.FindAsync(shipperName);
+            await _unitOfWork.Stop();
+
+            return matchedShippers.Select(x => new ShipperDto { Id = x.Id, Name = x.Name, });
         }
     }
 }
