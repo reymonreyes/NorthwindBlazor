@@ -7,12 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="10.4.0" />
     <PackageReference Include="TinyMapper" Version="3.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Northwind.Core\Northwind.Core.csproj" />
   </ItemGroup>
 
 </Project>
