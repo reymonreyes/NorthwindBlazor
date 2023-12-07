@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Northwind.Blazor.Models;
 using Northwind.Blazor.Models.Validators;
+using Northwind.Common.Extensions;
 using Northwind.Common.Enums;
 using Northwind.Core.Dtos;
 using Northwind.Core.Exceptions;
@@ -25,6 +26,8 @@ namespace Northwind.Blazor.Pages.CustomerOrders
         public ICustomerOrdersService CustomerOrdersService { get; set; }
         [Inject]
         public ICustomersService CustomersService { get; set; }
+        [Inject]
+        public IShippersService ShippersService { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
@@ -139,6 +142,16 @@ namespace Northwind.Blazor.Pages.CustomerOrders
             var customers = await CustomersService.FindAsync(customerName);
 
             return customers.Select(x => new CustomerDto { Id = x.Id, Name = x.Name}).ToList();
+        }
+
+        private async Task<IEnumerable<ShipperDto>> FindShipper(string shipperName)
+        {
+            if (shipperName.IsEmptyOrLengthLessThan(2))
+                return new List<ShipperDto>();
+
+            var shippers = await ShippersService.FindAsync(shipperName);
+
+            return shippers;
         }
     }
 

@@ -53,7 +53,8 @@
                     <MudDatePicker @bind-Date="_customerOrder.ShipDate" For="@(() => _customerOrder.ShipDate)" Label="Ship Date" />
                 </MudItem>
                 <MudItem md="6" lg="6">
-                    <MudTextField @bind-Value="_customerOrder.ShipperId" For="@(() => _customerOrder.ShipperId)" Label="Shipper"></MudTextField>
+                    <MudAutocomplete @bind-Value="_customerOrder.Shipper" Label="Shipper" SearchFunc="@FindShipper" ToStringFunc="@(x => x == null ? null : $"{x.Name}")"
+                        For="@(() => _customerOrder.Shipper)" ResetValueOnEmptyText="true" Immediate="true" ProgressIndicatorColor="Color.Info" Variant="Variant.Outlined" Margin="Margin.Dense"></MudAutocomplete>
                 </MudItem>
                 <MudItem md="6" lg="6">
                     <MudTextField @bind-Value="_customerOrder.ShipTo" For="@(() => _customerOrder.ShipTo)" Label="Ship To"></MudTextField>
