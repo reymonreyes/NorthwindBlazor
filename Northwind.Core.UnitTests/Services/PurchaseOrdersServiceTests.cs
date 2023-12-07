@@ -1,6 +1,6 @@
 ﻿using Autofac.Extras.Moq;
 using Moq;
-using Northwind.Common.Validators;
+using Northwind.Core.Validators;
 using Northwind.Core.Dtos;
 using Northwind.Core.Dtos.Document;
 using Northwind.Core.Entities;
