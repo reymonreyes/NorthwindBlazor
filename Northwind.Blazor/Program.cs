@@ -1,6 +1,6 @@
 using MudBlazor.Services;
 using Northwind.Blazor.Data;
-using Northwind.Common.Validators;
+using Northwind.Core.Validators;
 using Northwind.Core.Interfaces.Infrastructure;
 using Northwind.Core.Interfaces.Repositories;
 using Northwind.Core.Interfaces.Services;

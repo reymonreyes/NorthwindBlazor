@@ -1,4 +1,4 @@
-﻿using Northwind.Common.Validators;
+﻿using Northwind.Core.Validators;
 using Northwind.Core.Dtos;
 using Northwind.Core.Interfaces.Validators;
 using System;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Northwind.Common.UnitTests.Validators
+namespace Northwind.Core.UnitTests.Validators
 {
     public class ShipperValidatorTests
     {

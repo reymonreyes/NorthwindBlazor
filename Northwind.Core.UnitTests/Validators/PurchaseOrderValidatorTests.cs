@@ -1,4 +1,4 @@
-﻿using Northwind.Common.Validators;
+﻿using Northwind.Core.Validators;
 using Northwind.Core.Interfaces.Validators;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Northwind.Common.UnitTests.Validators
+namespace Northwind.Core.UnitTests.Validators
 {
     public class PurchaseOrderValidatorTests
     {
@@ -28,7 +28,7 @@ namespace Northwind.Common.UnitTests.Validators
         public void ShouldReturnEmptyIfValid()
         {
             IPurchaseOrderValidator validator = new PurchaseOrderValidator();
-            var result = validator.Validate(new Core.Dtos.PurchaseOrderDto { SupplierId = 1 });
+            var result = validator.Validate(new Core.Dtos.PurchaseOrderDto { SupplierId = 1, ShipTo = "Some address", OrderDate = DateTime.Now });
             Assert.Empty(result);
         }
     }

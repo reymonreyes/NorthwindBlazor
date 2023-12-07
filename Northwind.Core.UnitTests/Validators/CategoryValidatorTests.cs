@@ -1,4 +1,4 @@
-﻿using Northwind.Common.Validators;
+﻿using Northwind.Core.Validators;
 using Northwind.Core.Enums;
 using Northwind.Core.Interfaces.Validators;
 using System;
@@ -8,18 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Northwind.Common.UnitTests.Validators
+namespace Northwind.Core.UnitTests.Validators
 {
-    public class ProductValidatorTests
+    public class CategoryValidatorTests
     {
         [Fact]
         public void ShouldReturnErrorsOnRequiredFields()
         {
-            IProductValidator validator = new ProductValidator();
-            var result = validator.Validate(new Core.Dtos.ProductDto());
+            ICategoryValidator validator = new CategoryValidator();
+            var result = validator.Validate(new Core.Dtos.CategoryDto());
 
             Assert.Contains(result, x => x.MessageType == ServiceMessageType.Error && x.Message.Value.Contains("Name"));
-            Assert.Contains(result, x => x.MessageType == ServiceMessageType.Error && x.Message.Value.Contains("Code"));
         }
     }
 }

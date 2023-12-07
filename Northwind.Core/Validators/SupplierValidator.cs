@@ -3,7 +3,7 @@ using Northwind.Core.Dtos;
 using Northwind.Core.Enums;
 using Northwind.Core.Interfaces.Validators;
 
-namespace Northwind.Common.Validators
+namespace Northwind.Core.Validators
 {
     public class SupplierValidator : AbstractValidator<SupplierDto>, ISupplierValidator
     {

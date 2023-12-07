@@ -14,5 +14,6 @@ namespace Northwind.Core.Interfaces.Services
         public Task<ShipperDto?> Get(int shipperId);
         public Task<ServiceResult> Update(int shipperId, ShipperDto shipperDto);
         public Task Delete(int shipperId);
+        Task<IEnumerable<ShipperDto>> FindAsync(string shipperName);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Northwind.Common.Extensions;
 using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
 using System;
@@ -27,6 +28,15 @@ namespace Northwind.Data.Postgresql.Repositories
             var shipper = await Get(shipperId);
             if (shipper is not null)
                 _efDbContext.Shippers.Remove(shipper);
+        }
+
+        public async Task<IEnumerable<Shipper>> FindAsync(string shipperName)
+        {
+            if(shipperName.IsEmptyOrLengthLessThan(2))
+                return new List<Shipper>();
+
+            var results = await _efDbContext.Shippers.Where(x => x.Name.ToLower().Contains(shipperName.ToLower())).ToListAsync();
+            return results;
         }
 
         public async Task<Shipper?> Get(int shipperId)

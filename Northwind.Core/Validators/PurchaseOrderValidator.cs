@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CoreEnums = Northwind.Core.Enums;
 
-namespace Northwind.Common.Validators
+namespace Northwind.Core.Validators
 {
     public class PurchaseOrderValidator : AbstractValidator<PurchaseOrderDto>, IPurchaseOrderValidator
     {

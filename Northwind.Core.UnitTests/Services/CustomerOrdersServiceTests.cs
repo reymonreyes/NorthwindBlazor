@@ -41,6 +41,8 @@ namespace Northwind.Core.UnitTests.Services
             var productsRepo = mock.Mock<IProductsRepository>();
             productsRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Entities.Product)null);
             uow.Setup(x => x.ProductsRepository).Returns(productsRepo.Object);
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
 
             ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
             var items = new List<CustomerOrderItemDto>
@@ -64,6 +66,8 @@ namespace Northwind.Core.UnitTests.Services
             var productsRepo = mock.Mock<IProductsRepository>();
             productsRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Entities.Product)null);
             uow.Setup(x => x.ProductsRepository).Returns(productsRepo.Object);
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
 
             ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
             var items = new List<CustomerOrderItemDto>
@@ -88,6 +92,8 @@ namespace Northwind.Core.UnitTests.Services
             var productsRepo = mock.Mock<IProductsRepository>();
             productsRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync(new Product { Id = 1, Name = "Product One"});
             uow.Setup(x => x.ProductsRepository).Returns(productsRepo.Object);
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
 
             ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
             var items = new List<CustomerOrderItemDto>

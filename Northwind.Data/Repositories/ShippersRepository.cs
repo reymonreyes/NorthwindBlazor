@@ -29,6 +29,11 @@ namespace Northwind.Data.Repositories
                 _efDbContext.Shippers.Remove(shipper);
         }
 
+        public Task<IEnumerable<Shipper>> FindAsync(string shipperName)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Shipper?> Get(int shipperId)
         {
             return await _efDbContext.Shippers.FirstOrDefaultAsync(x => x.Id == shipperId);

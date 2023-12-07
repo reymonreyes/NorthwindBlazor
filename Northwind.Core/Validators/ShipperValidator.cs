@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Northwind.Common.Validators
+namespace Northwind.Core.Validators
 {
     public class ShipperValidator : AbstractValidator<ShipperDto>, IShipperValidator
     {
