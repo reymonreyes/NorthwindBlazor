@@ -67,6 +67,21 @@
         }
     </MudItem>
     <MudItem sm="12" md="6" lg="6">
-
+        <MudPaper Elevation="0">
+            <MudGrid>
+                <MudItem md="6">
+                    <MudTextField T="int" Label="Product" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </MudItem>
+                <MudItem md="2">
+                    <MudNumericField T="int" Label="Qty" Variant="Variant.Outlined" Margin="Margin.Dense" Adornment="Adornment.End"></MudNumericField>
+                </MudItem>
+                <MudItem md="2">
+                    <MudNumericField T="decimal" Label="Unit Price" Variant="Variant.Outlined" Margin="Margin.Dense" Adornment="Adornment.End"></MudNumericField>
+                </MudItem>
+                <MudItem md="2" Class="d-flex px-8 pt-1">
+                    <MudButton Class="align-self-center" Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Add</MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
     </MudItem>
 </MudGrid>
