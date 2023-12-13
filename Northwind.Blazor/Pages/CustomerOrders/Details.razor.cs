@@ -17,9 +17,11 @@ namespace Northwind.Blazor.Pages.CustomerOrders
     {
         public EntryMode _entryMode = EntryMode.Create;
         public CustomerOrder? _customerOrder = null;
+        public CustomerOrderItem _customerOrderItem = new CustomerOrderItem();
         public CustomerOrderValidator _customerOrderValidator = new CustomerOrderValidator();
-        public MudForm? _customerOrderForm;
-        public bool _isCustomerOrderFormValid, _isCustomerOrderFormOverlayVisible;
+        public CustomerOrderItemValidator _customerOrderItemValidator = new CustomerOrderItemValidator();
+        public MudForm? _customerOrderForm, _addItemForm;
+        public bool _isCustomerOrderFormValid, _isCustomerOrderFormOverlayVisible, _isCustomerOrderFormItemValid;
         public List<string> _errors = new List<string>();
         
         [Inject]
@@ -153,6 +155,15 @@ namespace Northwind.Blazor.Pages.CustomerOrders
 
             return shippers;
         }
+
+        private async Task AddItemAsync()
+        {
+            await _addItemForm.Validate();
+            if (!_isCustomerOrderFormItemValid)
+                return;
+
+            CustomersService.Create
+        }
     }
 
     public class CustomerOrderValidator : BaseValidator<CustomerOrder>
@@ -161,6 +172,16 @@ namespace Northwind.Blazor.Pages.CustomerOrders
         {
             RuleFor(x => x.Customer).NotEmpty().WithMessage("Customer is required");
             RuleFor(x => x.OrderDate).NotEmpty().WithMessage("OrderDate is required");
+        }
+    }
+
+    public class CustomerOrderItemValidator : BaseValidator<CustomerOrderItem>
+    {
+        public CustomerOrderItemValidator()
+        {
+            RuleFor(x => x.ProductId).NotEmpty().WithMessage("Required");
+            RuleFor(x => x.Qty).NotEmpty().WithMessage("Required").GreaterThan(0).WithMessage("Invalid");
+            RuleFor(x => x.UnitPrice).NotEmpty().WithMessage("Required").GreaterThan(0).WithMessage("Invalid");
         }
     }
 }
