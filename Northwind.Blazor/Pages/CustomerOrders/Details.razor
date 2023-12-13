@@ -83,5 +83,35 @@
                 </MudItem>
             </MudGrid>
         </MudPaper>
+        <MudSimpleTable Style="overflow-x: auto;" Hover="true" Bordered="true" Dense="true">
+            <colgroup>
+                <col />
+                <col width="15%" />
+                <col width="15%" />
+                <col />
+                <col width="11%" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th style="text-align:center;">Product</th>
+                    <th style="text-align:center;">Qty</th>
+                    <th style="text-align:center;">Unit Price</th>
+                    <th style="text-align:center;">Total</th>
+                    <th style="text-align:center;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Salsa</td>
+                    <td style="text-align:right;">1</td>
+                    <td style="text-align:right;">2.50</td>
+                    <td style="text-align:right;">2.50</td>
+                    <td style="text-align:center;">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="edit" Size="Size.Small"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>
+                    </td>
+                </tr>
+            </tbody>
+        </MudSimpleTable>
     </MudItem>
 </MudGrid>
