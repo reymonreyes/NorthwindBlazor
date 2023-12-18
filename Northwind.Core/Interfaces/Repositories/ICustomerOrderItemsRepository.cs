@@ -9,6 +9,7 @@ namespace Northwind.Core.Interfaces.Repositories
 {
     public interface ICustomerOrderItemsRepository
     {
+        Task DeleteAsync(int id);
         Task<CustomerOrderItem?> GetAsync(int id);
         Task UpdateAsync(CustomerOrderItem item);
     }
