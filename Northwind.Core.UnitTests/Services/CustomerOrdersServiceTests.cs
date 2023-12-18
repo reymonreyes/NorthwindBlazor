@@ -429,5 +429,27 @@ namespace Northwind.Core.UnitTests.Services
             var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.UpdateItem(1, new CustomerOrderItemDto { ProductId = 1, Quantity = 0, UnitPrice = 0 }));
             Assert.Equal(2, exception.ValidationErrors.Count);
         }
+
+        [Fact]
+        public async Task RemoveItem_ShouldThrowExceptionIfIdIsInvalid()
+        {
+            var mock = AutoMock.GetLoose();
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.RemoveItem(-1));
+        }
+
+        [Fact]
+        public async Task RemoveItem_ShouldThrowExceptionIfItemDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrderItemsRepo = mock.Mock<ICustomerOrderItemsRepository>();
+            customerOrderItemsRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((CustomerOrderItem)null);
+            uow.Setup(x => x.CustomerOrderItemsRepository).Returns(customerOrderItemsRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.RemoveItem(1));
+        }
     }
 }
