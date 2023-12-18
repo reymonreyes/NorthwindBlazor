@@ -27,5 +27,12 @@ namespace Northwind.Data.Postgresql.Repositories
 
             return Task.CompletedTask;
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            var item = await GetAsync(id);
+            if(item is not null)
+                _efDbContext.CustomerOrderItems.Remove(item);
+        }
     }
 }
