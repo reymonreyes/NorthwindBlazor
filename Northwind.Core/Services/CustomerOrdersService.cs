@@ -226,7 +226,7 @@ namespace Northwind.Core.Services
             return result;
         }
 
-        public async Task UpdateItem(int customerOrderId, CustomerOrderItemDto customerOrderItem)
+        public async Task UpdateItem(int customerOrderId, CustomerOrderItemDto customerOrderItem)   
         {
             if (customerOrderId <= 0) throw new ArgumentException(nameof(customerOrderId));
             if(customerOrderItem is null) throw new ArgumentNullException(nameof(customerOrderItem));
@@ -251,6 +251,19 @@ namespace Northwind.Core.Services
             orderItem.Quantity = customerOrderItem.Quantity;
             orderItem.UnitPrice = customerOrderItem.UnitPrice.Value;
             await _unitOfWork.CustomerOrderItemsRepository.UpdateAsync(orderItem);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+        }
+
+        public async Task RemoveItem(int customerOrderItemId)
+        {
+            if(customerOrderItemId <= 0) throw new ArgumentException(nameof(customerOrderItemId));
+
+            await _unitOfWork.Start();
+            var customerOrderItem = await _unitOfWork.CustomerOrderItemsRepository.GetAsync(customerOrderItemId);
+            if (customerOrderItem == null) throw new DataNotFoundException("CustomerOrderItem not found");
+
+            await _unitOfWork.CustomerOrderItemsRepository.DeleteAsync(customerOrderItemId);
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
         }
