@@ -9,6 +9,7 @@ using Northwind.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -339,6 +340,116 @@ namespace Northwind.Core.UnitTests.Services
             await service.CompleteOrder(1);
 
             Assert.Equal(Enums.OrderStatus.Completed, order.Status);
+        }
+
+        [Fact]
+        public async Task UpdateItem_ShouldThrowExceptionIfCustomerOrderIdIsInvalid()
+        {
+            var mock = AutoMock.GetLoose();
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.UpdateItem(-1, null));
+        }
+
+        [Fact]
+        public async Task UpdateItem_ShouldThrowExceptionIfCustomerOrderItemIsEmpty()
+        {
+            var mock = AutoMock.GetLoose();
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.UpdateItem(1, null));
+        }
+
+        [Fact]
+        public async Task UpdateItem_ShouldThrowExceptionIfCustomerOrderDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((CustomerOrder)null);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.UpdateItem(1, new CustomerOrderItemDto { Id = 1}));
+        }
+
+        [Fact]
+        public async Task UpdateItem_ShouldThrowExceptionIfItemDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1 });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            var productsRepo = mock.Mock<IProductsRepository>();
+            productsRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync(new Product { Id = 1 });
+            uow.Setup(x => x.ProductsRepository).Returns(productsRepo.Object);
+            var customerOrderItemsRepo = mock.Mock<ICustomerOrderItemsRepository>();
+            customerOrderItemsRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((CustomerOrderItem)null);
+            uow.Setup(x => x.CustomerOrderItemsRepository).Returns(customerOrderItemsRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var exception = await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.UpdateItem(1, new CustomerOrderItemDto { Id = 1, ProductId = 1 }));
+            Assert.Contains("Order Item not found", exception.Message);
+        }
+
+        [Fact]
+        public async Task UpdateItem_ShouldThrowExceptionIfProductDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1 });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            var productsRepo = mock.Mock<IProductsRepository>();
+            productsRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Product)null);
+            uow.Setup(x => x.ProductsRepository).Returns(productsRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var exception = await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.UpdateItem(1, new CustomerOrderItemDto { Id = 1, ProductId = 1 }));
+            Assert.Contains("Product not found", exception.Message);
+        }
+
+        [Fact]
+        public async Task UpdateItem_ShouldAddThrowValidationExceptionIfQuantityAndUnitPriceIsInvalid()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1});
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            var productsRepo = mock.Mock<IProductsRepository>();
+            productsRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync(new Product { Id = 1});
+            uow.Setup(x => x.ProductsRepository).Returns(productsRepo.Object);
+            var customerOrderItemsRepo = mock.Mock<ICustomerOrderItemsRepository>();
+            customerOrderItemsRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrderItem { Id = 1 });
+            uow.Setup(x => x.CustomerOrderItemsRepository).Returns(customerOrderItemsRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.UpdateItem(1, new CustomerOrderItemDto { ProductId = 1, Quantity = 0, UnitPrice = 0 }));
+            Assert.Equal(2, exception.ValidationErrors.Count);
+        }
+
+        [Fact]
+        public async Task RemoveItem_ShouldThrowExceptionIfIdIsInvalid()
+        {
+            var mock = AutoMock.GetLoose();
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.RemoveItem(-1));
+        }
+
+        [Fact]
+        public async Task RemoveItem_ShouldThrowExceptionIfItemDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrderItemsRepo = mock.Mock<ICustomerOrderItemsRepository>();
+            customerOrderItemsRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((CustomerOrderItem)null);
+            uow.Setup(x => x.CustomerOrderItemsRepository).Returns(customerOrderItemsRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.RemoveItem(1));
         }
     }
 }

@@ -224,6 +224,48 @@ namespace Northwind.Core.Services
             }
 
             return result;
-        }        
+        }
+
+        public async Task UpdateItem(int customerOrderId, CustomerOrderItemDto customerOrderItem)   
+        {
+            if (customerOrderId <= 0) throw new ArgumentException(nameof(customerOrderId));
+            if(customerOrderItem is null) throw new ArgumentNullException(nameof(customerOrderItem));
+
+            await _unitOfWork.Start();
+            var customerOrder = await _unitOfWork.CustomerOrdersRepository.GetAsync(customerOrderId);
+            if (customerOrder is null) throw new DataNotFoundException("CustomerOrder not found");
+
+            var product = await _unitOfWork.ProductsRepository.Get(customerOrderItem.ProductId);
+            if (product is null) throw new DataNotFoundException("Product not found");
+
+            var orderItem = await _unitOfWork.CustomerOrderItemsRepository.GetAsync(customerOrderItem.Id);
+            if (orderItem is null) throw new DataNotFoundException("Order Item not found");
+            
+            var validationErrors = new List<ServiceMessageResult>();
+            if(customerOrderItem.Quantity <= 0)
+                validationErrors.Add(new ServiceMessageResult { Message = new KeyValuePair<string, string>("Quantity", "invalid"), MessageType = ServiceMessageType.Error });
+            if(customerOrderItem.UnitPrice <= 0)
+                validationErrors.Add(new ServiceMessageResult { Message = new KeyValuePair<string, string>("UnitPrice", "invalid"), MessageType = ServiceMessageType.Error });
+            if (validationErrors.Count > 0) throw new ValidationFailedException(validationErrors);
+
+            orderItem.Quantity = customerOrderItem.Quantity;
+            orderItem.UnitPrice = customerOrderItem.UnitPrice.Value;
+            await _unitOfWork.CustomerOrderItemsRepository.UpdateAsync(orderItem);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+        }
+
+        public async Task RemoveItem(int customerOrderItemId)
+        {
+            if(customerOrderItemId <= 0) throw new ArgumentException(nameof(customerOrderItemId));
+
+            await _unitOfWork.Start();
+            var customerOrderItem = await _unitOfWork.CustomerOrderItemsRepository.GetAsync(customerOrderItemId);
+            if (customerOrderItem == null) throw new DataNotFoundException("CustomerOrderItem not found");
+
+            await _unitOfWork.CustomerOrderItemsRepository.DeleteAsync(customerOrderItemId);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+        }
     }
 }

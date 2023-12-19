@@ -17,5 +17,7 @@ namespace Northwind.Core.Interfaces.Services
         Task ReceivePayment(int orderId, DateTime paymenDate, decimal amount, PaymentMethodType paymentType);
         Task CompleteOrder(int orderId);
         Task<CustomerOrderDto?> GetAsync(int orderId);
+        Task UpdateItem(int customerOrderId, CustomerOrderItemDto customerOrderItem);
+        Task RemoveItem(int customerOrderItemId);
     }
 }
