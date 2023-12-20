@@ -11,7 +11,7 @@
     <MudItem sm="12" md="6" lg="6" Style="position: relative;">
         <MudOverlay Visible="_isCustomerOrderFormOverlayVisible" Absolute="true" DarkBackground="true">
             <MudStack>
-                <MudText Style="@($"color:{Colors.Shades.White};")">Updating</MudText>
+                <MudText Style="@($"color:{Colors.Shades.White};")">Processing...</MudText>
                 <MudProgressCircular Class="align-self-center" Color="Color.Primary" Indeterminate="true" />
             </MudStack>
         </MudOverlay>
@@ -66,9 +66,15 @@
         </MudForm>
         }
     </MudItem>
-    <MudItem sm="12" md="6" lg="6">
+    <MudItem sm="12" md="6" lg="6" Style="position: relative;">
+        <MudOverlay Visible="_isCustomerOrderItemFormOverlayVisible" Absolute="true" DarkBackground="true">
+            <MudStack>
+                <MudText Style="@($"color:{Colors.Shades.White};")">Processing...</MudText>
+                <MudProgressCircular Class="align-self-center" Color="Color.Primary" Indeterminate="true" />
+            </MudStack>
+        </MudOverlay>
         <MudPaper Elevation="0">
-            <MudForm @ref="_addItemForm" Model="_customerOrderItem" @bind-IsValid="_isCustomerOrderFormItemValid" Validation="(_customerOrderItemValidator.ValidateValue)">
+            <MudForm @ref="_addItemForm" Model="_customerOrderItem" @bind-IsValid="_isCustomerOrderItemFormValid" Validation="(_customerOrderItemValidator.ValidateValue)">
                 <MudGrid>
                     <MudItem md="6">
                         <MudTextField @bind-Value="_customerOrderItem.ProductId" For="@(() => _customerOrderItem.ProductId)" Label="Product" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
