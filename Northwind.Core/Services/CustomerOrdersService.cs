@@ -33,15 +33,15 @@ namespace Northwind.Core.Services
                 if (product == null) throw new DataNotFoundException("Product not found.");
                 if (customerOrderItemDto.Quantity <= 0) throw new ValidationFailedException("Quantity must be greater than 0.");
 
-                customerOrder.Items.Add(new CustomerOrderItem
+                var orderItem = new CustomerOrderItem
                 {
-                    CustomerOrderId = customerOrderItemDto.ProductId,
+                    CustomerOrderId = customerOrder.Id,
                     Quantity = customerOrderItemDto.Quantity,
                     ProductId = customerOrderItemDto.ProductId,
                     UnitPrice = customerOrderItemDto.UnitPrice ?? product.ListPrice,
-                });
-                _unitOfWork.CustomerOrdersRepository.Update(customerOrder);
+                };
 
+                await _unitOfWork.CustomerOrderItemsRepository.CreateAsync(orderItem);
                 await _unitOfWork.Commit();
             }
 
