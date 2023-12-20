@@ -21,6 +21,11 @@ namespace Northwind.Data.Postgresql.Repositories
             return customerOrder;
         }
 
+        public async Task CreateAsync(CustomerOrderItem item)
+        {
+            await _efDbContext.CustomerOrderItems.AddAsync(item);
+        }
+
         public Task UpdateAsync(CustomerOrderItem item)
         {
             _efDbContext.CustomerOrderItems.Update(item);

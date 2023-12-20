@@ -11,7 +11,7 @@
     <MudItem sm="12" md="6" lg="6" Style="position: relative;">
         <MudOverlay Visible="_isCustomerOrderFormOverlayVisible" Absolute="true" DarkBackground="true">
             <MudStack>
-                <MudText Style="@($"color:{Colors.Shades.White};")">Updating</MudText>
+                <MudText Style="@($"color:{Colors.Shades.White};")">Processing...</MudText>
                 <MudProgressCircular Class="align-self-center" Color="Color.Primary" Indeterminate="true" />
             </MudStack>
         </MudOverlay>
@@ -66,7 +66,60 @@
         </MudForm>
         }
     </MudItem>
-    <MudItem sm="12" md="6" lg="6">
-
+    <MudItem sm="12" md="6" lg="6" Style="position: relative;">
+        <MudOverlay Visible="_isCustomerOrderItemFormOverlayVisible" Absolute="true" DarkBackground="true">
+            <MudStack>
+                <MudText Style="@($"color:{Colors.Shades.White};")">Processing...</MudText>
+                <MudProgressCircular Class="align-self-center" Color="Color.Primary" Indeterminate="true" />
+            </MudStack>
+        </MudOverlay>
+        <MudPaper Elevation="0">
+            <MudForm @ref="_addItemForm" Model="_customerOrderItem" @bind-IsValid="_isCustomerOrderItemFormValid" Validation="(_customerOrderItemValidator.ValidateValue)">
+                <MudGrid>
+                    <MudItem md="6">
+                        <MudTextField @bind-Value="_customerOrderItem.ProductId" For="@(() => _customerOrderItem.ProductId)" Label="Product" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                    </MudItem>
+                    <MudItem md="2">
+                        <MudNumericField @bind-Value="_customerOrderItem.Qty" For="@(() => _customerOrderItem.Qty)" Label="Qty" Variant="Variant.Outlined" Margin="Margin.Dense" Adornment="Adornment.End"></MudNumericField>
+                    </MudItem>
+                    <MudItem md="2">
+                        <MudNumericField @bind-Value="_customerOrderItem.UnitPrice" For="@(() => _customerOrderItem.UnitPrice)" Label="Unit Price" Variant="Variant.Outlined" Margin="Margin.Dense" Adornment="Adornment.End"></MudNumericField>
+                    </MudItem>
+                    <MudItem md="2" Class="d-flex px-8 pt-1">
+                        <MudButton OnClick="AddItemAsync" Class="align-self-center" Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Add</MudButton>
+                    </MudItem>
+                </MudGrid>
+            </MudForm>
+        </MudPaper>
+        <MudSimpleTable Style="overflow-x: auto;" Hover="true" Bordered="true" Dense="true">
+            <colgroup>
+                <col />
+                <col width="15%" />
+                <col width="15%" />
+                <col />
+                <col width="11%" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th style="text-align:center;">Product</th>
+                    <th style="text-align:center;">Qty</th>
+                    <th style="text-align:center;">Unit Price</th>
+                    <th style="text-align:center;">Total</th>
+                    <th style="text-align:center;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Salsa</td>
+                    <td style="text-align:right;">1</td>
+                    <td style="text-align:right;">2.50</td>
+                    <td style="text-align:right;">2.50</td>
+                    <td style="text-align:center;">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="edit" Size="Size.Small"></MudIconButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>
+                    </td>
+                </tr>
+            </tbody>
+        </MudSimpleTable>
     </MudItem>
 </MudGrid>

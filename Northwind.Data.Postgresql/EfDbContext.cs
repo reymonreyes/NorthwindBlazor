@@ -183,6 +183,7 @@ namespace Northwind.Data.Postgresql
             modelBuilder.Entity<CustomerOrder>().Property(x => x.DueDate).HasColumnType("timestamp").IsRequired(false);
             modelBuilder.Entity<CustomerOrder>().Property(x => x.ShipDate).HasColumnType("timestamp").IsRequired(false);
             modelBuilder.Entity<CustomerOrderItem>().ToTable("customerorderitems").HasKey(x => x.Id);
+            modelBuilder.Entity<CustomerOrderItem>().Property(x => x.Id).HasColumnType("serial").IsRequired(true);
             modelBuilder.Entity<CustomerOrderItem>().Property(x => x.Quantity).HasColumnType("int");
             modelBuilder.Entity<CustomerOrderItem>().Property(x => x.UnitPrice).HasColumnType("money");
             modelBuilder.Entity<CustomerOrderItem>().Property(x => x.Discount).HasColumnType("int");
@@ -191,8 +192,8 @@ namespace Northwind.Data.Postgresql
 
             modelBuilder.Entity<CustomerOrder>().HasMany(x => x.Items).WithOne().HasForeignKey(x => x.CustomerOrderId).IsRequired(true);
             modelBuilder.Entity<CustomerOrderItem>().HasOne<Product>().WithMany().HasForeignKey(x => x.ProductId).IsRequired(true);
-            modelBuilder.Entity<PurchaseOrder>().HasMany<CustomerOrderItem>().WithOne().HasForeignKey(x => x.PurchaseOrderId).IsRequired(false);
-            modelBuilder.Entity<InventoryTransaction>().HasMany<CustomerOrderItem>().WithOne().HasForeignKey(x => x.InventoryTransactionId).IsRequired(false);
+            //modelBuilder.Entity<PurchaseOrder>().HasMany<CustomerOrderItem>().WithOne().HasForeignKey(x => x.PurchaseOrderId).IsRequired(false);
+            //modelBuilder.Entity<InventoryTransaction>().HasMany<CustomerOrderItem>().WithOne().HasForeignKey(x => x.InventoryTransactionId).IsRequired(false);
             modelBuilder.Entity<Shipper>().HasMany<CustomerOrder>().WithOne().HasForeignKey(x => x.ShipperId).IsRequired(false);
             modelBuilder.Entity<CustomerOrder>().OwnsOne(x => x.ShipTo);
             modelBuilder.Entity<CustomerOrder>().OwnsOne(x => x.Payment);

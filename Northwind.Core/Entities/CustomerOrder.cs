@@ -34,8 +34,8 @@ namespace Northwind.Core.Entities
         public decimal UnitPrice { get; set; }
         public int Discount { get; set; }
         public DateTime? DateAllocated { get; set; }
-        public int? PurchaseOrderId { get; set; }
-        public int? InventoryTransactionId { get; set; }
+        //public int? PurchaseOrderId { get; set; } TODO
+        //public int? InventoryTransactionId { get; set; } TODO
         public OrderStatus Status { get; set; }
     }
 }

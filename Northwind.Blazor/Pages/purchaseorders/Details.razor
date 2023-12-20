@@ -314,10 +314,10 @@
             if (result.IsSuccessful)
             {
                 var id = result?.Messages?.FirstOrDefault()?.Message.Value;
+                Notify($"Purchase Order # {id} {(_entryMode == EntryMode.Create ? "created" : "updated")} successfully.", MudBlazor.Severity.Success);
                 Id = int.Parse(id);
                 _entryMode = EntryMode.Edit;
                 NavigationManager.NavigateTo($"purchaseorders/{id}", false, true);
-                Notify($"Purchase Order # {id} {(_entryMode == EntryMode.Create ? "created" : "updated")} successfully.", MudBlazor.Severity.Success);
             }
         }
         catch (ValidationFailedException exc)//server side error

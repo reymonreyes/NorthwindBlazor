@@ -17,9 +17,11 @@ namespace Northwind.Blazor.Pages.CustomerOrders
     {
         public EntryMode _entryMode = EntryMode.Create;
         public CustomerOrder? _customerOrder = null;
+        public CustomerOrderItem _customerOrderItem = new CustomerOrderItem();
         public CustomerOrderValidator _customerOrderValidator = new CustomerOrderValidator();
-        public MudForm? _customerOrderForm;
-        public bool _isCustomerOrderFormValid, _isCustomerOrderFormOverlayVisible;
+        public CustomerOrderItemValidator _customerOrderItemValidator = new CustomerOrderItemValidator();
+        public MudForm? _customerOrderForm, _addItemForm;
+        public bool _isCustomerOrderFormValid, _isCustomerOrderFormOverlayVisible, _isCustomerOrderItemFormValid, _isCustomerOrderItemFormOverlayVisible;
         public List<string> _errors = new List<string>();
         
         [Inject]
@@ -87,11 +89,11 @@ namespace Northwind.Blazor.Pages.CustomerOrders
             Console.WriteLine("CustomerOrder loaded");
         }
 
-        private async Task Save()
+        private async Task<bool> Save()
         {
             await _customerOrderForm.Validate();
             if (!_isCustomerOrderFormValid)
-                return;
+                return false;
 
             switch (_entryMode)
             {
@@ -101,6 +103,8 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 case EntryMode.Edit:
                     break;
             }
+
+            return true;
         }
 
         private async Task Create()
@@ -113,10 +117,11 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 if(createResult.IsSuccessful)
                 {
                     var id = createResult?.Messages?.FirstOrDefault()?.Message.Value;
+                    Notify($"Customer Order # {id} {(_entryMode == EntryMode.Create ? "created" : "updated")} successfully.", MudBlazor.Severity.Success);
                     Id = int.Parse(id);
+                    _customerOrder.Id = Id;
                     _entryMode = EntryMode.Edit;
                     NavigationManager.NavigateTo($"customerorders/{id}", false, true);
-                    Notify($"Customer Order # {id} {(_entryMode == EntryMode.Create ? "created" : "updated")} successfully.", MudBlazor.Severity.Success);
                 }
             }
             catch (ValidationFailedException exc)
@@ -153,6 +158,51 @@ namespace Northwind.Blazor.Pages.CustomerOrders
 
             return shippers;
         }
+
+        private async Task AddItemAsync()
+        {
+            await _addItemForm.Validate();
+            if (!_isCustomerOrderItemFormValid)
+                return;
+
+            switch (_entryMode)
+            {
+                case EntryMode.Create:
+                    var successful = await Save();
+                    if (successful)
+                        await AddItemToOrder();
+                    break;
+                case EntryMode.Edit:
+                    await AddItemToOrder();
+                    break;
+            }
+        }
+
+        private async Task AddItemToOrder()
+        {
+            var item = new CustomerOrderItemDto
+            {
+                ProductId = _customerOrderItem.ProductId,
+                Quantity = _customerOrderItem.Qty,
+                UnitPrice = _customerOrderItem.UnitPrice,
+            };
+
+            try
+            {
+                _isCustomerOrderItemFormOverlayVisible = true;
+                await CustomerOrdersService.AddItem(_customerOrder.Id, item);
+                _customerOrder.Items.Add(_customerOrderItem);
+                _customerOrderItem = new CustomerOrderItem();
+                _customerOrderForm.Reset();
+                Notify($"Item added successfully.", MudBlazor.Severity.Success);
+            }
+            catch (Exception exc)
+            {
+                var message = exc.Message;
+                Notify(message, MudBlazor.Severity.Error);
+            }
+            _isCustomerOrderItemFormOverlayVisible = false;
+        }
     }
 
     public class CustomerOrderValidator : BaseValidator<CustomerOrder>
@@ -161,6 +211,16 @@ namespace Northwind.Blazor.Pages.CustomerOrders
         {
             RuleFor(x => x.Customer).NotEmpty().WithMessage("Customer is required");
             RuleFor(x => x.OrderDate).NotEmpty().WithMessage("OrderDate is required");
+        }
+    }
+
+    public class CustomerOrderItemValidator : BaseValidator<CustomerOrderItem>
+    {
+        public CustomerOrderItemValidator()
+        {
+            RuleFor(x => x.ProductId).NotEmpty().WithMessage("Required");
+            RuleFor(x => x.Qty).NotEmpty().WithMessage("Required").GreaterThan(0).WithMessage("Invalid");
+            RuleFor(x => x.UnitPrice).NotEmpty().WithMessage("Required").GreaterThan(0).WithMessage("Invalid");
         }
     }
 }
