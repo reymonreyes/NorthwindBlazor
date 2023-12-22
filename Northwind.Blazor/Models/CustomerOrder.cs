@@ -23,9 +23,18 @@ namespace Northwind.Blazor.Models
 
     public class CustomerOrderItem
     {
+        public int Id { get; set; }
         public int ProductId { get; set; }
         public ProductDto Product { get; set; }
         public int Qty { get; set; }
         public decimal UnitPrice { get; set; }
+        public bool IsInEditMode { get; set; }
+        public decimal Total
+        {
+            get
+            {
+                return Qty * UnitPrice;
+            }
+        }
     }
 }

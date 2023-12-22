@@ -17,7 +17,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
     public partial class Details
     {
         public EntryMode _entryMode = EntryMode.Create;
-        public Models.CustomerOrder? _customerOrder = null;
+        public Models.CustomerOrder _customerOrder = new Models.CustomerOrder();
         public Models.CustomerOrderItem _customerOrderItem = new Models.CustomerOrderItem();
         public CustomerOrderValidator _customerOrderValidator = new CustomerOrderValidator();
         public CustomerOrderItemValidator _customerOrderItemValidator = new CustomerOrderItemValidator();
@@ -66,8 +66,8 @@ namespace Northwind.Blazor.Pages.CustomerOrders
         private async Task LoadCustomerOrder()
         {
             _isCustomerOrderFormOverlayVisible = true;
+            _isCustomerOrderItemFormOverlayVisible = true;
             var customerOrder = await CustomerOrdersService.GetAsync(Id);
-            _isCustomerOrderFormOverlayVisible = false;
             if (customerOrder is null)
             {
                 Notify("Customer Order not found", MudBlazor.Severity.Error);
@@ -82,13 +82,16 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 DueDate = customerOrder.DueDate,
                 ShipDate = customerOrder.ShipDate,
                 ShipperId = customerOrder.ShipperId,
-                Notes = customerOrder.Notes
+                Notes = customerOrder.Notes,
+                Items = customerOrder.Items.Select(x => new Models.CustomerOrderItem { Id = x.Id, Product = new ProductDto { Id = x.Id }, Qty = x.Quantity, UnitPrice = x.UnitPrice.Value, IsInEditMode = true }).ToList()
             };
 
             var customer = await CustomersService.Get(_customerOrder.CustomerId);
             if(customer is not null)
                 _customerOrder.Customer = new CustomerDto { Id = customer.Id, Name = customer.Name };
 
+            _isCustomerOrderFormOverlayVisible = false;
+            _isCustomerOrderItemFormOverlayVisible = false;
             Console.WriteLine("CustomerOrder loaded");
         }
 

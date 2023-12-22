@@ -111,16 +111,31 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Salsa</td>
-                    <td style="text-align:right;">1</td>
-                    <td style="text-align:right;">2.50</td>
-                    <td style="text-align:right;">2.50</td>
-                    <td style="text-align:center;">
-                        <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="edit" Size="Size.Small"></MudIconButton>
-                        <MudIconButton Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>
-                    </td>
-                </tr>
+                @if (_customerOrder.Items is not null)
+                {
+                    @foreach (var item in _customerOrder.Items)
+                    {
+                        if (item.IsInEditMode)
+                        {
+                            @* item.EditItem = @<Northwind.Blazor.Components.EditPurchaseOrderItem Item="item" OnUpdateItem="UpdateItem" OnCancelUpdateItem="CancelUpdateItem"></Northwind.Blazor.Components.EditPurchaseOrderItem>
+                            ; *@
+                            <tr><td colspan="5">TODO: EDIT MODE</td></tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>@item.Product.Id</td>
+                                <td style="text-align:right;">@item.Qty</td>
+                                <td style="text-align:right;">@item.UnitPrice.ToString("N")</td>
+                                <td style="text-align:right;">@item.Total.ToString("N")</td>
+                                <td style="text-align: center;">
+                                    @* <MudIconButton OnClick="() => EditItem(item)" Icon="@Icons.Material.Filled.Edit" aria-label="delete" Size="Size.Small"></MudIconButton>
+                                    <MudIconButton OnClick="() => RemoveItem(item)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton> *@
+                                </td>
+                            </tr>
+                        }
+                    }
+                }                
             </tbody>
         </MudSimpleTable>
     </MudItem>
