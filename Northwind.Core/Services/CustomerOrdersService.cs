@@ -219,7 +219,8 @@ namespace Northwind.Core.Services
                     DueDate = order.DueDate,
                     ShipDate = order.ShipDate,
                     ShipperId = order.ShipperId,
-                    Notes = order.Notes
+                    Notes = order.Notes,
+                    Items = order.Items.Select(x => new CustomerOrderItemDto { Id = x.Id, ProductId = x.ProductId, Quantity = x.Quantity, UnitPrice = x.UnitPrice }).ToList()
                 };
             }
 
