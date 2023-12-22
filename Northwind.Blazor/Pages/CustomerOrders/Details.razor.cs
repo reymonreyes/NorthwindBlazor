@@ -83,7 +83,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 ShipDate = customerOrder.ShipDate,
                 ShipperId = customerOrder.ShipperId,
                 Notes = customerOrder.Notes,
-                Items = customerOrder.Items.Select(x => new Models.CustomerOrderItem { Id = x.Id, Product = new ProductDto { Id = x.Id }, Qty = x.Quantity, UnitPrice = x.UnitPrice.Value, IsInEditMode = true }).ToList()
+                Items = customerOrder.Items.Select(x => new Models.CustomerOrderItem { Id = x.Id, Product = new ProductDto { Id = x.Id }, Qty = x.Quantity, UnitPrice = x.UnitPrice.Value }).ToList()
             };
 
             var customer = await CustomersService.Get(_customerOrder.CustomerId);
