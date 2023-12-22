@@ -24,6 +24,7 @@ namespace Northwind.Blazor.Models
     public class CustomerOrderItem
     {
         public int ProductId { get; set; }
+        public ProductDto Product { get; set; }
         public int Qty { get; set; }
         public decimal UnitPrice { get; set; }
     }
