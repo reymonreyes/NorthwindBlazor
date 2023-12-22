@@ -10,14 +10,15 @@ using Northwind.Core.Exceptions;
 using Northwind.Core.Interfaces.Services;
 using System.Reflection.Metadata.Ecma335;
 using static SkiaSharp.HarfBuzz.SKShaper;
+using Northwind.Core.Entities;
 
 namespace Northwind.Blazor.Pages.CustomerOrders
 {
     public partial class Details
     {
         public EntryMode _entryMode = EntryMode.Create;
-        public CustomerOrder? _customerOrder = null;
-        public CustomerOrderItem _customerOrderItem = new CustomerOrderItem();
+        public Models.CustomerOrder? _customerOrder = null;
+        public Models.CustomerOrderItem _customerOrderItem = new Models.CustomerOrderItem();
         public CustomerOrderValidator _customerOrderValidator = new CustomerOrderValidator();
         public CustomerOrderItemValidator _customerOrderItemValidator = new CustomerOrderItemValidator();
         public MudForm? _customerOrderForm, _addItemForm;
@@ -30,6 +31,8 @@ namespace Northwind.Blazor.Pages.CustomerOrders
         public ICustomersService CustomersService { get; set; }
         [Inject]
         public IShippersService ShippersService { get; set; }
+        [Inject]
+        public IProductsService ProductsService { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
 
@@ -56,7 +59,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
 
         private void NewCustomerOrder()
         {
-            _customerOrder = new CustomerOrder();
+            _customerOrder = new Models.CustomerOrder();
             _customerOrder.OrderDate = DateTime.Now;
         }
 
@@ -71,7 +74,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 return;
             }
 
-            _customerOrder = new CustomerOrder
+            _customerOrder = new Models.CustomerOrder
             {
                 Id = customerOrder.Id,
                 CustomerId = customerOrder.CustomerId,
@@ -182,7 +185,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
         {
             var item = new CustomerOrderItemDto
             {
-                ProductId = _customerOrderItem.ProductId,
+                ProductId = _customerOrderItem.Product.Id,
                 Quantity = _customerOrderItem.Qty,
                 UnitPrice = _customerOrderItem.UnitPrice,
             };
@@ -192,7 +195,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 _isCustomerOrderItemFormOverlayVisible = true;
                 await CustomerOrdersService.AddItem(_customerOrder.Id, item);
                 _customerOrder.Items.Add(_customerOrderItem);
-                _customerOrderItem = new CustomerOrderItem();
+                _customerOrderItem = new Models.CustomerOrderItem();
                 _customerOrderForm.Reset();
                 Notify($"Item added successfully.", MudBlazor.Severity.Success);
             }
@@ -203,9 +206,27 @@ namespace Northwind.Blazor.Pages.CustomerOrders
             }
             _isCustomerOrderItemFormOverlayVisible = false;
         }
+
+        private async Task<IEnumerable<ProductDto>> FindProducts(string productName)
+        {
+            if(string.IsNullOrEmpty(productName))
+                return new List<ProductDto>();
+
+            ICollection<ProductDto> matchedProducts = await ProductsService.Find(productName);
+
+            return matchedProducts;
+        }
+
+        private void OnProductValueChanged(ProductDto? productDto)
+        {
+            Console.WriteLine("ValueChanged");
+            _customerOrderItem.Product = productDto;
+            if (productDto is not null)
+                _customerOrderItem.UnitPrice = productDto.ListPrice;
+        }
     }
 
-    public class CustomerOrderValidator : BaseValidator<CustomerOrder>
+    public class CustomerOrderValidator : BaseValidator<Models.CustomerOrder>
     {
         public CustomerOrderValidator()
         {
@@ -214,7 +235,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
         }
     }
 
-    public class CustomerOrderItemValidator : BaseValidator<CustomerOrderItem>
+    public class CustomerOrderItemValidator : BaseValidator<Models.CustomerOrderItem>
     {
         public CustomerOrderItemValidator()
         {

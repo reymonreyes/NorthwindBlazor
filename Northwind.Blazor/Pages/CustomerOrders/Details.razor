@@ -1,5 +1,6 @@
 ﻿@page "/customerorders/create"
 @page "/customerorders/{id:int}"
+@using Northwind.Core.Dtos
 @using Northwind.Core.Interfaces.Services
 @inherits PageBase
 
@@ -77,7 +78,8 @@
             <MudForm @ref="_addItemForm" Model="_customerOrderItem" @bind-IsValid="_isCustomerOrderItemFormValid" Validation="(_customerOrderItemValidator.ValidateValue)">
                 <MudGrid>
                     <MudItem md="6">
-                        <MudTextField @bind-Value="_customerOrderItem.ProductId" For="@(() => _customerOrderItem.ProductId)" Label="Product" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                        <MudAutocomplete T="ProductDto" Label="Product" Value="_customerOrderItem.Product" SearchFunc="@FindProducts" ToStringFunc="@(x => x == null ? null : $"{x.Name}")" For="@(() => _customerOrderItem.Product)" 
+                            ValueChanged="OnProductValueChanged" ResetValueOnEmptyText="true" Immediate="true" ProgressIndicatorColor="Color.Info" Variant="Variant.Outlined" Margin="Margin.Dense"></MudAutocomplete>
                     </MudItem>
                     <MudItem md="2">
                         <MudNumericField @bind-Value="_customerOrderItem.Qty" For="@(() => _customerOrderItem.Qty)" Label="Qty" Variant="Variant.Outlined" Margin="Margin.Dense" Adornment="Adornment.End"></MudNumericField>
