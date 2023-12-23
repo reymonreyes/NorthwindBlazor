@@ -11,6 +11,7 @@ using Northwind.Core.Interfaces.Services;
 using System.Reflection.Metadata.Ecma335;
 using static SkiaSharp.HarfBuzz.SKShaper;
 using Northwind.Core.Entities;
+using Northwind.Core.Services;
 
 namespace Northwind.Blazor.Pages.CustomerOrders
 {
@@ -226,6 +227,51 @@ namespace Northwind.Blazor.Pages.CustomerOrders
             _customerOrderItem.Product = productDto;
             if (productDto is not null)
                 _customerOrderItem.UnitPrice = productDto.ListPrice;
+        }
+
+        private void EditItem(Models.CustomerOrderItem customerOrderItem)
+        {
+            Console.WriteLine("EDITITEM");
+            customerOrderItem.IsInEditMode = true;
+        }
+
+        private void CancelUpdateItem(Models.CustomerOrderItem customerOrderItem)
+        {
+            Console.WriteLine("CancelUpdateItem from parent");
+            customerOrderItem.IsInEditMode = false;
+            customerOrderItem.EditItem = null;
+            StateHasChanged();
+        }
+
+        private async Task UpdateItemAsync(Models.CustomerOrderItem customerOrderItem)
+        {
+            _isCustomerOrderItemFormOverlayVisible = true;
+
+            var item = new CustomerOrderItemDto
+            {
+                Id = customerOrderItem.Id,
+                ProductId = customerOrderItem.Product.Id,
+                Quantity = customerOrderItem.Qty,
+                UnitPrice = customerOrderItem.UnitPrice,
+                CustomerOrderid = _customerOrder.Id
+            };
+
+            try
+            {
+                await CustomerOrdersService.UpdateItem(Id, item);
+                Notify($"Item updated successfully.", MudBlazor.Severity.Success);
+            }
+            catch (Exception exc)
+            {
+                var message = exc.Message;
+                Notify(message, MudBlazor.Severity.Error);
+            }
+            finally
+            {
+                customerOrderItem.IsInEditMode = false;
+                customerOrderItem.EditItem = null;
+                _isCustomerOrderItemFormOverlayVisible = false;
+            }
         }
     }
 
