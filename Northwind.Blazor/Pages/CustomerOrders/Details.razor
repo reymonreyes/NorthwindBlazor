@@ -117,9 +117,8 @@
                     {
                         if (item.IsInEditMode)
                         {
-                            @* item.EditItem = @<Northwind.Blazor.Components.EditPurchaseOrderItem Item="item" OnUpdateItem="UpdateItem" OnCancelUpdateItem="CancelUpdateItem"></Northwind.Blazor.Components.EditPurchaseOrderItem>
-                            ; *@
-                            <tr><td colspan="5">TODO: EDIT MODE</td></tr>
+                            item.EditItem = @<Northwind.Blazor.Components.EditCustomerOrderItem Item="item" OnUpdateItem="UpdateItemAsync" OnCancelUpdateItem="CancelUpdateItem"></Northwind.Blazor.Components.EditCustomerOrderItem>;
+                            @item.EditItem
                         }
                         else
                         {
@@ -129,8 +128,8 @@
                                 <td style="text-align:right;">@item.UnitPrice.ToString("N")</td>
                                 <td style="text-align:right;">@item.Total.ToString("N")</td>
                                 <td style="text-align: center;">
-                                    @* <MudIconButton OnClick="() => EditItem(item)" Icon="@Icons.Material.Filled.Edit" aria-label="delete" Size="Size.Small"></MudIconButton>
-                                    <MudIconButton OnClick="() => RemoveItem(item)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton> *@
+                                    <MudIconButton OnClick="() => EditItem(item)" Icon="@Icons.Material.Filled.Edit" aria-label="delete" Size="Size.Small"></MudIconButton>
+                                    @*<MudIconButton OnClick="() => RemoveItem(item)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton> *@
                                 </td>
                             </tr>
                         }
