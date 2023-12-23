@@ -1,4 +1,5 @@
-﻿using Northwind.Core.Dtos;
+﻿using Microsoft.AspNetCore.Components;
+using Northwind.Core.Dtos;
 
 namespace Northwind.Blazor.Models
 {
@@ -28,7 +29,10 @@ namespace Northwind.Blazor.Models
         public ProductDto Product { get; set; }
         public int Qty { get; set; }
         public decimal UnitPrice { get; set; }
-        public bool IsInEditMode { get; set; }
+        public bool IsInEditMode { get; set; } = false;
+        public RenderFragment? QuantityInput { get; set; }
+        public RenderFragment? UnitPriceInput { get; set; }
+        public RenderFragment? EditItem { get; set; }
         public decimal Total
         {
             get
