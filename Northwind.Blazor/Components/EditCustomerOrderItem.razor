@@ -1,0 +1,76 @@
+﻿@using System.Runtime
+@using FluentValidation
+@using Northwind.Blazor.Models
+@using Northwind.Blazor.Models.Validators
+@using Northwind.Core.Dtos
+@if (Item is not null)
+{
+    <tr height="90px">
+        <td style=""><MudText>@Item.Product?.Id</MudText>
+        </td>
+        <td style="text-align:right;vertical-align: top;">
+            <MudForm @ref="_editItemForm" @bind-IsValid="_isEditItemFormValid" Model="Item" Validation="(_customerOrderItemValidator.ValidateValue)">
+                <MudNumericField @bind-Value="Item.Qty" For="@(() => Item.Qty)" Margin="Margin.Dense" Required="true"></MudNumericField>
+            </MudForm>        
+        </td>
+        <td style="text-align:right;vertical-align: top;">
+            <MudForm @ref="_editItemForm" @bind-IsValid="_isEditItemFormValid" Model="Item" Validation="(_customerOrderItemValidator.ValidateValue)">
+                <MudNumericField @bind-Value="Item.UnitPrice" For="@(() => Item.UnitPrice)" Margin="Margin.Dense" Format="N2" Required="true"></MudNumericField>
+            </MudForm>
+        </td>
+        <td style="text-align:right;">
+            <MudText>@Item.Total.ToString("N")</MudText>
+        </td>
+        <td style="text-align: center;">
+            <MudIconButton OnClick="() => UpdateItem(Item)" Icon="@Icons.Material.Filled.Check" Color="Color.Success" aria-label="delete" Size="Size.Small"></MudIconButton>
+            <MudIconButton OnClick="() => CancelUpdateItem(Item)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>        
+        </td>
+    </tr>
+}
+@code {
+    private MudForm _editItemForm;
+    private bool _isEditItemFormValid = false;
+    private CustomerOrderItemFluentValidator _customerOrderItemValidator = new CustomerOrderItemFluentValidator();
+    private CustomerOrderItem? _originalItemValues;
+
+    [Parameter]
+    public CustomerOrderItem? Item { get; set; }    
+    [Parameter]
+    public EventCallback<CustomerOrderItem> OnUpdateItem { get; set; }
+    [Parameter]
+    public EventCallback<CustomerOrderItem> OnCancelUpdateItem { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (Item is not null)
+            _originalItemValues = new CustomerOrderItem { Id = Item.Id, Product = new ProductDto { Id = Item.Id }, Qty = Item.Qty, UnitPrice = Item.UnitPrice };
+    }
+
+    private async Task UpdateItem(CustomerOrderItem? customerOrderItem)
+    {
+        await _editItemForm.Validate();
+        Console.WriteLine($"_isEditItemFormValid: {_isEditItemFormValid}");
+        if (!_isEditItemFormValid)
+            return;
+
+        await OnUpdateItem.InvokeAsync(customerOrderItem);
+    }
+
+    private async Task CancelUpdateItem(CustomerOrderItem? customerOrderItem)
+    {
+        Console.WriteLine("CancelUpdateItem from child");        
+        customerOrderItem.Qty = _originalItemValues.Qty;
+        customerOrderItem.UnitPrice = _originalItemValues.UnitPrice;
+        await OnCancelUpdateItem.InvokeAsync(customerOrderItem);
+    }
+
+    public class CustomerOrderItemFluentValidator : BaseValidator<CustomerOrderItem>
+    {
+        public CustomerOrderItemFluentValidator()
+        {
+            RuleFor(x => x.Product).NotEmpty().WithMessage("Required");
+            RuleFor(x => x.Qty).NotEmpty().WithMessage("Required").GreaterThanOrEqualTo(0).WithMessage("Invalid");
+            RuleFor(x => x.UnitPrice).NotEmpty().WithMessage("Required").GreaterThanOrEqualTo(0).WithMessage("Invalid");
+        }
+    }
+}
