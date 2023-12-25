@@ -273,6 +273,14 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 _isCustomerOrderItemFormOverlayVisible = false;
             }
         }
+
+        private async Task RemoveItem(Models.CustomerOrderItem customerOrderItem)
+        {
+            _isCustomerOrderItemFormOverlayVisible = true;
+            _customerOrder.Items.Remove(customerOrderItem);
+            await CustomerOrdersService.RemoveItem(customerOrderItem.Id);
+            _isCustomerOrderItemFormOverlayVisible = false;
+        }
     }
 
     public class CustomerOrderValidator : BaseValidator<Models.CustomerOrder>
