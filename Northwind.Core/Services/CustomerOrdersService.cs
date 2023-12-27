@@ -268,5 +268,20 @@ namespace Northwind.Core.Services
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
         }
+
+        public async Task<ServiceMessageResult> CancelAsync(int customerOrderId)
+        {
+            if (customerOrderId <= 0) throw new ArgumentException(nameof(customerOrderId));
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(customerOrderId);
+            if (order is null) throw new DataNotFoundException();
+            if (!(order.Status == OrderStatus.New)) throw new ValidationFailedException($"Customer Order is already {order.Status}");
+
+            order.Status = OrderStatus.Cancelled;
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+
+            return new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("CustomerOrder", order.Status.ToString()) };
+        }
     }
 }
