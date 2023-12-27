@@ -503,5 +503,89 @@ namespace Northwind.Core.UnitTests.Services
 
             Assert.Equal(OrderStatus.Cancelled.ToString(), result.Message.Value);
         }
+
+        [Fact]
+        public async Task MarkAsInvoiced_ShouldThrowExceptionIfIdIsInvalid()
+        {
+            var mock = AutoMock.GetLoose();
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.MarkAsInvoiced(0));
+        }
+
+        [Fact]
+        public async Task MarkAsInvoiced_ShouldThrowExceptionIfOrderIsNotFound()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((CustomerOrder)null);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.MarkAsInvoiced(1));
+        }
+
+        [Fact]
+        public async Task MarkAsInvoiced_ShouldThrowValidationFailedExceptionIfOrderStatusIsNotNew()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, Status = Enums.OrderStatus.Cancelled });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.MarkAsInvoiced(1));
+            var validationError = exception.ValidationErrors.FirstOrDefault(x => x.MessageType == ServiceMessageType.Error);
+            Assert.Equal("Customer Order is already Cancelled", validationError.Message.Value);
+        }
+
+        [Fact]
+        public async Task MarkAsInvoiced_ShouldThrowValidationFailedExceptionIfDueDateIsNotSet()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, Status = Enums.OrderStatus.New });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.MarkAsInvoiced(1));
+            var validationError = exception.ValidationErrors.FirstOrDefault(x => x.MessageType == ServiceMessageType.Error);
+            Assert.Equal("Due Date not set", validationError.Message.Value);
+        }
+
+        [Theory]
+        [InlineData("2023-01-01", null)]
+        [InlineData(null, 1)]
+        public async Task MarkAsInvoiced_ShouldThrowValidationFailedExceptionIfShippingInformationIsNotSet(string? shipDate, int? shipperId)
+        {
+            DateTime? testDueDate = string.IsNullOrWhiteSpace(shipDate) ? null : DateTime.Parse(shipDate);
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, Status = Enums.OrderStatus.New, DueDate = DateTime.Now, ShipDate = testDueDate, ShipperId = shipperId });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.MarkAsInvoiced(1));
+            var validationError = exception.ValidationErrors.FirstOrDefault(x => x.MessageType == ServiceMessageType.Error);
+            Assert.Equal("Shipping Information not set", validationError.Message.Value);
+        }
+
+        [Fact]
+        public async Task MarkAsInvoiced_ShouldReturnInvoicedStatusIfSuccessful()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, Status = Enums.OrderStatus.New, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+            ServiceMessageResult result = await service.MarkAsInvoiced(1);
+
+            Assert.Equal(OrderStatus.Invoiced.ToString(), result.Message.Value);
+        }
     }
 }
