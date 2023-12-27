@@ -20,5 +20,6 @@ namespace Northwind.Core.Interfaces.Services
         Task UpdateItem(int customerOrderId, CustomerOrderItemDto customerOrderItem);
         Task RemoveItem(int customerOrderItemId);
         Task<ServiceMessageResult> CancelAsync(int customerOrderId);
+        Task<ServiceMessageResult> MarkAsInvoiced(int customerOrderId);
     }
 }
