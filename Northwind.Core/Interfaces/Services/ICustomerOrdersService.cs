@@ -19,5 +19,6 @@ namespace Northwind.Core.Interfaces.Services
         Task<CustomerOrderDto?> GetAsync(int orderId);
         Task UpdateItem(int customerOrderId, CustomerOrderItemDto customerOrderItem);
         Task RemoveItem(int customerOrderItemId);
+        Task<ServiceMessageResult> CancelAsync(int customerOrderId);
     }
 }
