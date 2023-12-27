@@ -283,5 +283,28 @@ namespace Northwind.Core.Services
 
             return new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("CustomerOrder", order.Status.ToString()) };
         }
+
+        public async Task<ServiceMessageResult> MarkAsInvoiced(int customerOrderId)
+        {
+            if (customerOrderId <= 0) throw new ArgumentException(nameof(customerOrderId));
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(customerOrderId);
+            if(order is null) throw new DataNotFoundException();
+            var validationErrors = new List<ServiceMessageResult>();
+            if (!(order.Status == OrderStatus.New))
+                validationErrors.Add(new ServiceMessageResult { MessageType = ServiceMessageType.Error, Message = new KeyValuePair<string, string>("CustomerOrder", $"Customer Order is already {order.Status}") });
+            if(!order.DueDate.HasValue)
+                validationErrors.Add(new ServiceMessageResult { MessageType = ServiceMessageType.Error, Message = new KeyValuePair<string, string>("CustomerOrder", $"Due Date not set") });
+            if(!order.ShipperId.HasValue || !order.ShipDate.HasValue)
+                validationErrors.Add(new ServiceMessageResult { MessageType = ServiceMessageType.Error, Message = new KeyValuePair<string, string>("CustomerOrder", $"Shipping Information not set") });
+            if (validationErrors.Any())
+                throw new ValidationFailedException(validationErrors);
+
+            order.Status = OrderStatus.Invoiced;
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+
+            return new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("CustomerOrder", order.Status.ToString()) };
+        }
     }
 }
