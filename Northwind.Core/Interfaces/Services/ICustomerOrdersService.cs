@@ -21,5 +21,6 @@ namespace Northwind.Core.Interfaces.Services
         Task RemoveItem(int customerOrderItemId);
         Task<ServiceMessageResult> CancelAsync(int customerOrderId);
         Task<ServiceMessageResult> MarkAsInvoiced(int customerOrderId);
+        Task MarkAsShipped(int customerOrderId);
     }
 }

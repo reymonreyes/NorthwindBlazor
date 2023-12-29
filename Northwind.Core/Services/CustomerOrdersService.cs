@@ -306,5 +306,19 @@ namespace Northwind.Core.Services
 
             return new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("CustomerOrder", order.Status.ToString()) };
         }
+
+        public async Task MarkAsShipped(int customerOrderId)
+        {
+            if (customerOrderId <= 0) throw new ArgumentException(nameof(customerOrderId));
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(customerOrderId);
+            if(order is null) throw new DataNotFoundException("Customer Order not found");
+            if (!(order.Status == OrderStatus.Invoiced)) throw new ValidationFailedException("Customer Order is not yet Invoiced");
+
+            order.Status = OrderStatus.Shipped;
+            _unitOfWork.CustomerOrdersRepository.Update(order);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+        }
     }
 }
