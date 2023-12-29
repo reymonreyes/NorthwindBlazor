@@ -587,5 +587,41 @@ namespace Northwind.Core.UnitTests.Services
 
             Assert.Equal(OrderStatus.Invoiced.ToString(), result.Message.Value);
         }
+
+        [Fact]
+        public async Task MarkAsShipped_ShouldThrowExceptionIfIdIsInvalid()
+        {
+            var mock = AutoMock.GetLoose();
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.MarkAsShipped(0));
+        }
+
+        [Fact]
+        public async Task MarkAsShipped_ShouldThrowExceptionIfOrderIsNotFound()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((CustomerOrder)null);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.MarkAsShipped(1));
+        }
+
+        [Fact]
+        public async Task MarkAsShipped_ShouldThrowValidationFailedExceptionIfOrderStatusIsNotInvoiced()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, Status = Enums.OrderStatus.New, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.MarkAsShipped(1));
+            Assert.Equal("Customer Order is not yet Invoiced", exception.Message);
+        }
     }
 }
