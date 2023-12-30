@@ -7,6 +7,10 @@
 <MudToolBar>
     <MudText><b>Customer Order</b></MudText>
     <MudSpacer/>
+    @if (_customerOrder.Status == Core.Enums.OrderStatus.Cancelled)
+    {
+        <MudChip Color="Color.Warning">Cancelled</MudChip>
+    }
     @if (_customerOrder.Status == Core.Enums.OrderStatus.New)
     {
         <MudButton Variant="Variant.Text" Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
@@ -14,23 +18,32 @@
     else
     {
         <MudText Typo="Typo.button">New</MudText>
-    }
-    @if(_customerOrder.Status == Core.Enums.OrderStatus.Cancelled)
-    {
-        <MudChip Color="Color.Warning">Cancelled</MudChip>
-    }
+    }    
     <MudText Class="mx-4"><b>></b></MudText>
     @if(_customerOrder.Status== Core.Enums.OrderStatus.New)
     {
         <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="MarkAsInvoiced">Invoiced</MudButton>
     }
-    @if (_customerOrder.Status == Core.Enums.OrderStatus.Invoiced)
-    {
-        <MudChip Color="Color.Success">Invoiced</MudChip>
-    }
-    else
-    {
-        <MudText Typo="Typo.button">Invoiced</MudText>
+    @{
+        RenderFragment? invoicedStatus = null;
+        if (_customerOrder.Status == Core.Enums.OrderStatus.Invoiced)
+            invoicedStatus = @<MudChip Color = "Color.Success"> Invoiced</MudChip>;
+        else
+            invoicedStatus = @<MudText Typo="Typo.button">Invoiced</MudText>;
+        
+        @invoicedStatus;
+    }   
+    <MudText Class="mx-4"><b>></b></MudText>
+    @{
+        RenderFragment? shippedStatus = null;
+        if (_customerOrder.Status == Core.Enums.OrderStatus.Invoiced)
+            shippedStatus = @<MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="MarkAsShippedAsync">Shipped</MudButton>;
+        else if (_customerOrder.Status == Core.Enums.OrderStatus.Shipped)
+            shippedStatus = @<MudChip Color="Color.Success">Shipped</MudChip>;
+        else
+            shippedStatus = @<MudText Typo="Typo.button">Shipped</MudText>;
+
+        @shippedStatus;
     }
     <MudText Class="mx-4"><b>></b></MudText>
 </MudToolBar>
