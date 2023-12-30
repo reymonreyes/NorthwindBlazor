@@ -674,5 +674,56 @@ namespace Northwind.Core.UnitTests.Services
 
             Assert.Equal(OrderStatus.Paid, order.Status);
         }
+
+        [Fact]
+        public async Task MarkAsCompleted_ShouldThrowExceptionIfIdIsInvalid()
+        {
+            var mock = AutoMock.GetLoose();
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentException>(async () => await service.MarkAsCompleted(0));
+        }
+
+        [Fact]
+        public async Task MarkAsCompleted_ShouldThrowExceptionIfOrderIsNotFound()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((CustomerOrder)null);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.MarkAsCompleted(1));
+        }
+
+        [Fact]
+        public async Task MarkAsCompleted_ShouldThrowValidationFailedExceptionIfOrderStatusIsNotPaid()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, Status = Enums.OrderStatus.Shipped, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.MarkAsCompleted(1));
+            Assert.Equal("Customer Order is not yet Paid", exception.Message);
+        }
+
+        [Fact]
+        public async Task MarkAsCompleted_ShouldReturnPaidStatusIfSuccessful()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            var order = new CustomerOrder { Id = 1, Status = Enums.OrderStatus.Paid, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 };
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(order);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+            ServiceMessageResult result = await service.MarkAsCompleted(1);
+
+            Assert.Equal(OrderStatus.Completed, order.Status);
+        }
     }
 }
