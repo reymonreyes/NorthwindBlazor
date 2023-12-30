@@ -74,6 +74,7 @@ namespace Northwind.Core.Services
             {
                 CustomerId = customerId,
                 OrderDate = orderDate.Value,
+                Status = OrderStatus.New,
                 Items = new List<CustomerOrderItem>()
             };
 
@@ -220,6 +221,7 @@ namespace Northwind.Core.Services
                     ShipDate = order.ShipDate,
                     ShipperId = order.ShipperId,
                     Notes = order.Notes,
+                    Status = order.Status,
                     Items = order.Items.Select(x => new CustomerOrderItemDto { Id = x.Id, ProductId = x.ProductId, Quantity = x.Quantity, UnitPrice = x.UnitPrice }).ToList()
                 };
             }
