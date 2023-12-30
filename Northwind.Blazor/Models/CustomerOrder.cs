@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Northwind.Core.Dtos;
+using Northwind.Core.Enums;
 
 namespace Northwind.Blazor.Models
 {
@@ -19,6 +20,7 @@ namespace Northwind.Blazor.Models
         public int? ShipperId { get; set; }
         public string? ShipTo { get; set; }
         public string? Notes { get; set; }
+        public OrderStatus Status { get; set; }
         public List<CustomerOrderItem> Items { get; set; }
     }
 

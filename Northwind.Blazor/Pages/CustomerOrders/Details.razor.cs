@@ -36,7 +36,8 @@ namespace Northwind.Blazor.Pages.CustomerOrders
         public IProductsService ProductsService { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; }
-
+        [Inject]
+        public IDialogService DialogService { get; set; }
         [Parameter]
         public int Id { get; set; }
 
@@ -84,6 +85,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 ShipDate = customerOrder.ShipDate,
                 ShipperId = customerOrder.ShipperId,
                 Notes = customerOrder.Notes,
+                Status = customerOrder.Status,
                 Items = customerOrder.Items.Select(x => new Models.CustomerOrderItem { Id = x.Id, Product = new ProductDto { Id = x.Id }, Qty = x.Quantity, UnitPrice = x.UnitPrice.Value }).ToList()
             };
 
@@ -280,6 +282,34 @@ namespace Northwind.Blazor.Pages.CustomerOrders
             _customerOrder.Items.Remove(customerOrderItem);
             await CustomerOrdersService.RemoveItem(customerOrderItem.Id);
             _isCustomerOrderItemFormOverlayVisible = false;
+        }
+
+        private async Task Cancel()
+        {
+            var confirmed = await DialogService.ShowMessageBox(
+                "Cancel",
+                "Are you sure you want to cancel this Customer Order?",
+                "Yes",
+                "No"
+            );
+
+            if (confirmed.HasValue && confirmed.Value)
+            {
+                try
+                {
+                    _isCustomerOrderFormOverlayVisible = true;
+                    _isCustomerOrderItemFormOverlayVisible = true;
+                    await CustomerOrdersService.CancelAsync(Id);
+                    _customerOrder.Status = Core.Enums.OrderStatus.Cancelled;
+                    _isCustomerOrderFormOverlayVisible = false;
+                    _isCustomerOrderItemFormOverlayVisible = false;
+                    Notify("Customer Order cancelled.", MudBlazor.Severity.Warning);
+                }
+                catch (Exception exc)
+                {
+                    Notify(exc.Message, MudBlazor.Severity.Error);
+                }
+            }
         }
     }
 
