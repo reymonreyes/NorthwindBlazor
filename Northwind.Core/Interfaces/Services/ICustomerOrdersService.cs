@@ -23,5 +23,6 @@ namespace Northwind.Core.Interfaces.Services
         Task<ServiceMessageResult> MarkAsInvoiced(int customerOrderId);
         Task MarkAsShipped(int customerOrderId);
         Task<ServiceMessageResult> MarkAsPaid(int customerOrderId);
+        Task<ServiceMessageResult> MarkAsCompleted(int customerOrderId);
     }
 }
