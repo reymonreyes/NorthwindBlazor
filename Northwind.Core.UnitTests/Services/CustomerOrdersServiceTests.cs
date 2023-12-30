@@ -611,7 +611,7 @@ namespace Northwind.Core.UnitTests.Services
         }
 
         [Fact]
-        public async Task MarkAsShipped_ShouldThrowValidationFailedExceptionIfOrderStatusIsNotInvoiced()
+        public async Task MarkAsShipped_ShouldThrowValidationFailedExceptionIfOrderStatusIsNotPaid()
         {
             var mock = AutoMock.GetLoose();
             var uow = mock.Mock<IUnitOfWork>();
@@ -621,7 +621,22 @@ namespace Northwind.Core.UnitTests.Services
             ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
 
             var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.MarkAsShipped(1));
-            Assert.True(exception.ValidationErrors?.Any(x => x.Message.Value == "Customer Order is not yet Invoiced"));
+            Assert.True(exception.ValidationErrors?.Any(x => x.Message.Value == "Customer Order is not yet Paid"));
+        }
+
+        [Fact]
+        public async Task MarkAsShipped_ShouldReturnPaidStatusIfSuccessful()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            var order = new CustomerOrder { Id = 1, Status = Enums.OrderStatus.Paid, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 };
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(order);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+            await service.MarkAsShipped(1);
+
+            Assert.Equal(OrderStatus.Shipped, order.Status);
         }
 
         [Fact]
@@ -657,7 +672,7 @@ namespace Northwind.Core.UnitTests.Services
             ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
 
             var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.MarkAsPaid(1));
-            Assert.Equal("Customer Order is not yet Invoiced", exception.Message);
+            Assert.True(exception.ValidationErrors?.Any(x => x.Message.Value == "Customer Order is not yet Invoiced"));
         }
 
         [Fact]
