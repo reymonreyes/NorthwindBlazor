@@ -315,9 +315,9 @@ namespace Northwind.Core.Services
             await _unitOfWork.Start();
             var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(customerOrderId);
             if(order is null) throw new DataNotFoundException("Customer Order not found");
-            if (!(order.Status == OrderStatus.Invoiced))
+            if (!(order.Status == OrderStatus.Paid))
             {
-                var validationErrors = new List<ServiceMessageResult> { new ServiceMessageResult { MessageType = ServiceMessageType.Error, Message = new KeyValuePair<string, string>("CustomerOrder", $"Customer Order is not yet Invoiced") } };
+                var validationErrors = new List<ServiceMessageResult> { new ServiceMessageResult { MessageType = ServiceMessageType.Error, Message = new KeyValuePair<string, string>("CustomerOrder", $"Customer Order is not yet Paid") } };
                 throw new ValidationFailedException("Validation failed. Please check ValidationErrors for details.", validationErrors);
             }
 
@@ -333,8 +333,12 @@ namespace Northwind.Core.Services
             await _unitOfWork.Start();
             var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(customerOrderId);
             if (order is null) throw new DataNotFoundException("Customer Order not found");
-            if (!(order.Status == OrderStatus.Invoiced)) throw new ValidationFailedException("Customer Order is not yet Invoiced");
-            
+            if (!(order.Status == OrderStatus.Invoiced))
+            {
+                var validationErrors = new List<ServiceMessageResult> { new ServiceMessageResult { MessageType = ServiceMessageType.Error, Message = new KeyValuePair<string, string>("CustomerOrder", $"Customer Order is not yet Invoiced") } };
+                throw new ValidationFailedException("Validation failed. Please check ValidationErrors for details.", validationErrors);
+            }
+
             order.Status = OrderStatus.Paid;
             _unitOfWork.CustomerOrdersRepository.Update(order);
             await _unitOfWork.Commit();

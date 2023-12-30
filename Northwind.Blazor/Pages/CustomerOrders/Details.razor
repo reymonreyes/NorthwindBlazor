@@ -35,8 +35,21 @@
     }   
     <MudText Class="mx-4"><b>></b></MudText>
     @{
-        RenderFragment? shippedStatus = null;
+        RenderFragment? paidStatus = null;
         if (_customerOrder.Status == Core.Enums.OrderStatus.Invoiced)
+            paidStatus = @<MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="MarkAsPaidAsync">Paid</MudButton>;
+        else if (_customerOrder.Status == Core.Enums.OrderStatus.Paid)
+            paidStatus = @<MudChip Color="Color.Success">Paid</MudChip>;
+        else
+            paidStatus = @<MudText Typo="Typo.button">Paid</MudText>;
+
+        @paidStatus
+        ;
+    }
+    <MudText Class="mx-4"><b>></b></MudText>
+    @{
+        RenderFragment? shippedStatus = null;
+        if (_customerOrder.Status == Core.Enums.OrderStatus.Paid)
             shippedStatus = @<MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="MarkAsShippedAsync">Shipped</MudButton>;
         else if (_customerOrder.Status == Core.Enums.OrderStatus.Shipped)
             shippedStatus = @<MudChip Color="Color.Success">Shipped</MudChip>;
@@ -46,6 +59,7 @@
         @shippedStatus;
     }
     <MudText Class="mx-4"><b>></b></MudText>
+
 </MudToolBar>
 <MudDivider DividerType="DividerType.FullWidth" Light="true" />
 <MudGrid Class="pt-3" Spacing="3">
