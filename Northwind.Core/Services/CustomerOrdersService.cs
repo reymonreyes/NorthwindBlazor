@@ -303,6 +303,7 @@ namespace Northwind.Core.Services
                 throw new ValidationFailedException(validationErrors);
 
             order.Status = OrderStatus.Invoiced;
+            _unitOfWork.CustomerOrdersRepository.Update(order);
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
 
@@ -353,7 +354,11 @@ namespace Northwind.Core.Services
             await _unitOfWork.Start();
             var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(customerOrderId);
             if (order is null) throw new DataNotFoundException("Customer Order not found");
-            if (!(order.Status == OrderStatus.Paid)) throw new ValidationFailedException("Customer Order is not yet Paid");
+            if (!(order.Status == OrderStatus.Shipped))
+            {
+                var validationErrors = new List<ServiceMessageResult> { new ServiceMessageResult { MessageType = ServiceMessageType.Error, Message = new KeyValuePair<string, string>("CustomerOrder", $"Customer Order is not yet Shipped") } };
+                throw new ValidationFailedException("Validation failed. Please check ValidationErrors for details.", validationErrors);
+            }
 
             order.Status = OrderStatus.Completed;
             _unitOfWork.CustomerOrdersRepository.Update(order);

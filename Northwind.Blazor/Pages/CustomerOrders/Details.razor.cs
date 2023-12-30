@@ -422,6 +422,43 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 }
             }
         }
+
+        private async Task MarkAsCompletedAsync()
+        {
+            var confirmed = await DialogService.ShowMessageBox(
+                "Invoiced",
+                "Do you want to mark this Customer Order as Completed?",
+                "Yes",
+                "No"
+            );
+
+            if (confirmed.HasValue && confirmed.Value)
+            {
+                try
+                {
+                    _isCustomerOrderFormOverlayVisible = true;
+                    _isCustomerOrderItemFormOverlayVisible = true;
+                    await CustomerOrdersService.MarkAsCompleted(Id);
+                    _customerOrder.Status = Core.Enums.OrderStatus.Completed;
+                    Notify("Customer Order Completed.", MudBlazor.Severity.Success);
+                }
+                catch (ValidationFailedException exc)
+                {
+                    var validationErrors = exc.ValidationErrors.Select(x => x.Message.Value).ToList();
+                    var errorMessage = string.Join("<br/>", validationErrors);
+                    Notify(errorMessage, MudBlazor.Severity.Error);
+                }
+                catch (Exception exc)
+                {
+                    Notify(exc.Message, MudBlazor.Severity.Error);
+                }
+                finally
+                {
+                    _isCustomerOrderFormOverlayVisible = false;
+                    _isCustomerOrderItemFormOverlayVisible = false;
+                }
+            }
+        }
     }
 
     public class CustomerOrderValidator : BaseValidator<Models.CustomerOrder>

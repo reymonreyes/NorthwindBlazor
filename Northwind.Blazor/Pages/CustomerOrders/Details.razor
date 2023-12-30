@@ -10,23 +10,28 @@
     @if (_customerOrder.Status == Core.Enums.OrderStatus.Cancelled)
     {
         <MudChip Color="Color.Warning">Cancelled</MudChip>
+        <MudText Class="mx-4"><b>></b></MudText>
     }
     @if (_customerOrder.Status == Core.Enums.OrderStatus.New)
     {
         <MudButton Variant="Variant.Text" Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
-    }
-    else
-    {
-        <MudText Typo="Typo.button">New</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
     }    
-    <MudText Class="mx-4"><b>></b></MudText>
-    @if(_customerOrder.Status== Core.Enums.OrderStatus.New)
-    {
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="MarkAsInvoiced">Invoiced</MudButton>
+    @{
+        RenderFragment? newStatus = null;
+        if (_customerOrder.Status == Core.Enums.OrderStatus.New)            
+            newStatus = @<MudChip Color="Color.Success"> New</MudChip>;
+        else
+            newStatus = @<MudText Typo="Typo.button">New</MudText>;
+
+        @newStatus;
     }
+    <MudText Class="mx-4"><b>></b></MudText>
     @{
         RenderFragment? invoicedStatus = null;
-        if (_customerOrder.Status == Core.Enums.OrderStatus.Invoiced)
+        if (_customerOrder.Status == Core.Enums.OrderStatus.New)
+            invoicedStatus =@<MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="MarkAsInvoiced">Invoiced</MudButton>;
+        else if (_customerOrder.Status == Core.Enums.OrderStatus.Invoiced)
             invoicedStatus = @<MudChip Color = "Color.Success"> Invoiced</MudChip>;
         else
             invoicedStatus = @<MudText Typo="Typo.button">Invoiced</MudText>;
@@ -59,6 +64,17 @@
         @shippedStatus;
     }
     <MudText Class="mx-4"><b>></b></MudText>
+    @{
+        RenderFragment? completedStatus = null;
+        if (_customerOrder.Status == Core.Enums.OrderStatus.Shipped)
+            completedStatus = @<MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="MarkAsCompletedAsync">Completed</MudButton>;
+        else if (_customerOrder.Status == Core.Enums.OrderStatus.Completed)
+            completedStatus = @<MudChip Color="Color.Success">Completed</MudChip>;
+        else
+            completedStatus = @<MudText Typo="Typo.button">Completed</MudText>;
+
+        @completedStatus;
+    }
 
 </MudToolBar>
 <MudDivider DividerType="DividerType.FullWidth" Light="true" />
