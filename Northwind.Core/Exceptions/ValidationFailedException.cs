@@ -20,6 +20,11 @@ namespace Northwind.Core.Exceptions
         public ValidationFailedException(string message, Exception innerException) : base(message, innerException)
         {            
         }
+
+        public ValidationFailedException(string message, IList<ServiceMessageResult> validationErrors):base(message)
+        {
+            ValidationErrors = validationErrors;
+        }
         public ValidationFailedException(IList<ServiceMessageResult> validationErrors)
         {
             ValidationErrors = validationErrors;
