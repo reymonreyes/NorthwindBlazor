@@ -11,9 +11,26 @@
     {
         <MudButton Variant="Variant.Text" Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
     }
+    else
+    {
+        <MudText Typo="Typo.button">New</MudText>
+    }
     @if(_customerOrder.Status == Core.Enums.OrderStatus.Cancelled)
     {
         <MudChip Color="Color.Warning">Cancelled</MudChip>
+    }
+    <MudText Class="mx-4"><b>></b></MudText>
+    @if(_customerOrder.Status== Core.Enums.OrderStatus.New)
+    {
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="MarkAsInvoiced">Invoiced</MudButton>
+    }
+    @if (_customerOrder.Status == Core.Enums.OrderStatus.Invoiced)
+    {
+        <MudChip Color="Color.Success">Invoiced</MudChip>
+    }
+    else
+    {
+        <MudText Typo="Typo.button">Invoiced</MudText>
     }
     <MudText Class="mx-4"><b>></b></MudText>
 </MudToolBar>
