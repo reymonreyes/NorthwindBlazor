@@ -713,17 +713,17 @@ namespace Northwind.Core.UnitTests.Services
         }
 
         [Fact]
-        public async Task MarkAsCompleted_ShouldThrowValidationFailedExceptionIfOrderStatusIsNotPaid()
+        public async Task MarkAsCompleted_ShouldThrowValidationFailedExceptionIfOrderStatusIsNotShipped()
         {
             var mock = AutoMock.GetLoose();
             var uow = mock.Mock<IUnitOfWork>();
             var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
-            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, Status = Enums.OrderStatus.Shipped, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 });
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, Status = Enums.OrderStatus.Paid, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 });
             uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
             ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
 
             var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.MarkAsCompleted(1));
-            Assert.Equal("Customer Order is not yet Paid", exception.Message);
+            Assert.True(exception.ValidationErrors?.Any(x => x.Message.Value == "Customer Order is not yet Shipped"));
         }
 
         [Fact]
