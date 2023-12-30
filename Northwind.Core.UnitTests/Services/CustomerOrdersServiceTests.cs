@@ -621,7 +621,7 @@ namespace Northwind.Core.UnitTests.Services
             ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
 
             var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.MarkAsShipped(1));
-            Assert.Equal("Customer Order is not yet Invoiced", exception.Message);
+            Assert.True(exception.ValidationErrors?.Any(x => x.Message.Value == "Customer Order is not yet Invoiced"));
         }
 
         [Fact]
