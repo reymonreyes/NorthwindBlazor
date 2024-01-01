@@ -7,6 +7,7 @@ using Northwind.Core.Interfaces.Services;
 using Northwind.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -366,6 +367,33 @@ namespace Northwind.Core.Services
             await _unitOfWork.Stop();
 
             return new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("CustomerOrder", order.Status.ToString()) };
+        }
+
+        public async Task<ServiceResult> Update(int customerOrderId, CustomerOrderDto orderData)
+        {
+            if(customerOrderId <= 0) throw new ArgumentOutOfRangeException(nameof(customerOrderId));
+            if(orderData is null) throw new ArgumentNullException(nameof(orderData));
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(customerOrderId);
+            if (order is null) throw new DataNotFoundException("Customer Order not found");
+            if(order.Status == OrderStatus.Cancelled || order.Status == OrderStatus.Completed)
+                throw new ValidationFailedException($"Customer Order is already {order.Status}");
+
+            order.OrderDate = orderData.OrderDate;
+            order.ShipDate = orderData.ShipDate;
+            order.ShipperId = orderData.ShipperId;
+            //order.ShipTo = orderData.ShipTo; TODO
+            order.DueDate = orderData.DueDate;
+            //order.Payment = orderData.Payment; TODO
+            order.Notes = orderData.Notes;
+
+            _unitOfWork.CustomerOrdersRepository.Update(order);
+            await _unitOfWork.Commit();
+            await _unitOfWork.Stop();
+
+            var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
+            result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", order.Id.ToString()) });
+            return result;
         }
     }
 }

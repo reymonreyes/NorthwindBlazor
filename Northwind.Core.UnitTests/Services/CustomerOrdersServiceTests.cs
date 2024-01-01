@@ -732,13 +732,78 @@ namespace Northwind.Core.UnitTests.Services
             var mock = AutoMock.GetLoose();
             var uow = mock.Mock<IUnitOfWork>();
             var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
-            var order = new CustomerOrder { Id = 1, Status = Enums.OrderStatus.Paid, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 };
+            var order = new CustomerOrder { Id = 1, Status = Enums.OrderStatus.Shipped, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 };
             customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(order);
             uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
             ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
             ServiceMessageResult result = await service.MarkAsCompleted(1);
 
             Assert.Equal(OrderStatus.Completed, order.Status);
+        }
+
+        [Fact]
+        public async Task Update_ShouldThrowExceptionIfIdIsInvalid()
+        {
+            var mock = AutoMock.GetLoose();
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await service.Update(0, null));
+        }
+
+        [Fact]
+        public async Task Update_ShouldThrowExceptionIfDataIsEmpty()
+        {
+            var mock = AutoMock.GetLoose();
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await service.Update(1, null));
+        }
+
+        [Fact]
+        public async Task Update_ShouldThrowExceptionIfOrderDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((CustomerOrder)null!);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);           
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+            
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.Update(1, new CustomerOrderDto { Id = 1 }));
+        }
+
+        [Theory]
+        [InlineData(OrderStatus.Cancelled)]
+        [InlineData(OrderStatus.Completed)]
+        public async Task Update_ShouldThrowExceptionIfOrderIsAlreadyCancelledOrCompletedAsync(OrderStatus orderStatus)
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, Status = orderStatus, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var orderToEdit = new CustomerOrderDto { Id = 1, Status = orderStatus, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 };
+            var exception = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.Update(1, orderToEdit));
+
+            Assert.Equal($"Customer Order is already {orderStatus}", exception.Message);
+        }
+
+        [Fact]
+        public async Task Update_ShouldReturnTrueIfSuccessful()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, Status = OrderStatus.New, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var orderToEdit = new CustomerOrderDto { Id = 1, Status = OrderStatus.New, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 };
+            var result = await service.Update(1, orderToEdit);
+
+            Assert.True(result.IsSuccessful);
         }
     }
 }
