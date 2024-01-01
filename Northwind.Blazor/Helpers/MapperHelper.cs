@@ -117,5 +117,14 @@ namespace Northwind.Blazor.Helpers
             result.OrderDate = result.OrderDate.ToUniversalTime();
             return result;
         }
+
+        public static CustomerOrderDto ToCustomerOrderDto(this CustomerOrder customerOrder)
+        {
+            if (customerOrder is null)
+                throw new ArgumentNullException("customerOrder");
+
+            TinyMapper.Bind<CustomerOrder, CustomerOrderDto>();
+            return TinyMapper.Map<CustomerOrderDto>(customerOrder);
+        }
     }
 }
