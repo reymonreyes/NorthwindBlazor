@@ -12,6 +12,7 @@ using System.Reflection.Metadata.Ecma335;
 using static SkiaSharp.HarfBuzz.SKShaper;
 using Northwind.Core.Entities;
 using Northwind.Core.Services;
+using Northwind.Blazor.Helpers;
 
 namespace Northwind.Blazor.Pages.CustomerOrders
 {
@@ -110,6 +111,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                     await Create();
                     break;
                 case EntryMode.Edit:
+                    await Update();
                     break;
             }
 
@@ -146,6 +148,33 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 _isCustomerOrderFormOverlayVisible = false;
             }
 
+        }
+
+        private async Task Update()
+        {
+            try
+            {
+                _errors.Clear();
+                _isCustomerOrderFormOverlayVisible = true;
+                var result = await CustomerOrdersService.Update(Id, _customerOrder.ToCustomerOrderDto());
+                if (result.IsSuccessful)
+                    Notify($"Customer Order # {Id} {(_entryMode == EntryMode.Create ? "created" : "updated")} successfully.", MudBlazor.Severity.Success);
+            }
+            catch (ValidationFailedException exc)
+            {
+                if (exc.ValidationErrors.Any())
+                    _errors = exc.ValidationErrors.Select(x => x.Message.Value).ToList();
+                else
+                    _errors.Add(exc.Message);
+            }
+            catch (Exception exc)
+            {
+                _errors.Add(exc.Message);
+            }
+            finally
+            {
+                _isCustomerOrderFormOverlayVisible = false;
+            }
         }
 
         private async Task<IEnumerable<CustomerDto>> FindCustomer(string customerName)
