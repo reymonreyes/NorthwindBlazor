@@ -108,7 +108,7 @@ namespace Northwind.Infrastructure.Documents
                         table.Cell().ColumnSpan(2).Border(1).PaddingLeft(5).Text("Notes").Bold();
                         table.Cell().Row(rowIndex).Column(3).Border(1).PaddingHorizontal(5).AlignRight().Text("Subtotal").Bold();
                         table.Cell().Row(rowIndex++).Column(4).Border(1).PaddingHorizontal(5).AlignRight().Text(_invoice.Subtotal.ToString("N2"));
-                        table.Cell().RowSpan(3).ColumnSpan(2).Border(1).Text("");
+                        table.Cell().RowSpan(3).ColumnSpan(2).Border(1).Text(_invoice.Notes);//notes
                         table.Cell().Row(rowIndex).Column(3).Border(1).PaddingHorizontal(5).AlignRight().Text("Tax").Bold();
                         table.Cell().Row(rowIndex++).Column(4).Border(1).PaddingHorizontal(5).AlignRight().Text(_invoice.Tax.ToString("N2"));
                         table.Cell().ColumnSpan(2).Border(1).Text("");
