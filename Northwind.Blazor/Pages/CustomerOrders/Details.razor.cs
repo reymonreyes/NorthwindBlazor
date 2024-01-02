@@ -13,6 +13,7 @@ using static SkiaSharp.HarfBuzz.SKShaper;
 using Northwind.Core.Entities;
 using Northwind.Core.Services;
 using Northwind.Blazor.Helpers;
+using Microsoft.JSInterop;
 
 namespace Northwind.Blazor.Pages.CustomerOrders
 {
@@ -39,6 +40,8 @@ namespace Northwind.Blazor.Pages.CustomerOrders
         public NavigationManager NavigationManager { get; set; }
         [Inject]
         public IDialogService DialogService { get; set; }
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
         [Parameter]
         public int Id { get; set; }
 
@@ -487,6 +490,32 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                     _isCustomerOrderItemFormOverlayVisible = false;
                 }
             }
+        }
+
+        private async Task PrintInvoiceAsync()
+        {
+            try
+            {
+                _isCustomerOrderFormOverlayVisible = true;
+                _isCustomerOrderItemFormOverlayVisible = true;
+                
+                var file = await CustomerOrdersService.GeneratePdfInvoice(Id);
+
+                //download pdf to client
+                var fileStream = File.OpenRead(file);
+                using var streamRef = new DotNetStreamReference(fileStream);
+                await JSRuntime.InvokeVoidAsync("downloadFileFromStream", file, streamRef);
+            }
+            catch (Exception exc)
+            {
+                Notify(exc.Message, MudBlazor.Severity.Error);
+            }
+            finally
+            {
+                _isCustomerOrderFormOverlayVisible = false;
+                _isCustomerOrderItemFormOverlayVisible = false;
+            }
+
         }
     }
 
