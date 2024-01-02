@@ -416,6 +416,22 @@ namespace Northwind.Core.UnitTests.Services
             await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.GeneratePdfDocument(1));
         }
 
+        [Fact]
+        public async Task GeneratePdfDocument_ShouldThrowExceptionIfShippingInformationIsNotFound()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var repo = mock.Mock<IPurchaseOrdersRepository>();
+            var supplierRepo = mock.Mock<ISuppliersRepository>();
+            supplierRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync(new Entities.Supplier { Id = 1 });
+            repo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new PurchaseOrder { Id = 1, SupplierId = 1, Status = OrderStatus.New, OrderItems = new List<PurchaseOrderItem> { new PurchaseOrderItem { Id = 1 } } });
+            uow.Setup(x => x.PurchaseOrdersRepository).Returns(repo.Object);
+            uow.Setup(x => x.SuppliersRepository).Returns(supplierRepo.Object);
+            IPurchaseOrdersService service = mock.Create<PurchaseOrdersService>();
+
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.GeneratePdfDocument(1));
+        }
+
         //email pdf to supplier
         //purchase order is required
         //supplier is required for email destination

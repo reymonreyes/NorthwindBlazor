@@ -187,7 +187,7 @@ namespace Northwind.Core.Services
         {
             if(id <= 0)
                 throw new ArgumentOutOfRangeException("id");
-
+            await _unitOfWork.Start();
             var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
             if (purchaseOrder == null)
                 throw new DataNotFoundException("Purchase Order not found.");
@@ -199,8 +199,27 @@ namespace Northwind.Core.Services
             if (purchaseOrder.OrderItems == null || purchaseOrder.OrderItems.Count == 0)
                 throw new DataNotFoundException("Line Items not found.");
 
+            if(string.IsNullOrWhiteSpace(purchaseOrder.ShipTo))
+                throw new DataNotFoundException("Shipping Information not found");
+
             var poModel = new DocumentDtos.PurchaseOrderDto();
+            poModel.PONumber = purchaseOrder.Id.ToString();
+            poModel.Date = DateTime.Now;
+            poModel.Notes = purchaseOrder.Notes;
+            poModel.Company = new DocumentDtos.BasicCompanyInformation { Name = "Northwind Blazor", Address = new DocumentDtos.Address { Street = "1st", City = "Tagum City" } };
+            poModel.ShipTo = new DocumentDtos.ShipTo { Name = "Northwind Blazor", Address = new DocumentDtos.Address { Street = purchaseOrder.ShipTo } };
+            poModel.Supplier = new DocumentDtos.Supplier { Name = supplier.Name, Address = new DocumentDtos.Address { Street = supplier.Address, City = supplier.City, State = supplier.State, PostalCode = supplier.PostalCode, Phone = supplier.Phone } };
+            poModel.LineItems = purchaseOrder.OrderItems.Select(x => new DocumentDtos.LineItem { ItemDescription = x.ProductId.ToString(), Qty = x.Quantity, UnitPrice = x.UnitCost, Total = x.UnitCost * x.Quantity }).ToList();
+            //TODO all fields below
+            var subtotal = purchaseOrder.OrderItems.Sum(x => x.UnitCost * x.Quantity);
+            poModel.Subtotal = subtotal;
+            poModel.Tax = 0;
+            poModel.ShippingCost = 0;
+            poModel.Total = subtotal + poModel.Tax + poModel.ShippingCost;
+            poModel.PreparedBy = "Northwind Blazor";
+            poModel.ApprovedBy = "Northwind Blazor";
             var filename = _documentGeneratorService.CreatePurchaseOrderPdf(poModel);
+            await _unitOfWork.Stop();
 
             return filename;
         }
