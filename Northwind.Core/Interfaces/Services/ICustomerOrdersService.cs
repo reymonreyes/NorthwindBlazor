@@ -25,5 +25,6 @@ namespace Northwind.Core.Interfaces.Services
         Task<ServiceMessageResult> MarkAsPaid(int customerOrderId);
         Task<ServiceMessageResult> MarkAsCompleted(int customerOrderId);
         Task<ServiceResult> Update(int customerOrderId, CustomerOrderDto orderData);
+        Task<string> GeneratePdfInvoice(int customerOrderId);
     }
 }

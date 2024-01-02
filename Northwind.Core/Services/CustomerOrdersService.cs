@@ -1,4 +1,5 @@
 ﻿using Northwind.Core.Dtos;
+using Northwind.Core.Dtos.Document;
 using Northwind.Core.Entities;
 using Northwind.Core.Enums;
 using Northwind.Core.Exceptions;
@@ -17,9 +18,11 @@ namespace Northwind.Core.Services
     public class CustomerOrdersService : ICustomerOrdersService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CustomerOrdersService(IUnitOfWork unitOfWork)
+        private readonly IDocumentGeneratorService _documentGeneratorService;
+        public CustomerOrdersService(IUnitOfWork unitOfWork, IDocumentGeneratorService documentGeneratorService)
         {            
             _unitOfWork = unitOfWork;
+            _documentGeneratorService = documentGeneratorService;
         }
 
         public async Task AddItem(int customerOrderId, CustomerOrderItemDto? customerOrderItemDto)
@@ -127,7 +130,7 @@ namespace Northwind.Core.Services
             int id = 0;
             if (invoice == null)
             {
-                invoice = new Invoice();
+                invoice = new Entities.Invoice();
                 invoice.CustomerOrderId = order.Id;
                 invoice.InvoiceDate = invoiceDate ?? DateTime.UtcNow;
                 invoice.DueDate = dueDate;
@@ -394,6 +397,41 @@ namespace Northwind.Core.Services
             var result = new ServiceResult { IsSuccessful = true, Messages = new List<ServiceMessageResult>() };
             result.Messages.Add(new ServiceMessageResult { MessageType = Enums.ServiceMessageType.Info, Message = new KeyValuePair<string, string>("Id", order.Id.ToString()) });
             return result;
+        }
+
+        public async Task<string> GeneratePdfInvoice(int customerOrderId)
+        {
+            if (customerOrderId <= 0) throw new ArgumentOutOfRangeException(nameof(customerOrderId));
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(customerOrderId);
+            if (order is null) 
+                throw new DataNotFoundException("Customer Order not found");
+            if (!order.DueDate.HasValue) throw new ValidationFailedException("Due Date is not set");
+            if (order.Items is null || !order.Items.Any()) throw new DataNotFoundException("Items not found");
+            var customer = await _unitOfWork.CustomersRepository.Get(order.CustomerId);
+            if (customer is null) throw new DataNotFoundException("Customer not found");
+
+            var invoiceData = new Dtos.Document.Invoice();
+            invoiceData.Company = new BasicCompanyInformation { Name = "Northwind Blazor", Address = new Address { City = "Tagum City" } };
+            invoiceData.ShipTo = new BasicCompanyInformation { Name = customer.Name, Address = new Address { City = customer.City } };
+            invoiceData.BillTo = invoiceData.Company;
+            invoiceData.InvoiceNumber = order.Id.ToString();
+            invoiceData.Date = order.OrderDate;
+            invoiceData.DueDate = order.DueDate.Value;
+            invoiceData.Items = order.Items.Select(x => new LineItem { ItemDescription = x.ProductId.ToString(), Qty = x.Quantity, UnitPrice = x.UnitPrice, Total = x.UnitPrice * x.Quantity }).ToList();
+            var subtotal = order.Items.Sum(x => x.UnitPrice * x.Quantity);
+            //TODO all fields below
+            invoiceData.Subtotal = subtotal;
+            invoiceData.Tax = 0;
+            invoiceData.ShippingCost = 0;
+            invoiceData.Total = subtotal + invoiceData.Tax + invoiceData.ShippingCost;
+            invoiceData.Notes = order.Notes;
+            invoiceData.PreparedBy = "Northwind Blazor";
+            invoiceData.ApprovedBy = "Northwind Blazor";
+            var filename = _documentGeneratorService.CreateInvoicePdf(invoiceData);
+            await _unitOfWork.Stop();
+
+            return filename;
         }
     }
 }
