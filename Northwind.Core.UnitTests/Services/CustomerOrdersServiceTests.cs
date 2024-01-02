@@ -805,5 +805,83 @@ namespace Northwind.Core.UnitTests.Services
 
             Assert.True(result.IsSuccessful);
         }
+
+        [Fact]
+        public void GeneratePdfInvoice_ShouldThrowExceptionIfOrderIdIsInvalid()
+        {
+            var mock = AutoMock.GetLoose();
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await service.GeneratePdfInvoice(0));
+        }
+
+        [Fact]
+        public async Task GeneratePdfInvoice_ShouldThrowExceptionIfOrderDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync((CustomerOrder)null);
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var error = await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.GeneratePdfInvoice(1));
+            Assert.Equal("Customer Order not found", error.Message);
+        }
+
+        [Fact]
+        public async Task GeneratePdfInvoice_ShouldThrowExceptionIfDueDateIsNotSet()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, Status = OrderStatus.New, ShipDate = DateTime.Now, ShipperId = 1 });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var error = await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.GeneratePdfInvoice(1));
+            Assert.Equal("Due Date is not set", error.Message);
+        }
+
+        [Fact]
+        public async Task GeneratePdfInvoice_ShouldThrowExceptionItemsAreEmpty()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(new CustomerOrder { Id = 1, Status = OrderStatus.New, DueDate = DateTime.Now, ShipDate = DateTime.Now, ShipperId = 1 });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var error = await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.GeneratePdfInvoice(1));
+            Assert.Equal("Items not found", error.Message);
+        }
+
+        [Fact]
+        public async Task GeneratePdfInvoice_ShouldThrowExceptionCustomerDoesNotExist()
+        {
+            var mock = AutoMock.GetLoose();
+            var uow = mock.Mock<IUnitOfWork>();
+            var customerOrdersRepo = mock.Mock<ICustomerOrdersRepository>();
+            customerOrdersRepo.Setup(x => x.GetAsync(It.IsAny<int>())).ReturnsAsync(
+                new CustomerOrder
+                {
+                    Id = 1,
+                    Status = OrderStatus.New,
+                    DueDate = DateTime.Now,
+                    ShipDate = DateTime.Now,
+                    ShipperId = 1,
+                    CustomerId = 1,
+                    Items = new List<CustomerOrderItem> { new CustomerOrderItem { Id = 1 } }
+                });
+            uow.Setup(x => x.CustomerOrdersRepository).Returns(customerOrdersRepo.Object);
+            var customersRepo = mock.Mock<ICustomersRepository>();
+            customersRepo.Setup(x => x.Get(It.IsAny<int>())).ReturnsAsync((Customer)null);
+            uow.Setup(x => x.CustomersRepository).Returns(customersRepo.Object);
+            ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
+
+            var error = await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.GeneratePdfInvoice(1));
+            Assert.Equal("Customer not found", error.Message);
+        }
     }
 }
