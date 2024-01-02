@@ -21,5 +21,6 @@ namespace Northwind.Core.Dtos.Document
         public string PreparedBy { get; set; }
         public string ApprovedBy { get; set; }
         public List<LineItem> Items { get; set; }
+        public string Notes { get; set; }
     }
 }
