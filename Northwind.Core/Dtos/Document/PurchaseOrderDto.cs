@@ -20,6 +20,7 @@ namespace Northwind.Core.Dtos.Document
         public decimal Total { get; set; }
         public string PreparedBy { get; set; }
         public string ApprovedBy { get; set; }
+        public string Notes { get; set; }
     }
 
     public class LineItem
