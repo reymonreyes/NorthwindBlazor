@@ -1,4 +1,5 @@
 ﻿@page "/purchaseorders"
+@inherits PageBase
 
 <MudPaper Elevation="2" Class="my-1">
     <MudToolBar>
@@ -17,9 +18,35 @@
             <MudSelectItem Value="@("Espresso")" />
         </MudSelect>
         <MudButton Href="products/create" Variant="Variant.Filled" Color="Color.Secondary">Find</MudButton>
+        <MudDivider Vertical="true" FlexItem="true" Class="mx-4" Light="true" />        
+        <MudPagination Color="Color.Primary" Count="_totalPages" SelectedChanged="PaginationChangedAsync" />
     </MudToolBar>
 </MudPaper>
-
-@code {
-
+@if (_isProgressBarVisible)
+{
+    <MudProgressLinear Indeterminate="true" />
+}
+@if(_purchaseOrders is not null)
+{
+<MudSimpleTable Bordered="true" Hover="true" Outlined="true">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Supplier</th>
+            <th>Status</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var order in _purchaseOrders)
+    {
+        <tr>
+            <td><MudLink Href="@($"purchaseorders/{order.Id}")">@order.Id</MudLink></td>
+            <td>@order.Supplier.Name</td>
+            <td>@order.Status</td>
+            <td>0.00</td>
+        </tr>
+    }
+    </tbody>
+</MudSimpleTable>
 }

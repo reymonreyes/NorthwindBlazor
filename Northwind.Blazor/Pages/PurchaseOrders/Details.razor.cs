@@ -11,7 +11,7 @@ using Northwind.Core.Interfaces.Services;
 using Northwind.Core.Services;
 using System;
 
-namespace Northwind.Blazor.Pages.purchaseorders
+namespace Northwind.Blazor.Pages.PurchaseOrders
 {
     public partial class Details
     {

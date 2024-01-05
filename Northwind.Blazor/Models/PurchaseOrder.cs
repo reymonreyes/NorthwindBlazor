@@ -12,6 +12,7 @@ namespace Northwind.Blazor.Models
         public string Notes { get; set; }
         public OrderStatus Status { get; set; }
         public List<PurchaseOrderItem> Items { get; set; }
+        public int Id { get; set; }
     }
 
     public class PurchaseOrderItem
