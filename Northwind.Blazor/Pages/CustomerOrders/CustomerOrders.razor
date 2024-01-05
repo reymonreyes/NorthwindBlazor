@@ -1,0 +1,51 @@
+﻿@page "/customerorders"
+@inherits PageBase
+<MudPaper Elevation="2" Class="my-1">
+    <MudToolBar>
+        <MudText Typo="Typo.subtitle1">Customer Orders</MudText>
+        <MudSpacer />
+        <MudButton Href="customerorders/create" Variant="Variant.Filled" Color="Color.Primary">New</MudButton>
+        <MudDivider Vertical="true" FlexItem="true" Class="mx-4" Light="true" />
+        <MudSelect T="string" Label="Customer" AnchorOrigin="Origin.BottomCenter" Margin="Margin.Dense" Variant="Variant.Outlined" Dense="true" Class="mx-1">
+            <MudSelectItem Value="@("Cappuccino")" />
+            <MudSelectItem Value="@("Cafe Latte")" />
+            <MudSelectItem Value="@("Espresso")" />
+        </MudSelect>
+        <MudSelect T="string" Label="Status" AnchorOrigin="Origin.BottomCenter" Margin="Margin.Dense" Variant="Variant.Outlined" Dense="true" Class="mx-1">
+            <MudSelectItem Value="@("Cappuccino")" />
+            <MudSelectItem Value="@("Cafe Latte")" />
+            <MudSelectItem Value="@("Espresso")" />
+        </MudSelect>
+        <MudButton Href="products/create" Variant="Variant.Filled" Color="Color.Secondary">Find</MudButton>
+        <MudDivider Vertical="true" FlexItem="true" Class="mx-4" Light="true" />
+        <MudPagination Color="Color.Primary" Count="_totalPages" SelectedChanged="PaginationChangedAsync" />
+    </MudToolBar>
+</MudPaper>
+@if (_isProgressBarVisible)
+{
+    <MudProgressLinear Indeterminate="true" />
+}
+@if (_customerOrders is not null)
+{
+    <MudSimpleTable Bordered="true" Hover="true" Outlined="true">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Supplier</th>
+                <th>Status</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in _customerOrders)
+            {
+                <tr>
+                    <td><MudLink Href="@($"customerorders/{order.Id}")">@order.Id</MudLink></td>
+                        <td>@order.Customer.Name</td>
+                    <td>@order.Status</td>
+                    <td>0.00</td>
+                </tr>
+            }
+        </tbody>
+    </MudSimpleTable>
+}
