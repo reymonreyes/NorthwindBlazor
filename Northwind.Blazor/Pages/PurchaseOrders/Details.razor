@@ -1,0 +1,182 @@
+﻿@page "/purchaseorders/create"
+@page "/purchaseorders/{id:int}"
+@using Northwind.Core.Dtos;
+@inherits PageBase
+
+<MudToolBar WrapContent="true">
+    <MudText><b>Purchase Order</b></MudText>
+    <MudSpacer />
+    @if (!(_purchaseOrder.Status == Core.Enums.OrderStatus.Completed) && !(_purchaseOrder.Status == Core.Enums.OrderStatus.Cancelled))
+    {
+        <MudButton Variant="Variant.Text" Color="Color.Secondary" OnClick="Cancel">Cancel</MudButton>
+        <MudText Class="mx-4"><b>></b></MudText>
+    }
+    @if(_purchaseOrder.Status == Core.Enums.OrderStatus.Cancelled)
+    {
+        <MudChip Color="Color.Warning">Cancelled</MudChip>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">New</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">Submitted</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">Approved</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">Approved</MudText>
+    }
+    @if(_purchaseOrder.Status == Core.Enums.OrderStatus.New)
+    {
+        <MudChip Color="Color.Success">New</MudChip>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="SubmitForApproval">Submit For Approval</MudButton>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">Approve</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">Complete</MudText>
+    }
+    @if(_purchaseOrder.Status == Core.Enums.OrderStatus.Submitted)
+    {
+        <MudText Typo="Typo.button">New</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudChip Color="Color.Success">Submitted</MudChip>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="Approve">Approve</MudButton>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">Complete</MudText>
+    }   
+    @if(_purchaseOrder.Status == Core.Enums.OrderStatus.Approved)
+    {
+        <MudText Typo="Typo.button">New</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">Submitted</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudChip Color="Color.Success">Approved</MudChip>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="Complete">Complete</MudButton>
+    }
+    @if (_purchaseOrder.Status == Core.Enums.OrderStatus.Completed)
+    {
+        <MudText Typo="Typo.button">New</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">Submitted</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudText Typo="Typo.button">Approved</MudText>
+        <MudText Class="mx-4"><b>></b></MudText>
+        <MudChip Color="Color.Success">Completed</MudChip>
+    }
+</MudToolBar>
+<MudDivider DividerType="DividerType.FullWidth" Light="true"/>
+<MudGrid Class="pt-3" Spacing="3">
+    <MudItem sm="12" md="6" lg="6">
+       <MudForm @ref="_poForm" Model="_purchaseOrder" @bind-IsValid="@_isPODetailsValid" Validation="(_purchaseOrderValidator.ValidateValue)">
+            <MudGrid>
+                <MudItem xs="12" sm="12" md="12" lg="12">
+                    <MudPaper Elevation="1" Square="true">
+                        <MudToolBar>
+                            <MudText>Order # <b>@(Id.HasValue ? Id.Value : "New")</b></MudText>
+                            <MudSpacer />
+                            <MudButton Color="Color.Secondary" Variant="Variant.Filled" Size="Size.Small" Class="mr-1" OnClick="PrintPOAsync">Print PO</MudButton>
+                            <MudButton Color="Color.Primary" Variant="Variant.Filled" Size="Size.Small" Class="mf-1" OnClick="Save">Save</MudButton>
+                        </MudToolBar>
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12" lg="12">
+                    @if (_errors.Count > 0)
+                    {
+                        <MudAlert Severity="MudBlazor.Severity.Error">
+                            @foreach (var error in _errors)
+                            {
+                                <MudText>@error</MudText>
+                            }
+                        </MudAlert>
+                    }
+                </MudItem>
+                <MudItem xs="12" sm="8" md="8" lg="8">
+                    <MudAutocomplete Label="Supplier" @bind-Value="_purchaseOrder.Supplier" SearchFunc="@FindSupplier" ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
+                        For="@(() => _purchaseOrder.Supplier)" ResetValueOnEmptyText="true" Immediate="true" ProgressIndicatorColor="Color.Info" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                </MudItem>
+                <MudItem xs="12" sm="4" md="4" lg="4">
+                    <MudDatePicker @bind-Date="_purchaseOrder.OrderDate"  For="@(() => _purchaseOrder.OrderDate)" Label="Order Date(YYYY-MM-DD)" Margin="Margin.Dense" Variant="Variant.Outlined" Editable="true" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd"/>
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12" lg="12">
+                    <MudTextField @bind-Value="_purchaseOrder.ShipTo" Label="Ship To" For="@(() => _purchaseOrder.ShipTo)" Immediate="true" Margin="Margin.Dense" Variant="Variant.Outlined"></MudTextField>
+                </MudItem>
+                <MudItem xs="12" sm="12" md="12" lg="12">
+                    <MudTextField @bind-Value="_purchaseOrder.Notes" For="@(() => _purchaseOrder.Notes)" Label="Notes - Optional" Lines="3" Margin="Margin.Dense" Variant="Variant.Outlined"></MudTextField>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </MudItem>
+    <MudItem sm="12" md="6" lg="6" Style="position: relative;">
+        <MudOverlay Visible="_isOverlayVisible" Absolute="true" DarkBackground="true">
+            <MudStack>
+                <MudText Style="@($"color:{Colors.Shades.White};")">Updating</MudText>
+                <MudProgressCircular Class="align-self-center" Color="Color.Primary" Indeterminate="true"/>
+            </MudStack>
+        </MudOverlay>
+        <MudPaper Elevation="0">
+            <MudForm @ref="_addItemForm" Model="_purchaseOrderItem" @bind-IsValid="_isAddItemFormValid" Validation="(_purchaseOrderItemValidator.ValidateValue)">
+                <MudGrid>
+                    <MudItem md="6">
+                        <MudAutocomplete @ref="_productAutocomplete" Label="Product" Value="_purchaseOrderItem.Product" SearchFunc="@FindProduct" ToStringFunc="@(e=> e==null?null : $"{e.Name}")"
+                                         For="@(() => _purchaseOrderItem.Product)" ValueChanged="OnProductValueChanged" T="ProductDto" ResetValueOnEmptyText="true" Immediate="true" ProgressIndicatorColor="Color.Info" Variant="Variant.Outlined" Margin="Margin.Dense" />
+                    </MudItem>
+                    <MudItem md="2">
+                        <MudNumericField @bind-Value="_purchaseOrderItem.Quantity" For="@(() => _purchaseOrderItem.Quantity)" Variant="Variant.Outlined" Margin="Margin.Dense" T="int" Label="Qty" Adornment="Adornment.End"></MudNumericField>
+                    </MudItem>
+                    <MudItem md="2">
+                        <MudNumericField @bind-Value="_purchaseOrderItem.UnitPrice" For="@(() => _purchaseOrderItem.UnitPrice)" Format="N2" Variant="Variant.Outlined" Margin="Margin.Dense" T="decimal" Label="Unit Price" Adornment="Adornment.End"></MudNumericField>
+                    </MudItem>
+                    <MudItem md="2" Class="d-flex px-8 pt-1">                    
+                        <MudButton Class="align-self-center" OnClick="AddItem" Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Add</MudButton>                    
+                    </MudItem>
+                </MudGrid>
+            </MudForm>
+        </MudPaper>
+
+        <MudSimpleTable Style="overflow-x: auto;" Hover="true" Bordered="true" Dense="true">
+            <colgroup>
+                <col/><col/>
+                <col width="15%"/>
+                <col width="15%" />
+                <col/>
+                <col width="11%" />
+            </colgroup>
+            <thead>                
+                <tr>
+                    @foreach (var h in headings)
+                    {
+                        <th style="text-align:center;">@h</th>
+                    }
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>                
+                @if(_purchaseOrder.Items is not null)
+                {
+                    @foreach (var item in _purchaseOrder.Items)
+                    {
+                        if (item.IsInEditMode)
+                        {
+                            item.EditItem = @<Northwind.Blazor.Components.EditPurchaseOrderItem Item="item" OnUpdateItem="UpdateItem" OnCancelUpdateItem="CancelUpdateItem"></Northwind.Blazor.Components.EditPurchaseOrderItem>;
+                            @item.EditItem
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>@item.Product.Id</td>
+                                <td>@item.Product.Id</td>
+                                <td style="text-align:right;">@item.Quantity</td>
+                                <td style="text-align:right;">@item.UnitPrice.ToString("N")</td>
+                                <td style="text-align:right;">@item.Total.ToString("N")</td>
+                                <td style="text-align: center;">
+                                    <MudIconButton OnClick="() => EditItem(item)" Icon="@Icons.Material.Filled.Edit" aria-label="delete" Size="Size.Small"></MudIconButton>
+                                    <MudIconButton OnClick="() => RemoveItem(item)" Icon="@Icons.Material.Filled.Close" aria-label="delete" Size="Size.Small"></MudIconButton>                                    
+                                </td>
+                            </tr>
+                        }
+                    }
+                }                
+            </tbody>
+        </MudSimpleTable>
+    </MudItem>
+</MudGrid>
