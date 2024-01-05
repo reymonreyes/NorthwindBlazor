@@ -398,5 +398,15 @@ namespace Northwind.Core.Services
             await _unitOfWork.Commit();
             await _unitOfWork.Stop();
         }
+
+        public async Task<(int TotalRecords, IEnumerable<PurchaseOrderDto> Records)> GetAllAsync(int page = 1, int size = 10)
+        {
+            await _unitOfWork.Start();
+            var orders = await _unitOfWork.PurchaseOrdersRepository.GetAllAsync(page, size);
+            var results = orders.Records.Select(x => new PurchaseOrderDto { Id = x.Id, SupplierId = x.SupplierId, Status = x.Status }).ToList();
+            await _unitOfWork.Stop();
+
+            return (orders.TotalRecords, results);
+        }
     }
 }
