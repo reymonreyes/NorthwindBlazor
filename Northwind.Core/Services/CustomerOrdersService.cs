@@ -433,5 +433,15 @@ namespace Northwind.Core.Services
 
             return filename;
         }
+
+        public async Task<(int TotalRecords, IEnumerable<CustomerOrderDto> Records)> GetAllAsync(int page = 1, int size = 10)
+        {
+            await _unitOfWork.Start();
+            var orders = await _unitOfWork.CustomerOrdersRepository.GetAllAsync(page, size);
+            var results = orders.Records.Select(x => new CustomerOrderDto { Id = x.Id, CustomerId = x.CustomerId, Status = x.Status }).ToList();
+            await _unitOfWork.Stop();
+
+            return (orders.TotalRecords, results);
+        }
     }
 }

@@ -22,6 +22,13 @@ namespace Northwind.Data.Postgresql.Repositories
             await _efDbContext.CustomerOrders.AddAsync(customerOrder);
         }
 
+        public async Task<(int TotalRecords, IEnumerable<CustomerOrder> Records)> GetAllAsync(int page = 1, int size = 10)
+        {
+            var results = await _efDbContext.CustomerOrders.Skip((page - 1) * size).Take(size).ToListAsync();
+            var totalRecords = await _efDbContext.CustomerOrders.CountAsync();
+            return (totalRecords, results);
+        }
+
         public Task<CustomerOrder?> GetAsync(int customerOrderId)
         {
             return _efDbContext.CustomerOrders.Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == customerOrderId);
