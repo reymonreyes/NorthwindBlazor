@@ -21,7 +21,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
         {
             _isProgressBarVisible = true;
             var orders = await CustomerOrdersService.GetAllAsync(_page);
-            var result = orders.Records.Select(x => new CustomerOrder { Id = x.Id, Customer = new Core.Dtos.CustomerDto { Id = x.CustomerId, Name = $"Customer{x.CustomerId}" }, Status = x.Status }).ToList();
+            var result = orders.Records.Select(x => new CustomerOrder { Id = x.Id, Customer = new Core.Dtos.CustomerDto { Id = x.CustomerId, Name = $"Customer{x.CustomerId}" }, Status = x.Status, Total = x.Total }).ToList();
             _customerOrders = result;
             _totalRecords = orders.TotalRecords;
             _totalPages = (int)Math.Ceiling(_totalRecords / (double)_pageSize);

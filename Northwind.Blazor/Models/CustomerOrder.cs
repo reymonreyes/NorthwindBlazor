@@ -22,6 +22,7 @@ namespace Northwind.Blazor.Models
         public string? Notes { get; set; }
         public OrderStatus Status { get; set; }
         public List<CustomerOrderItem> Items { get; set; }
+        public decimal Total { get; set; }
     }
 
     public class CustomerOrderItem
