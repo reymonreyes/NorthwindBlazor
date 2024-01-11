@@ -19,7 +19,6 @@
     <ProjectReference Include="..\Northwind.Common\Northwind.Common.csproj" />
     <ProjectReference Include="..\Northwind.Core\Northwind.Core.csproj" />
     <ProjectReference Include="..\Northwind.Data.Postgresql\Northwind.Data.Postgresql.csproj" />
-    <ProjectReference Include="..\Northwind.Data\Northwind.Data.csproj" />
     <ProjectReference Include="..\Northwind.Infrastructure\Northwind.Infrastructure.csproj" />
   </ItemGroup>
 

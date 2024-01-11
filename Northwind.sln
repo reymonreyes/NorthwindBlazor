@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Blazor", "Northwi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Core", "Northwind.Core\Northwind.Core.csproj", "{3202E7CE-F213-42FB-867C-A56E33005605}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Data", "Northwind.Data\Northwind.Data.csproj", "{42C1FC42-A996-4D9B-AB50-9E6332B3434A}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Common", "Northwind.Common\Northwind.Common.csproj", "{C566DFE4-C977-4EAE-9BCA-DF62C7566B50}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Northwind.Core.UnitTests", "Northwind.Core.UnitTests\Northwind.Core.UnitTests.csproj", "{92034291-19C6-4779-B059-945306F1378F}"
@@ -35,10 +33,6 @@ Global
 		{3202E7CE-F213-42FB-867C-A56E33005605}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3202E7CE-F213-42FB-867C-A56E33005605}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3202E7CE-F213-42FB-867C-A56E33005605}.Release|Any CPU.Build.0 = Release|Any CPU
-		{42C1FC42-A996-4D9B-AB50-9E6332B3434A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42C1FC42-A996-4D9B-AB50-9E6332B3434A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42C1FC42-A996-4D9B-AB50-9E6332B3434A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42C1FC42-A996-4D9B-AB50-9E6332B3434A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C566DFE4-C977-4EAE-9BCA-DF62C7566B50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C566DFE4-C977-4EAE-9BCA-DF62C7566B50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C566DFE4-C977-4EAE-9BCA-DF62C7566B50}.Release|Any CPU.ActiveCfg = Release|Any CPU
