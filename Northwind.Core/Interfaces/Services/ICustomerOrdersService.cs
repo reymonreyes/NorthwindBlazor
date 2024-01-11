@@ -26,6 +26,6 @@ namespace Northwind.Core.Interfaces.Services
         Task<ServiceMessageResult> MarkAsCompleted(int customerOrderId);
         Task<ServiceResult> Update(int customerOrderId, CustomerOrderDto orderData);
         Task<string> GeneratePdfInvoice(int customerOrderId);
-        Task<(int TotalRecords, IEnumerable<CustomerOrderDto> Records)> GetAllAsync(int page = 1, int size = 10);
+        Task<(int TotalRecords, IEnumerable<CustomerOrderSummaryDto> Records)> GetAllAsync(int page = 1, int size = 10);
     }
 }
