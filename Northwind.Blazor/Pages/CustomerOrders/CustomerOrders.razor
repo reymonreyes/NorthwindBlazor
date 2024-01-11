@@ -30,10 +30,10 @@
     <MudSimpleTable Bordered="true" Hover="true" Outlined="true">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Supplier</th>
-                <th>Status</th>
-                <th>Total</th>
+                <th style="text-align:center;">Id</th>
+                <th style="text-align:center;">Customer</th>
+                <th style="text-align:center;">Status</th>
+                <th style="text-align:center;">Total</th>
             </tr>
         </thead>
         <tbody>
@@ -43,7 +43,7 @@
                     <td><MudLink Href="@($"customerorders/{order.Id}")">@order.Id</MudLink></td>
                         <td>@order.Customer.Name</td>
                     <td>@order.Status</td>
-                    <td>0.00</td>
+                    <td style="text-align: right;">@order.Total.ToString("C")</td>
                 </tr>
             }
         </tbody>
