@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Northwind.Core.Dtos;
 using Northwind.Core.Entities;
 using Northwind.Core.Interfaces.Repositories;
 using System;
@@ -32,11 +33,24 @@ namespace Northwind.Data.Postgresql.Repositories
             _efDbContext.Update(purchaseOrder);
         }
 
-        public async Task<(int TotalRecords, IEnumerable<PurchaseOrder> Records)> GetAllAsync(int page = 1, int size = 10)
+        public async Task<(int TotalRecords, IEnumerable<PurchaseOrderSummaryDto> Records)> GetAllAsync(int page = 1, int size = 10)
         {
-            var results = await _efDbContext.PurchaseOrders.Skip((page - 1) * size).Take(size).ToListAsync();
+            var query = from order in _efDbContext.PurchaseOrders
+                        join supplier in _efDbContext.Suppliers on order.SupplierId equals supplier.Id
+                        select new PurchaseOrderSummaryDto
+                        {
+                            Id = order.Id,
+                            SupplierId = supplier.Id,
+                            SupplierName = supplier.Name,
+                            Total = (from orderItem in _efDbContext.PurchaseOrderItems
+                                     where orderItem.PurchaseOrderId == order.Id
+                                     select new { Quantity = orderItem.Quantity, UnitPrice = orderItem.UnitCost }).Sum(x => x.Quantity * x.UnitPrice)
+                        };
+
+            var results = await query.Skip((page - 1) * size).Take(size).ToListAsync();
             var totalRecords = await _efDbContext.PurchaseOrders.CountAsync();
+
             return (totalRecords, results);
-        }
+        }                
     }
 }
