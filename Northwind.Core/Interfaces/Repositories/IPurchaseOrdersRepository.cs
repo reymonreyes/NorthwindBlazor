@@ -13,6 +13,6 @@ namespace Northwind.Core.Interfaces.Repositories
         Task CreateAsync(PurchaseOrder purchaseOrder);
         Task<PurchaseOrder?> GetAsync(int id);
         void Update(PurchaseOrder purchaseOrder);
-        Task<(int TotalRecords, IEnumerable<PurchaseOrder> Records)> GetAllAsync(int page = 1, int size = 10);
+        Task<(int TotalRecords, IEnumerable<PurchaseOrderSummaryDto> Records)> GetAllAsync(int page = 1, int size = 10);
     }
 }
