@@ -17,7 +17,7 @@ namespace Northwind.Core.Interfaces.Services
         Task<ServiceResult> Create(PurchaseOrderDto purchaseOrder);
         Task EmailPdfToSupplier(int purchaseOrderId);
         Task<string> GeneratePdfDocument(int id);
-        Task<(int TotalRecords, IEnumerable<PurchaseOrderDto> Records)> GetAllAsync(int page = 1, int size = 10);
+        Task<(int TotalRecords, IEnumerable<PurchaseOrderSummaryDto> Records)> GetAllAsync(int page = 1, int size = 10);
         Task<PurchaseOrderDto?> GetAsync(int id);
         Task PaySupplierAsync(int v, Payment payment);
         Task<List<(int purchaseOrderId, int purchaseOrderItemId, string result)>> ReceiveInventory(List<(int purchaseOrderId, int purchaseOrderItemId)> itemsToReceive);
