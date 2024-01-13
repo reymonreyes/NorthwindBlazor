@@ -22,7 +22,7 @@ namespace Northwind.Blazor.Pages.PurchaseOrders
         {
             _isProgressBarVisible = true;
             var orders = await PurchaseOrdersService.GetAllAsync(_page);
-            var result = orders.Records.Select(x => new PurchaseOrder { Id = x.Id, Supplier = new Core.Dtos.SupplierDto { Id = x.SupplierId, Name = $"Supplier{x.SupplierId}" }, Status = x.Status }).ToList();
+            var result = orders.Records.Select(x => new PurchaseOrder { Id = x.Id, Supplier = new Core.Dtos.SupplierDto { Id = x.SupplierId, Name = x.SupplierName }, Status = x.Status, Total = x.Total }).ToList();
             _purchaseOrders = result;
             _totalRecords = orders.TotalRecords;
             _totalPages = (int)Math.Ceiling(_totalRecords / (double)_pageSize);
