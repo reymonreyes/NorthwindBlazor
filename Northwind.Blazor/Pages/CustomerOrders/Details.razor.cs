@@ -19,14 +19,15 @@ namespace Northwind.Blazor.Pages.CustomerOrders
 {
     public partial class Details
     {
-        public EntryMode _entryMode = EntryMode.Create;
-        public Models.CustomerOrder _customerOrder = new Models.CustomerOrder();
-        public Models.CustomerOrderItem _customerOrderItem = new Models.CustomerOrderItem();
-        public CustomerOrderValidator _customerOrderValidator = new CustomerOrderValidator();
-        public CustomerOrderItemValidator _customerOrderItemValidator = new CustomerOrderItemValidator();
-        public MudForm? _customerOrderForm, _addItemForm;
-        public bool _isCustomerOrderFormValid, _isCustomerOrderFormOverlayVisible, _isCustomerOrderItemFormValid, _isCustomerOrderItemFormOverlayVisible;
-        public List<string> _errors = new List<string>();
+        private EntryMode _entryMode = EntryMode.Create;
+        private Models.CustomerOrder _customerOrder = new Models.CustomerOrder();
+        private Models.CustomerOrderItem _customerOrderItem = new Models.CustomerOrderItem();
+        private CustomerOrderValidator _customerOrderValidator = new CustomerOrderValidator();
+        private CustomerOrderItemValidator _customerOrderItemValidator = new CustomerOrderItemValidator();
+        private MudForm? _customerOrderForm, _addItemForm;
+        private bool _isCustomerOrderFormValid, _isCustomerOrderFormOverlayVisible, _isCustomerOrderItemFormValid, _isCustomerOrderItemFormOverlayVisible;
+        private List<string> _errors = new List<string>();
+        private MudAutocomplete<ProductDto> _productAutocomplete;
         
         [Inject]
         public ICustomerOrdersService CustomerOrdersService { get; set; }
@@ -73,7 +74,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
         {
             _isCustomerOrderFormOverlayVisible = true;
             _isCustomerOrderItemFormOverlayVisible = true;
-            var customerOrder = await CustomerOrdersService.GetAsync(Id);
+            var customerOrder = await CustomerOrdersService.GetAsync(Id, true);
             if (customerOrder is null)
             {
                 Notify("Customer Order not found", MudBlazor.Severity.Error);
@@ -84,13 +85,14 @@ namespace Northwind.Blazor.Pages.CustomerOrders
             {
                 Id = customerOrder.Id,
                 CustomerId = customerOrder.CustomerId,
+                Customer = new CustomerDto { Id = customerOrder.CustomerId, Name = customerOrder.CustomerName },
                 OrderDate = customerOrder.OrderDate,
                 DueDate = customerOrder.DueDate,
                 ShipDate = customerOrder.ShipDate,
                 ShipperId = customerOrder.ShipperId,
                 Notes = customerOrder.Notes,
                 Status = customerOrder.Status,
-                Items = customerOrder.Items.Select(x => new Models.CustomerOrderItem { Id = x.Id, Product = new ProductDto { Id = x.Id }, Qty = x.Quantity, UnitPrice = x.UnitPrice.Value }).ToList()
+                Items = customerOrder.Items.Select(x => new Models.CustomerOrderItem { Id = x.Id, Product = new ProductDto { Id = x.Id, Name = x.ProductName }, Qty = x.Quantity, UnitPrice = x.UnitPrice.Value }).ToList()
             };
 
             var customer = await CustomersService.Get(_customerOrder.CustomerId);
@@ -235,6 +237,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 _customerOrder.Items.Add(_customerOrderItem);
                 _customerOrderItem = new Models.CustomerOrderItem();
                 _customerOrderForm.Reset();
+                await _productAutocomplete.Clear();
                 Notify($"Item added successfully.", MudBlazor.Severity.Success);
             }
             catch (Exception exc)
@@ -287,7 +290,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 ProductId = customerOrderItem.Product.Id,
                 Quantity = customerOrderItem.Qty,
                 UnitPrice = customerOrderItem.UnitPrice,
-                CustomerOrderid = _customerOrder.Id
+                CustomerOrderId = _customerOrder.Id
             };
 
             try
