@@ -207,7 +207,15 @@ namespace Northwind.Core.Services
             await _unitOfWork.Stop();
         }
 
-        public async Task<CustomerOrderDto?> GetAsync(int orderId)
+        public async Task<CustomerOrderDto?> GetAsync(int orderId, bool includeLinkedNames = false)
+        {
+            if(includeLinkedNames)
+                return await GetOrderWithLinkedNamesAsync(orderId);
+
+            return await GetOrderAsync(orderId);
+        }
+
+        private async Task<CustomerOrderDto?> GetOrderAsync(int orderId)
         {
             CustomerOrderDto? result = null;
 
@@ -232,6 +240,46 @@ namespace Northwind.Core.Services
 
             return result;
         }
+
+        private async Task<CustomerOrderDto?> GetOrderWithLinkedNamesAsync(int orderId)
+        {
+            CustomerOrderDto? result = null;
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.CustomerOrdersRepository.GetAsync(orderId);
+            
+            if (order is not null)
+            {
+                result = new CustomerOrderDto
+                {
+                    Id = order.Id,
+                    CustomerId = order.CustomerId,
+                    OrderDate = order.OrderDate,
+                    DueDate = order.DueDate,
+                    ShipDate = order.ShipDate,
+                    ShipperId = order.ShipperId,
+                    Notes = order.Notes,
+                    Status = order.Status,
+                    Items = order.Items.Select(x => new CustomerOrderItemDto { Id = x.Id, ProductId = x.ProductId, Quantity = x.Quantity, UnitPrice = x.UnitPrice }).ToList()
+                };
+                
+                var customer = await _unitOfWork.CustomersRepository.Get(order.CustomerId);
+                if(customer is not null)
+                    result.CustomerName = customer.Name;
+
+                foreach (var item in result.Items)
+                {
+                    var product = await _unitOfWork.ProductsRepository.Get(item.ProductId);
+                    if(product is not null)
+                        item.ProductName = product.Name;
+                }
+            }
+
+            await _unitOfWork.Stop();
+
+            return result;
+        }
+
+        
 
         public async Task UpdateItem(int customerOrderId, CustomerOrderItemDto customerOrderItem)   
         {

@@ -136,7 +136,7 @@ namespace Northwind.Core.UnitTests.Services
             
             ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
 
-            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.AddItem(1, new CustomerOrderItemDto { ProductId = 1, Quantity = 1, CustomerOrderid = 1 }));
+            await Assert.ThrowsAsync<DataNotFoundException>(async () => await service.AddItem(1, new CustomerOrderItemDto { ProductId = 1, Quantity = 1, CustomerOrderId = 1 }));
         }
 
         [Fact]
@@ -153,7 +153,7 @@ namespace Northwind.Core.UnitTests.Services
 
             ICustomerOrdersService service = mock.Create<CustomerOrdersService>();
 
-            await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.AddItem(1, new CustomerOrderItemDto { ProductId = 1, Quantity = 0, CustomerOrderid = 1 }));
+            await Assert.ThrowsAsync<ValidationFailedException>(async () => await service.AddItem(1, new CustomerOrderItemDto { ProductId = 1, Quantity = 0, CustomerOrderId = 1 }));
         }
 
         [Fact]

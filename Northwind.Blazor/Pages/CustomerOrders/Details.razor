@@ -149,7 +149,7 @@
             <MudForm @ref="_addItemForm" Model="_customerOrderItem" @bind-IsValid="_isCustomerOrderItemFormValid" Validation="(_customerOrderItemValidator.ValidateValue)">
                 <MudGrid>
                     <MudItem md="6">
-                        <MudAutocomplete T="ProductDto" Label="Product" Value="_customerOrderItem.Product" SearchFunc="@FindProducts" ToStringFunc="@(x => x == null ? null : $"{x.Name}")" For="@(() => _customerOrderItem.Product)" 
+                        <MudAutocomplete @ref="_productAutocomplete" T="ProductDto" Label="Product" Value="_customerOrderItem.Product" SearchFunc="@FindProducts" ToStringFunc="@(x => x == null ? null : $"{x.Name}")" For="@(() => _customerOrderItem.Product)" 
                             ValueChanged="OnProductValueChanged" ResetValueOnEmptyText="true" Immediate="true" ProgressIndicatorColor="Color.Info" Variant="Variant.Outlined" Margin="Margin.Dense"></MudAutocomplete>
                     </MudItem>
                     <MudItem md="2">
@@ -194,7 +194,7 @@
                         else
                         {
                             <tr>
-                                <td>@item.Product.Id</td>
+                                <td>@item.Product.Name</td>
                                 <td style="text-align:right;">@item.Qty</td>
                                 <td style="text-align:right;">@item.UnitPrice.ToString("N")</td>
                                 <td style="text-align:right;">@item.Total.ToString("N")</td>
