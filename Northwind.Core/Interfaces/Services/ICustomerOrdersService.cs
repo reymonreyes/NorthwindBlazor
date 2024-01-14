@@ -16,7 +16,7 @@ namespace Northwind.Core.Interfaces.Services
         Task ShipOrder(int orderId);
         Task ReceivePayment(int orderId, DateTime paymenDate, decimal amount, PaymentMethodType paymentType);
         Task CompleteOrder(int orderId);
-        Task<CustomerOrderDto?> GetAsync(int orderId);
+        Task<CustomerOrderDto?> GetAsync(int orderId, bool includeLinkedNames = false);
         Task UpdateItem(int customerOrderId, CustomerOrderItemDto customerOrderItem);
         Task RemoveItem(int customerOrderItemId);
         Task<ServiceMessageResult> CancelAsync(int customerOrderId);
@@ -26,6 +26,6 @@ namespace Northwind.Core.Interfaces.Services
         Task<ServiceMessageResult> MarkAsCompleted(int customerOrderId);
         Task<ServiceResult> Update(int customerOrderId, CustomerOrderDto orderData);
         Task<string> GeneratePdfInvoice(int customerOrderId);
-        Task<(int TotalRecords, IEnumerable<CustomerOrderSummaryDto> Records)> GetAllAsync(int page = 1, int size = 10);
+        Task<(int TotalRecords, IEnumerable<CustomerOrderSummaryDto> Records)> GetAllAsync(int page = 1, int size = 10);        
     }
 }
