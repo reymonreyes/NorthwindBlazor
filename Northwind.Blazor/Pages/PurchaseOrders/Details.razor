@@ -135,19 +135,19 @@
 
         <MudSimpleTable Style="overflow-x: auto;" Hover="true" Bordered="true" Dense="true">
             <colgroup>
-                <col/><col/>
+                <col />
                 <col width="15%"/>
                 <col width="15%" />
-                <col/>
+                <col />
                 <col width="11%" />
             </colgroup>
             <thead>                
                 <tr>
-                    @foreach (var h in headings)
-                    {
-                        <th style="text-align:center;">@h</th>
-                    }
-                    <th></th>
+                    <th style="text-align:center;">Product</th>
+                    <th style="text-align:center;">Qty</th>
+                    <th style="text-align:center;">Unit Price</th>
+                    <th style="text-align:center;">Total</th>
+                    <th style="text-align:center;"></th>
                 </tr>
             </thead>
             <tbody>                
@@ -163,8 +163,7 @@
                         else
                         {
                             <tr>
-                                <td>@item.Product.Id</td>
-                                <td>@item.Product.Id</td>
+                                <td>@item.Product.Name</td>
                                 <td style="text-align:right;">@item.Quantity</td>
                                 <td style="text-align:right;">@item.UnitPrice.ToString("N")</td>
                                 <td style="text-align:right;">@item.Total.ToString("N")</td>
