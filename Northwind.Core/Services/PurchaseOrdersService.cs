@@ -333,24 +333,69 @@ namespace Northwind.Core.Services
             }
         }
 
-        public async Task<PurchaseOrderDto?> GetAsync(int id)
+        public async Task<PurchaseOrderDto?> GetAsync(int id, bool includeLinkedNames = false)
+        {
+            if (includeLinkedNames)
+                return await GetOrderWithLinkedNamesAsync(id);
+
+            return await GetOrderAsync(id);
+        }
+        
+        private async Task<PurchaseOrderDto?> GetOrderAsync(int orderId)
         {
             PurchaseOrderDto? result = null;
+
             await _unitOfWork.Start();
-            var purchaseOrder = await _unitOfWork.PurchaseOrdersRepository.GetAsync(id);
-            if(purchaseOrder != null)
+            var order = await _unitOfWork.PurchaseOrdersRepository.GetAsync(orderId);
+            await _unitOfWork.Stop();
+            if (order is not null)
             {
                 result = new PurchaseOrderDto
                 {
-                    SupplierId = purchaseOrder.SupplierId,
-                    ShipTo = purchaseOrder.ShipTo,
-                    OrderDate = purchaseOrder.OrderDate.Value.ToUniversalTime(),
-                    Status = purchaseOrder.Status,
-                    OrderItems = purchaseOrder.OrderItems.Select(x => new PurchaseOrderItemDto { Id = x.Id, ProductId = x.ProductId, Quantity = x.Quantity, UnitPrice = x.UnitCost }).ToList()
+                    Id = order.Id,
+                    SupplierId = order.SupplierId,
+                    OrderDate = order.OrderDate.Value,
+                    Notes = order.Notes,
+                    Status = order.Status,
+                    OrderItems = order.OrderItems.Select(x => new PurchaseOrderItemDto { Id = x.Id, ProductId = x.ProductId, Quantity = x.Quantity, UnitPrice = x.UnitCost }).ToList()
                 };
             }
 
+            return result;
+        }
+
+        private async Task<PurchaseOrderDto?> GetOrderWithLinkedNamesAsync(int orderId)
+        {
+            PurchaseOrderDto? result = null;
+            await _unitOfWork.Start();
+            var order = await _unitOfWork.PurchaseOrdersRepository.GetAsync(orderId);
+
+            if (order is not null)
+            {
+                result = new PurchaseOrderDto
+                {
+                    Id = order.Id,
+                    SupplierId = order.SupplierId,
+                    OrderDate = order.OrderDate.Value,
+                    Notes = order.Notes,
+                    Status = order.Status,
+                    OrderItems = order.OrderItems.Select(x => new PurchaseOrderItemDto { Id = x.Id, ProductId = x.ProductId, Quantity = x.Quantity, UnitPrice = x.UnitCost }).ToList()
+                };
+
+                var supplier = await _unitOfWork.SuppliersRepository.Get(order.SupplierId);
+                if (supplier is not null)
+                    result.SupplierName = supplier.Name;
+
+                foreach (var item in result.OrderItems)
+                {
+                    var product = await _unitOfWork.ProductsRepository.Get(item.ProductId);
+                    if (product is not null)
+                        item.ProductName = product.Name;
+                }
+            }
+
             await _unitOfWork.Stop();
+
             return result;
         }
 
