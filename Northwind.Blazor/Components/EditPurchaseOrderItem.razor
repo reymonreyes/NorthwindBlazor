@@ -5,9 +5,7 @@
 @if (Item is not null)
 {
     <tr height="90px">
-        <td style=""><MudText>@Item.Product?.Id</MudText></td>
-        <td style=""><MudText>@Item.Product?.Id</MudText>
-        </td>
+        <td style=""><MudText>@Item.Product?.Name</MudText></td>
         <td style="text-align:right;vertical-align: top;">
             <MudForm @ref="_editItemForm" @bind-IsValid="_isEditItemFormValid" Model="Item" Validation="(_purchaseOrderItemValidator.ValidateValue)">
                 <MudNumericField @bind-Value="Item.Quantity" For="@(() => Item.Quantity)" Margin="Margin.Dense" Required="true"></MudNumericField>
