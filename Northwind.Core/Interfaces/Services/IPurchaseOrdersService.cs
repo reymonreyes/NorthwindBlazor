@@ -18,13 +18,12 @@ namespace Northwind.Core.Interfaces.Services
         Task EmailPdfToSupplier(int purchaseOrderId);
         Task<string> GeneratePdfDocument(int id);
         Task<(int TotalRecords, IEnumerable<PurchaseOrderSummaryDto> Records)> GetAllAsync(int page = 1, int size = 10);
-        Task<PurchaseOrderDto?> GetAsync(int id);
+        Task<PurchaseOrderDto?> GetAsync(int id, bool includeLinkedNames = false);
         Task PaySupplierAsync(int v, Payment payment);
         Task<List<(int purchaseOrderId, int purchaseOrderItemId, string result)>> ReceiveInventory(List<(int purchaseOrderId, int purchaseOrderItemId)> itemsToReceive);
         Task RemoveItem(int purchaseOrderItemId);
         Task<ServiceMessageResult> SubmitAsync(int id);
         Task<ServiceResult> UpdateAsync(int id, PurchaseOrderDto purchaseOrderDto);
         Task UpdateItem(int purchaseOrderId, PurchaseOrderItemDto purchaseOrderItem);
-        //Task<IEnumerable<PurchaseOrderDto>> GetAllAsync(int page = 1, int size = 10);
     }
 }
