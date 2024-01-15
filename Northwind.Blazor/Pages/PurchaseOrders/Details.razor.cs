@@ -28,7 +28,6 @@ namespace Northwind.Blazor.Pages.PurchaseOrders
 
 
         private List<string> _errors = new List<string>();
-        string[] headings = { "ID", "Description", "Qty", "Unit price", "Total" };
 
         [Parameter]
         public int? Id { get; set; }
@@ -73,7 +72,7 @@ namespace Northwind.Blazor.Pages.PurchaseOrders
         private async Task LoadPurchaseOrder()
         {
             Console.WriteLine("LoadPurchaseOrder()");
-            var purchaseOrder = await PurchaseOrdersService.GetAsync(Id.Value);
+            var purchaseOrder = await PurchaseOrdersService.GetAsync(Id.Value, true);
             if (purchaseOrder is not null)
             {
                 _purchaseOrder = new PurchaseOrder
@@ -82,7 +81,7 @@ namespace Northwind.Blazor.Pages.PurchaseOrders
                     OrderDate = purchaseOrder.OrderDate.ToLocalTime(),
                     Notes = purchaseOrder.Notes,
                     Status = purchaseOrder.Status,
-                    Items = purchaseOrder.OrderItems.Select(x => new PurchaseOrderItem { Id = x.Id, Product = new ProductDto { Id = x.Id }, Quantity = x.Quantity, UnitPrice = x.UnitPrice.Value }).ToList()
+                    Items = purchaseOrder.OrderItems.Select(x => new PurchaseOrderItem { Id = x.Id, Product = new ProductDto { Id = x.Id, Name = x.ProductName }, Quantity = x.Quantity, UnitPrice = x.UnitPrice.Value }).ToList()
                 };
 
                 var supplier = await SuppliersService.Get(purchaseOrder.SupplierId);
