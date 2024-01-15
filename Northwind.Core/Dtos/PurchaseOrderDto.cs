@@ -11,6 +11,7 @@ namespace Northwind.Core.Dtos
     public class PurchaseOrderDto
     {
         public int SupplierId { get; set; }
+        public string SupplierName { get; set; }
         public string Notes { get; set; }
         public string ShipTo { get; set; }
         public List<PurchaseOrderItemDto> OrderItems { get; set; }
