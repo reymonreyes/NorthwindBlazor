@@ -92,7 +92,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 ShipperId = customerOrder.ShipperId,
                 Notes = customerOrder.Notes,
                 Status = customerOrder.Status,
-                Items = customerOrder.Items.Select(x => new Models.CustomerOrderItem { Id = x.Id, Product = new ProductDto { Id = x.Id, Name = x.ProductName }, Qty = x.Quantity, UnitPrice = x.UnitPrice.Value }).ToList()
+                Items = customerOrder.Items.Select(x => new Models.CustomerOrderItem { Id = x.Id, Product = new ProductDto { Id = x.ProductId, Name = x.ProductName }, Qty = x.Quantity, UnitPrice = x.UnitPrice.Value }).ToList()
             };
 
             var customer = await CustomersService.Get(_customerOrder.CustomerId);
@@ -223,6 +223,16 @@ namespace Northwind.Blazor.Pages.CustomerOrders
 
         private async Task AddItemToOrder()
         {
+            var itemExist = _customerOrder.Items.FirstOrDefault(x => x.Product.Id == _customerOrderItem.Product.Id);
+            if(itemExist is not null)
+            {
+                itemExist.Qty += _customerOrderItem.Qty;
+                await UpdateItemAsync(itemExist);
+                _addItemForm.Reset();
+                await _productAutocomplete.Clear();
+                return;
+            }
+
             var item = new CustomerOrderItemDto
             {
                 ProductId = _customerOrderItem.Product.Id,
@@ -236,7 +246,7 @@ namespace Northwind.Blazor.Pages.CustomerOrders
                 await CustomerOrdersService.AddItem(_customerOrder.Id, item);
                 _customerOrder.Items.Add(_customerOrderItem);
                 _customerOrderItem = new Models.CustomerOrderItem();
-                _customerOrderForm.Reset();
+                _addItemForm.Reset();
                 await _productAutocomplete.Clear();
                 Notify($"Item added successfully.", MudBlazor.Severity.Success);
             }
