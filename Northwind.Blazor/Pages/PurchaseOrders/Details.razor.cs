@@ -81,7 +81,7 @@ namespace Northwind.Blazor.Pages.PurchaseOrders
                     OrderDate = purchaseOrder.OrderDate.ToLocalTime(),
                     Notes = purchaseOrder.Notes,
                     Status = purchaseOrder.Status,
-                    Items = purchaseOrder.OrderItems.Select(x => new PurchaseOrderItem { Id = x.Id, Product = new ProductDto { Id = x.Id, Name = x.ProductName }, Quantity = x.Quantity, UnitPrice = x.UnitPrice.Value }).ToList()
+                    Items = purchaseOrder.OrderItems.Select(x => new PurchaseOrderItem { Id = x.Id, Product = new ProductDto { Id = x.ProductId, Name = x.ProductName }, Quantity = x.Quantity, UnitPrice = x.UnitPrice.Value }).ToList()
                 };
 
                 var supplier = await SuppliersService.Get(purchaseOrder.SupplierId);
@@ -211,6 +211,16 @@ namespace Northwind.Blazor.Pages.PurchaseOrders
         private async Task AddItemToPurchaseOrder()
         {
             _isOverlayVisible = true;
+
+            var itemExist = _purchaseOrder.Items.FirstOrDefault(x => x.Product.Id == _purchaseOrderItem.Product.Id);
+            if(itemExist is not null)
+            {
+                itemExist.Quantity += _purchaseOrderItem.Quantity;
+                await UpdateItem(itemExist);
+                _addItemForm.Reset();
+                await _productAutocomplete.Clear();
+                return;
+            }
 
             var item = new PurchaseOrderItemDto
             {
